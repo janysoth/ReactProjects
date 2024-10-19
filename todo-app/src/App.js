@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+} from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Todo from './Todo';
+import { db } from './firebase';
 
 const style = {
   bg: `h-screen w-screen p-4 bg-gradient-to-r from-[#2F80ED] to-[#1CB5E0]`,
@@ -14,6 +24,50 @@ const style = {
 
 function App() {
   const [todos, setTodos] = useState(['learn React', 'grind LeetCode questions']);
+  const [input, setInput] = useState('');
+
+  // Create todo
+  const createTodo = async (e) => {
+    e.preventDefault(e);
+
+    if (input === '') {
+      alert('Please enter a valid todo.');
+      return;
+    }
+    await addDoc(collection(db, 'todos'), {
+      text: input,
+      completed: false,
+    });
+
+    setInput('');
+  };
+
+  // Read todo from todo from firebase
+  useEffect(() => {
+    const q = query(collection(db, 'todos'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let todosList = [];
+      querySnapshot.forEach((doc) => {
+        todosList.push({
+          ...doc.data(), id: doc.id
+        });
+        setTodos(todosList);
+      });
+      return () => unsubscribe();
+    });
+  }, []);
+
+  // Update todo in firebase
+  const toggleComplete = async (todo) => {
+    await updateDoc(doc(db, 'todos', todo.id), {
+      completed: !todo.completed,
+    });
+  };
+
+  // Delete todo
+  const deleteTodo = async (id) => {
+    await deleteDoc(doc(db, 'todos', id));
+  };
 
   return (
     <div className={style.bg}>
