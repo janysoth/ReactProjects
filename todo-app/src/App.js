@@ -23,7 +23,7 @@ const style = {
 };
 
 function App() {
-  const [todos, setTodos] = useState(['learn React', 'grind LeetCode questions']);
+  const [todos, setTodos] = useState([]);
   const [input, setInput] = useState('');
 
   // Create todo
@@ -73,8 +73,10 @@ function App() {
     <div className={style.bg}>
       <div className={style.container}>
         <h3 className={style.heading}>Todo App</h3>
-        <form className={style.form}>
+        <form onSubmit={createTodo} className={style.form}>
           <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             className={style.input}
             type='text'
             placeholder='Add Todo'
@@ -87,11 +89,17 @@ function App() {
 
         <ul>
           {todos.map((todo, index) => (
-            <Todo key={index} todo={todo} />
+            <Todo
+              key={index}
+              todo={todo}
+              toggleComplete={toggleComplete}
+              deleteTodo={deleteTodo}
+            />
           ))}
         </ul>
-
-        <p className={style.count}>You have 2 todos.</p>
+        {todos.length < 1 ? null : (
+          <p className={style.count}>{`You have ${todos.length} todos.`}</p>
+        )}
       </div>
     </div>
   );
