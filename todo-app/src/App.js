@@ -28,45 +28,59 @@ function App() {
 
   // Create todo
   const createTodo = async (e) => {
-    e.preventDefault(e);
+    e.preventDefault(); // Removed unnecessary parameter
 
     if (input === '') {
       alert('Please enter a valid todo.');
       return;
     }
-    await addDoc(collection(db, 'todos'), {
-      text: input,
-      completed: false,
-    });
 
-    setInput('');
+    try {
+      await addDoc(collection(db, 'todos'), {
+        text: input,
+        completed: false,
+      });
+      setInput('');
+    } catch (error) {
+      console.error("Error adding todo: ", error);
+    }
   };
 
-  // Read todo from todo from firebase
+  // Read todo from Firebase
   useEffect(() => {
     const q = query(collection(db, 'todos'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       let todosList = [];
       querySnapshot.forEach((doc) => {
         todosList.push({
-          ...doc.data(), id: doc.id
+          ...doc.data(),
+          id: doc.id,
         });
-        setTodos(todosList);
       });
-      return () => unsubscribe();
+      setTodos(todosList);
     });
+
+    return () => unsubscribe(); // Correct cleanup
   }, []);
 
-  // Update todo in firebase
+  // Update todo in Firebase
   const toggleComplete = async (todo) => {
-    await updateDoc(doc(db, 'todos', todo.id), {
-      completed: !todo.completed,
-    });
+    try {
+      await updateDoc(doc(db, 'todos', todo.id), {
+        completed: !todo.completed,
+      });
+    } catch (error) {
+      console.error("Error updating todo: ", error);
+    }
   };
 
   // Delete todo
   const deleteTodo = async (id) => {
-    await deleteDoc(doc(db, 'todos', id));
+    try {
+      await deleteDoc(doc(db, 'todos', id));
+    } catch (error) {
+      console.error("Error deleting todo: ", error);
+    }
   };
 
   return (
@@ -81,22 +95,22 @@ function App() {
             type='text'
             placeholder='Add Todo'
           />
-
           <button className={style.button}>
             <AiOutlinePlus size={30} />
           </button>
         </form>
 
         <ul>
-          {todos.map((todo, index) => (
+          {todos.map((todo) => (
             <Todo
-              key={index}
+              key={todo.id} // Use the unique Firestore document ID
               todo={todo}
               toggleComplete={toggleComplete}
               deleteTodo={deleteTodo}
             />
           ))}
         </ul>
+
         {todos.length < 1 ? null : (
           <p className={style.count}>{`You have ${todos.length} todos.`}</p>
         )}
