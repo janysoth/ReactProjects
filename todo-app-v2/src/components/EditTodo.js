@@ -2,7 +2,9 @@ import React from 'react';
 
 const EditTodo = () => {
   return (
-    <div>EditTodo</div>
+    <div className='EditTodo'>
+      EditTodo
+    </div>
   );
 };
 
