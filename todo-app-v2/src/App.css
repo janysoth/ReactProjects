@@ -109,7 +109,7 @@
 
 /* AddNewTodo form */
 .AddNewTodo form {
-  padding: 1rem;
+  padding: 1rem 1rem calc(1rem + 40px) 1rem;
   width: 500px;
   background: white;
   border-radius: 4px;
@@ -175,6 +175,7 @@
   color: white;
 }
 
+
 .AddNewTodo form .cancel {
   position: absolute;
   top: 0;
@@ -182,12 +183,14 @@
   cursor: pointer;
 }
 
+
 .AddNewTodo form .confirm {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
 }
+
 
 .AddNewTodo form .confirm button {
   width: 100%;
