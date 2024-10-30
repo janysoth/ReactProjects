@@ -1,11 +1,17 @@
 import React from 'react';
+import { Plus } from 'react-bootstrap-icons';
 
-const AddNewProject = () => {
+function AddNewProject() {
+
   return (
     <div className='AddNewProject'>
-      AddNewProject
+      <div className="add-button">
+        <span>
+          <Plus size="20" />
+        </span>
+      </div>
     </div>
   );
-};
+}
 
 export default AddNewProject;
