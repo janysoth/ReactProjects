@@ -9,9 +9,9 @@ const Projects = () => {
   const pencilColor = edit ? "#1EC94C" : "#000000";
 
   const projects = [
-    { id: 1, name: "Personal", numOfTodos: 0 },
-    { id: 2, name: "Work", numOfTodos: 1 },
-    { id: 3, name: "Other", numOfTodos: 2 },
+    { id: 1, name: "personal", numOfTodos: 0 },
+    { id: 2, name: "work", numOfTodos: 1 },
+    { id: 3, name: "other", numOfTodos: 2 },
   ];
   return (
     <div className='Projects'>
