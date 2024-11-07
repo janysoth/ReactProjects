@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { CalendarDate, CaretUp } from 'react-bootstrap-icons';
 import { calendarItems } from '../constants';
+import { TodoContext } from '../context';
 
 const Calendar = () => {
+  // Context
+  const { setSelectedProject } = useContext(TodoContext);
 
   return (
     <div className='Calendar'>
@@ -22,7 +25,11 @@ const Calendar = () => {
       <div className="items">
         {
           calendarItems.map(item => (
-            <div className="item" key={item}>
+            <div
+              className="item"
+              key={item}
+              onClick={() => setSelectedProject(item)}
+            >
               {item}
             </div>
           )
