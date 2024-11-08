@@ -12,6 +12,8 @@ const TodoForm = ({
   setDay,
   time,
   setTime,
+  todoProject,
+  setTodoProject,
   projects,
   showButtons = false,
   setShowModal = false
@@ -71,11 +73,21 @@ const TodoForm = ({
 
           <div className="projects">
             {
-              projects.map(project =>
-                <div className="project" key={project.id}>
-                  {project.name}
+              projects.length > 0 ?
+                projects.map(project =>
+                  <div
+                    className={
+                      `project ${todoProject === project.name ? "active" : ""}`
+                    }
+                    onClick={() => setTodoProject(project.name)}
+                    key={project.id}
+                  >
+                    {project.name}
+                  </div>
+                ) :
+                <div style={{ color: '#ff0000' }}>
+                  Please add a project before proceeding.
                 </div>
-              )
             }
           </div>
         </div>
