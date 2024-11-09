@@ -4,30 +4,7 @@ import Next7Days from './Next7Days';
 import Todo from './Todo';
 
 const Todos = () => {
-  const { selectedProject } = useContext(TodoContext);
-
-  const todos = [
-    {
-      id: 'd54sd4',
-      text: "go for a run",
-      time: "10:00 AM",
-      date: "12/05/2024",
-      day: "6",
-      checked: false,
-      color: '#00ff00',
-      project: 'personal'
-    },
-    {
-      id: 'd54fdf',
-      text: "meeting friends",
-      time: "09:00 AM",
-      date: "12/09/2024",
-      day: "1",
-      checked: true,
-      color: '#00ff00',
-      project: 'work'
-    }
-  ];
+  const { selectedProject, todos } = useContext(TodoContext);
 
   return (
     <div className='Todos'>
