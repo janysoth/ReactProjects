@@ -1,5 +1,11 @@
+import { addDoc, collection } from 'firebase/firestore';
+import moment from 'moment';
+import randomcolor from 'randomcolor';
 import React, { useContext, useEffect, useState } from 'react';
+
+import { calendarItems } from '../constants';
 import { TodoContext } from '../context';
+import { db } from "../firebase";
 import Modal from './Modal';
 import TodoForm from './TodoForm';
 
@@ -21,7 +27,28 @@ function AddNewTodo() {
   ];
 
   function handleSubmit(e) {
+    e.preventDefault();
 
+    if (text && !calendarItems.includes(todoProject)) {
+      addDoc(collection(db, 'todos'), {
+        text: text,
+        date: moment(day).format('MM/DD/YYYY'),
+        day: moment(day).format('d'),
+        time: moment(time).format('hh:mm A'),
+        checked: false,
+        color: randomcolor(),
+        projectName: todoProject,
+      })
+        .then(() => {
+          setShowModal(false);
+          setText('');
+          setDay(new Date());
+          setTime(new Date());
+        })
+        .catch((error) => {
+          console.error("Error adding a new todo: ", error);
+        });
+    }
   }
 
   useEffect(() => {

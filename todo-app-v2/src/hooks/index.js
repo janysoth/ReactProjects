@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 import { db } from "../firebase";
 
-
 export function useTodos() {
   const [todos, setTodos] = useState([]);
 
