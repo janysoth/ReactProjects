@@ -11,7 +11,7 @@ import TodoForm from './TodoForm';
 
 function AddNewTodo() {
   // Context
-  const { selectedProject } = useContext(TodoContext);
+  const { selectedProject, projects } = useContext(TodoContext);
 
   // State
   const [showModal, setShowModal] = useState(false);
@@ -19,12 +19,6 @@ function AddNewTodo() {
   const [day, setDay] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [todoProject, setTodoProject] = useState(selectedProject);
-
-  const projects = [
-    { id: 1, name: "personal", numOfTodos: 0 },
-    { id: 2, name: "work", numOfTodos: 1 },
-    { id: 3, name: "other", numOfTodos: 2 }
-  ];
 
   function handleSubmit(e) {
     e.preventDefault();
