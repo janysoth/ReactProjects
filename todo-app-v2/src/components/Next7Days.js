@@ -32,7 +32,9 @@ const Next7Days = ({ todos }) => {
           <div key={day.number}>
             <div className="day">
               <div className="name">
-                {moment(day.number, 'd').format('dddd')}
+                {`
+                  ${moment(day.number, 'd').format('dddd')} - ${moment(day.number, 'd').format('MM/DD/YYYY')}
+                `}
                 {day.number === moment().format('d') && ' (Today)'}
               </div>
 
