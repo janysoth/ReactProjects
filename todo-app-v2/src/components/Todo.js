@@ -29,7 +29,7 @@ const Todo = ({ todo }) => {
             {todo.text}
           </p>
 
-          <span>{todo.time} - {todo.projectName}</span>
+          <span>{todo.time} - {todo.date} - {todo.projectName}</span>
 
           <div className={`line ${todo.checked ? 'line-through' : ''}`} />
         </div>

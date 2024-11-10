@@ -512,3 +512,18 @@
   padding-bottom: 2px;
   border-bottom: 1px solid #eeeeee;
 }
+
+/* Next7Days */
+.Next7Days .day {
+  margin: 5px;
+  display: flex;
+}
+
+.Next7Days .day .name {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.Next7Days .day .total-todos {
+  margin-left: 10px;
+}
