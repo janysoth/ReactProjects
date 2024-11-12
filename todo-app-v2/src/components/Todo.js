@@ -1,8 +1,20 @@
+import { deleteDoc, doc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { ArrowClockwise, CheckCircleFill, Circle, Trash } from 'react-bootstrap-icons';
+import { db } from '../firebase';
 
 const Todo = ({ todo }) => {
   const [hover, setHover] = useState(false);
+
+  const deleteTodo = (todo) => {
+    deleteDoc(doc(db, 'todos', todo.id))
+      .then(() => {
+        console.log("Document successfully deleted!");
+      })
+      .catch((error) => {
+        console.error("Error in deleting todo: ", error);
+      });
+  };
 
   return (
     <div className='Todo'>
@@ -43,7 +55,10 @@ const Todo = ({ todo }) => {
           }
         </div>
 
-        <div className="delete-todo">
+        <div
+          className="delete-todo"
+          onClick={() => deleteTodo(todo)}
+        >
           {
             (hover || todo.checked) &&
             <span>
