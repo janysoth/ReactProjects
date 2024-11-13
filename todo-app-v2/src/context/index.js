@@ -12,6 +12,7 @@ function TodoContextProvider({ children }) {
   const filteredTodos = useFilterTodos(todos, selectedProject);
 
   const contextValue = useMemo(() => ({
+    defaultProject,
     selectedProject,
     setSelectedProject,
     todos: filteredTodos,
