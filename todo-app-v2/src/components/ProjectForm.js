@@ -2,7 +2,7 @@
 import React from 'react';
 
 const ProjectForm = ({
-  handleSumbit,
+  handleSubmit,
   heading,
   value,
   setValue,
@@ -10,7 +10,7 @@ const ProjectForm = ({
   confirmButtonText
 }) => {
   return (
-    <form onSubmit={handleSumbit} className="ProjectForm">
+    <form onSubmit={handleSubmit} className="ProjectForm">
       <h3>{heading}</h3>
       <input
         value={value}

@@ -56,7 +56,7 @@ function AddNewProject() {
 
       <Modal showModal={showModal} setShowModal={setShowModal}>
         <ProjectForm
-          handleSumbit={handleSubmit}
+          handleSubmit={handleSubmit}
           heading='New Project'
           value={projectName}
           setValue={setProjectName}
