@@ -6,25 +6,25 @@ import { db } from '../firebase';
 import ProjectForm from './ProjectForm';
 
 const RenameProject = ({ project, setShowModal }) => {
-  // Context 
   const { selectedProject, setSelectedProject } = useContext(TodoContext);
-
-  // State
   const [newProjectName, setNewProjectName] = useState(project.name);
 
-  const renameProject = async (project, newProjectName) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (newProjectName === project.name) {
+      setShowModal(false);
+      return; // Skip if the name hasn't changed
+    }
+
     try {
-      // Reference to the projects collection
       const projectsRef = collection(db, 'projects');
+      const projectExistsQuery = query(projectsRef, where('name', '==', newProjectName));
+      const projectExistsSnapshot = await getDocs(projectExistsQuery);
 
-      // Check if a project with the new name already exists
-      const projectQuery = query(projectsRef, where('name', '==', newProjectName));
-      const projectSnapshot = await getDocs(projectQuery);
-
-      if (!projectSnapshot.empty) {
+      if (!projectExistsSnapshot.empty) {
         alert('A project with this name already exists!');
-        setShowModal(true);
-        return; // Early return to stop execution if the project name exists
+        return setShowModal(true);
       }
 
       // Update the project name
@@ -39,25 +39,20 @@ const RenameProject = ({ project, setShowModal }) => {
       const todosSnapshot = await getDocs(todosQuery);
 
       // Update each todo's project name
-      todosSnapshot.forEach(async (todoDoc) => {
-        await updateDoc(todoDoc.ref, { projectName: newProjectName });
-      });
+      const updateTodoPromises = todosSnapshot.docs.map(todoDoc =>
+        updateDoc(todoDoc.ref, { projectName: newProjectName })
+      );
+      await Promise.all(updateTodoPromises);
 
-      // Update selected project if necessary
       if (selectedProject === project.name) {
         setSelectedProject(newProjectName);
       }
 
       console.log("Project and associated todos successfully renamed.");
+      setShowModal(false);
     } catch (error) {
-      console.error("Error in renaming project or updating todos: ", error);
+      console.error("Error renaming project or updating todos: ", error);
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    renameProject(project, newProjectName);
-    setShowModal(false);
   };
 
   return (
