@@ -1,6 +1,9 @@
-import { deleteDoc, doc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import moment from 'moment';
 import React, { useState } from 'react';
 import { ArrowClockwise, CheckCircleFill, Circle, Trash } from 'react-bootstrap-icons';
+
+
 import { db } from '../firebase';
 
 const Todo = ({ todo }) => {
@@ -16,6 +19,62 @@ const Todo = ({ todo }) => {
       });
   };
 
+  const checkTodo = async (todo) => {
+    // Early return if the `todo` object is invalid
+    if (!todo || !todo.id) {
+      console.error("Invalid todo object provided.");
+      return;
+    }
+
+    try {
+      // Reference to the specific todo document
+      const todoRef = doc(db, "todos", todo.id);
+
+      // Update the checked status of the todo
+      await updateDoc(todoRef, { checked: !todo.checked });
+      console.log(`Todo "${todo.id}" successfully updated.`);
+
+      // Additional functionality: Fetch todos for optional processing (similar to your reference code)
+      const todosQuery = query(
+        collection(db, "todos"),
+        where("checked", "==", !todo.checked)
+      );
+      const todosSnapshot = await getDocs(todosQuery);
+
+      if (!todosSnapshot.empty) {
+        console.log(`Found ${todosSnapshot.docs.length} todos with the new checked status.`);
+      }
+    } catch (error) {
+      console.error("Error updating todo:", error);
+    }
+  };
+
+  const repeatNextDay = async (todo) => {
+    try {
+      // Calculate the next day's date
+      const nextDayDate = moment(todo.date, "MM/DD/YYYY").add(1, "days");
+
+      // Create the new todo object with updated fields
+      const repeatedTodo = {
+        ...todo,
+        checked: false,
+        date: nextDayDate.format("MM/DD/YYYY"),
+        day: nextDayDate.format("d"),
+      };
+
+      // Remove the ID field to avoid conflicts with Firestore's auto-generated IDs
+      delete repeatedTodo.id;
+
+      // Add the repeated todo to the "todos" collection
+      const todosRef = collection(db, "todos");
+      await addDoc(todosRef, repeatedTodo);
+
+      console.log("Repeated todo added successfully:", repeatedTodo);
+    } catch (error) {
+      console.error("Error adding repeated todo:", error);
+    }
+  };
+
   return (
     <div className='Todo'>
       <div
@@ -23,7 +82,10 @@ const Todo = ({ todo }) => {
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
-        <div className="check-todo">
+        <div
+          className="check-todo"
+          onClick={() => checkTodo(todo)}
+        >
           {
             todo.checked ?
               <span className="checked">
@@ -37,7 +99,7 @@ const Todo = ({ todo }) => {
         </div>
 
         <div className="text">
-          <p style={{ color: todo.checked ? '#bebebe' : '#00000' }}>
+          <p style={{ color: todo.checked ? '#bebebe' : '#000000' }}>
             {todo.text}
           </p>
 
@@ -46,7 +108,10 @@ const Todo = ({ todo }) => {
           <div className={`line ${todo.checked ? 'line-through' : ''}`} />
         </div>
 
-        <div className="add-to-next-day">
+        <div
+          className="add-to-next-day"
+          onClick={() => repeatNextDay(todo)}
+        >
           {
             todo.checked &&
             <span>
