@@ -22,12 +22,8 @@ export function useTodos() {
   return todos;
 }
 
-export function useProjects(todos) {
+export function useProjects() {
   const [projects, setProjects] = useState([]);
-
-  function calculateNumOfTodos(projectName, todos) {
-    return todos.filter(todo => todo.projectName === projectName).length;
-  }
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'projects'), (snapshot) => {
@@ -36,14 +32,13 @@ export function useProjects(todos) {
         return {
           id: doc.id,
           name: projectName,
-          numOfTodos: calculateNumOfTodos(projectName, todos)
         };
       });
       setProjects(data);
     });
 
     return () => unsubscribe();
-  }, [todos]);
+  }, []);
 
   return projects;
 }
@@ -75,4 +70,21 @@ export function useFilterTodos(todos, selectedProject) {
   }, [todos, selectedProject]);
 
   return filteredTodos;
+}
+
+export function useProjectsWithStats(projects, todos) {
+  const [projectsWithStats, setProjectsWithStats] = useState([]);
+
+  useEffect(() => {
+    const data = projects.map((project) => {
+      return {
+        numOfTodos: todos.filter(todo => todo.projectName === project.name && !todo.checked).length,
+        ...project
+      };
+    });
+
+    setProjectsWithStats(data);
+  }, [projects, todos]);
+
+  return projectsWithStats;
 }
