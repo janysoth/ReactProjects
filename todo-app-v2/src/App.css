@@ -438,8 +438,13 @@
   text-transform: capitalize;
   font-size: 1.2rem;
   font-weight: bold;
-  padding-bottom: 2px;
+  /* padding-bottom: 2px; */
   border-bottom: 1px solid #eeeeee;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 100;
+  padding: 8px;
 }
 
 .Todos .todos {
