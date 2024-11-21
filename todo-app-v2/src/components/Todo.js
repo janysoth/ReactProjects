@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { ArrowClockwise, CheckCircleFill, Circle, Trash } from 'react-bootstrap-icons';
@@ -19,35 +19,51 @@ const Todo = ({ todo }) => {
       });
   };
 
-  const checkTodo = async (todo) => {
-    // Early return if the `todo` object is invalid
-    if (!todo || !todo.id) {
-      console.error("Invalid todo object provided.");
-      return;
-    }
+  // Longer version of checkTodo 
+  // const checkTodo = async (todo) => {
+  //   // Early return if the `todo` object is invalid
+  //   if (!todo || !todo.id) {
+  //     console.error("Invalid todo object provided.");
+  //     return;
+  //   }
 
+  //   try {
+  //     // Reference to the specific todo document
+  //     const todoRef = doc(db, "todos", todo.id);
+
+  //     // Update the checked status of the todo
+  //     await updateDoc(todoRef, { checked: !todo.checked });
+  //     console.log(`Todo "${todo.id}" successfully updated.`);
+
+  //     // Additional functionality: Fetch todos for optional processing (similar to your reference code)
+  //     const todosQuery = query(
+  //       collection(db, "todos"),
+  //       where("checked", "==", !todo.checked)
+  //     );
+  //     const todosSnapshot = await getDocs(todosQuery);
+
+  //     if (!todosSnapshot.empty) {
+  //       console.log(`Found ${todosSnapshot.docs.length} todos with the new checked status.`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating todo:", error);
+  //   }
+  // };
+
+  const checkTodo = async (todo) => {
     try {
-      // Reference to the specific todo document
+      // Create a reference to the document in Firebase
       const todoRef = doc(db, "todos", todo.id);
 
-      // Update the checked status of the todo
+      // Update checked property of Todo
       await updateDoc(todoRef, { checked: !todo.checked });
-      console.log(`Todo "${todo.id}" successfully updated.`);
 
-      // Additional functionality: Fetch todos for optional processing (similar to your reference code)
-      const todosQuery = query(
-        collection(db, "todos"),
-        where("checked", "==", !todo.checked)
-      );
-      const todosSnapshot = await getDocs(todosQuery);
-
-      if (!todosSnapshot.empty) {
-        console.log(`Found ${todosSnapshot.docs.length} todos with the new checked status.`);
-      }
+      console.log("Todo has been successfully checked.");
     } catch (error) {
-      console.error("Error updating todo:", error);
+      console.error("Error in checking Todo: ", error);
     }
   };
+
 
   const repeatNextDay = async (todo) => {
     try {
