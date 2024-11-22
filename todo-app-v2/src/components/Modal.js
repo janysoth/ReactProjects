@@ -22,7 +22,8 @@ const Modal = ({ children, showModal, setShowModal }) => {
       <div className="Modal" ref={modalRef} onClick={closeModal}>
         <animated.div
           style={modalAnimation}
-          className="container">
+          className="container"
+        >
           {children}
         </animated.div>
       </div>

@@ -1,11 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { CalendarDate, CaretUp } from 'react-bootstrap-icons';
+import { animated, useSpring } from 'react-spring';
+
 import { calendarItems } from '../constants';
 import { TodoContext } from '../context';
 
 const Calendar = () => {
+  // STATE 
+  const [showMenu, setShowMenu] = useState(true);
+
   // Context
   const { setSelectedProject } = useContext(TodoContext);
+
+  // Animation
+  const spin = useSpring({
+    transform: showMenu ? 'rotate(0deg)' : 'rotate(180deg)',
+    config: { friction: 10 }
+  });
+
+  const menuAnimation = useSpring({
+    display: showMenu ? 'block' : 'none',
+    lineHeight: showMenu ? 1.2 : 0,
+  });
 
   return (
     <div className='Calendar'>
@@ -15,14 +31,21 @@ const Calendar = () => {
           <p>Calendar</p>
         </div>
 
-        <div className="btns">
+        <animated.div
+          className="btns"
+          style={spin}
+          onClick={() => setShowMenu(!showMenu)}
+        >
           <span>
             <CaretUp size="20" />
           </span>
-        </div>
+        </animated.div>
       </div>
 
-      <div className="items">
+      <animated.div
+        className="items"
+        style={menuAnimation}
+      >
         {
           calendarItems.map(item => (
             <div
@@ -35,7 +58,7 @@ const Calendar = () => {
           )
           )
         }
-      </div>
+      </animated.div>
     </div>
   );
 };
