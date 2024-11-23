@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { CaretUp, Palette, PencilFill } from 'react-bootstrap-icons';
-import { animated, useSpring } from 'react-spring';
+import { animated } from 'react-spring';
 
 import { TodoContext } from '../context';
+import { useMenuAnimation, useSpinAnimation } from '../hooks';
 import AddNewProject from './AddNewProject';
 import Project from './Project';
 
@@ -15,15 +16,8 @@ const Projects = () => {
   const { projects } = useContext(TodoContext);
 
   // Animation
-  const spin = useSpring({
-    transform: showMenu ? 'rotate(0deg)' : 'rotate(180deg)',
-    config: { friction: 10 }
-  });
-
-  const menuAnimation = useSpring({
-    display: showMenu ? 'block' : 'none',
-    lineHeight: showMenu ? 1.2 : 0
-  });
+  const spin = useSpinAnimation(showMenu);
+  const menuAnimation = useMenuAnimation(showMenu);
 
   return (
     <div className='Projects'>

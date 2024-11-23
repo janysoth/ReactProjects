@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { animated, useSpring } from 'react-spring';
+import { useModalAnimation } from '../hooks';
 
 const Modal = ({ children, showModal, setShowModal }) => {
 
@@ -11,11 +12,7 @@ const Modal = ({ children, showModal, setShowModal }) => {
   };
 
   // Animation
-  const modalAnimation = useSpring({
-    opacity: showModal ? 1 : 0,
-    top: showModal ? '25%' : '0%',
-    config: { friction: 10 }
-  });
+  const modalAnimation = useModalAnimation(showModal);
 
   return (
     showModal && (

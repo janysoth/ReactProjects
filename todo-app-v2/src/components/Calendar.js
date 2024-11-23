@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { CalendarDate, CaretUp } from 'react-bootstrap-icons';
-import { animated, useSpring } from 'react-spring';
+import { animated } from 'react-spring';
 
 import { calendarItems } from '../constants';
 import { TodoContext } from '../context';
+import { useMenuAnimation, useSpinAnimation } from '../hooks';
 
 const Calendar = () => {
   // STATE 
@@ -13,15 +14,8 @@ const Calendar = () => {
   const { setSelectedProject } = useContext(TodoContext);
 
   // Animation
-  const spin = useSpring({
-    transform: showMenu ? 'rotate(0deg)' : 'rotate(180deg)',
-    config: { friction: 10 }
-  });
-
-  const menuAnimation = useSpring({
-    display: showMenu ? 'block' : 'none',
-    lineHeight: showMenu ? 1.2 : 0,
-  });
+  const spin = useSpinAnimation(showMenu);
+  const menuAnimation = useMenuAnimation(showMenu);
 
   return (
     <div className='Calendar'>

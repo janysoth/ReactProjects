@@ -5,6 +5,7 @@ import { animated, useSpring, useTransition } from 'react-spring';
 
 import { TodoContext } from '../context';
 import { db } from "../firebase";
+import { useBtnTransition, useFadeInAnimation } from '../hooks';
 import Modal from './Modal';
 import RenameProject from './RenameProject';
 
@@ -44,16 +45,8 @@ const Project = ({ project, edit }) => {
   };
 
   // Animation
-  const fadeIn = useSpring({
-    from: { marginTop: '-12px', opacity: 0 },
-    to: { marginTop: '0px', opacity: 1 }
-  });
-
-  const btnTransitions = useTransition(edit, {
-    from: { opacity: 0, right: '-20px' },
-    enter: { opacity: 1, right: '0px' },
-    leave: { opacity: 0, right: '-20px' }
-  });
+  const fadeIn = useFadeInAnimation();
+  const btnTransitions = useBtnTransition(edit);
 
   return (
     <animated.div style={fadeIn} className='Project'>
