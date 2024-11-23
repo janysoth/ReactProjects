@@ -438,17 +438,51 @@
   text-transform: capitalize;
   font-size: 1.2rem;
   font-weight: bold;
-  /* padding-bottom: 2px; */
   border-bottom: 1px solid #eeeeee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
   position: sticky;
   top: 0;
   background-color: white;
   z-index: 100;
-  padding: 8px;
+}
+
+.Todos .delete-all-button {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+}
+
+.Todos .delete-all-button:hover {
+  background-color: #e60000;
+  filter: brightness(1.1);
 }
 
 .Todos .todos {
   overflow-y: auto;
+}
+
+.Todos .todos .empty-todos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #bebebe;
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: bold;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border: 1px dashed #ebebeb;
+  border-radius: 4px;
 }
 
 /* Todo */
