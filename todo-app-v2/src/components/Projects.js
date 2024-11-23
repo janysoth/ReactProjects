@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { CaretUp, Palette, PencilFill } from 'react-bootstrap-icons';
+import { animated, useSpring } from 'react-spring';
+
 import { TodoContext } from '../context';
 import AddNewProject from './AddNewProject';
 import Project from './Project';
@@ -11,6 +13,17 @@ const Projects = () => {
 
   // Context 
   const { projects } = useContext(TodoContext);
+
+  // Animation
+  const spin = useSpring({
+    transform: showMenu ? 'rotate(0deg)' : 'rotate(180deg)',
+    config: { friction: 10 }
+  });
+
+  const menuAnimation = useSpring({
+    display: showMenu ? 'block' : 'none',
+    lineHeight: showMenu ? 1.2 : 0
+  });
 
   return (
     <div className='Projects'>
@@ -33,13 +46,20 @@ const Projects = () => {
           }
 
           <AddNewProject />
-          <span className="arrow">
+          <animated.span
+            className="arrow"
+            style={spin}
+            onClick={() => setShowMenu(!showMenu)}
+          >
             <CaretUp size="20" />
-          </span>
+          </animated.span>
         </div>
       </div>
 
-      <div className="items">
+      <animated.div
+        className="items"
+        style={menuAnimation}
+      >
         {
           projects.map(project =>
             <Project
@@ -49,7 +69,7 @@ const Projects = () => {
             />
           )
         }
-      </div>
+      </animated.div>
     </div>
   );
 };
