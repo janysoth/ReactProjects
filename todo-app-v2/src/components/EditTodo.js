@@ -14,7 +14,7 @@ const EditTodo = () => {
   const [todoProject, setTodoProject] = useState();
 
   // CONTEXT
-  const { selectedTodo, projects } = useContext(TodoContext);
+  const { selectedTodo, projects, setSelectedTodo } = useContext(TodoContext);
 
   useEffect(() => {
     if (selectedTodo) {
@@ -25,47 +25,36 @@ const EditTodo = () => {
     }
   }, [selectedTodo]);
 
-  useEffect(() => {
-    const updateTodo = async () => {
-      if (selectedTodo) {
-        try {
-          // Reference the specific document in the "todos" collection
-          const todoRef = doc(db, "todos", selectedTodo.id);
-
-          // Update the todo document with the new values
-          await updateDoc(todoRef, {
-            text,
-            date: moment(day).format("MM/DD/YYYY"),
-            day: moment(day).format("d"),
-            time: moment(time).format("hh:mm A"),
-            projectName: todoProject,
-          });
-
-          console.log("Todo successfully updated.");
-        } catch (error) {
-          console.error("Error updating todo:", error);
-        }
+  const handleSubmit = async () => {
+    if (selectedTodo) {
+      try {
+        const todoRef = doc(db, "todos", selectedTodo.id);
+        await updateDoc(todoRef, {
+          text,
+          date: moment(day).format("MM/DD/YYYY"),
+          day: moment(day).format("d"),
+          time: moment(time).format("hh:mm A"),
+          projectName: todoProject,
+        });
+        setSelectedTodo(undefined);
+        alert("Todo successfully updated.");
+      } catch (error) {
+        console.error("Error updating todo:", error);
       }
-    };
+    }
+  };
 
-    updateTodo(); // Call the async function inside useEffect
-  }, [selectedTodo, text, day, time, todoProject]);
-
-  const handleSubmit = () => {
-
+  const handleCancel = () => {
+    setSelectedTodo(undefined);
   };
 
   return (
     <div>
-      {
-        selectedTodo &&
-        <div className='EditTodo'>
-          <div className="header">
-            Edit Todo
-          </div>
+      {selectedTodo && (
+        <div className="EditTodo">
+          <div className="header">Edit Todo</div>
           <div className="container">
             <TodoForm
-              handleSubmit={handleSubmit}
               text={text}
               setText={setText}
               day={day}
@@ -77,8 +66,16 @@ const EditTodo = () => {
               projects={projects}
             />
           </div>
+          <div className="buttons">
+            <button className="cancel" onClick={handleCancel}>
+              Cancel
+            </button>
+            <button className="submit" onClick={handleSubmit}>
+              Save Changes
+            </button>
+          </div>
         </div>
-      }
+      )}
     </div>
   );
 };
