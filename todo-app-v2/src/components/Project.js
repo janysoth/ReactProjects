@@ -1,7 +1,7 @@
 import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import React, { useContext, useState } from 'react';
 import { Pencil, XCircle } from 'react-bootstrap-icons';
-import { animated, useSpring, useTransition } from 'react-spring';
+import { animated } from 'react-spring';
 
 import { TodoContext } from '../context';
 import { db } from "../firebase";

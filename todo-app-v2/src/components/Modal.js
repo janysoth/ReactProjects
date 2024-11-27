@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { animated, useSpring } from 'react-spring';
+import { animated } from 'react-spring';
 import { useModalAnimation } from '../hooks';
 
 const Modal = ({ children, showModal, setShowModal }) => {

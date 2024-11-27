@@ -1,5 +1,5 @@
 import { collection, onSnapshot } from "firebase/firestore";
-import moment, { duration } from 'moment';
+import moment from 'moment';
 import { useEffect, useState } from "react";
 import { useSpring, useTransition } from 'react-spring';
 
