@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 
 function App() {
   const [user] = useAuthState(auth);
+  console.log(user);
   return (
     <div>
       {!user ? <LoginPage /> : <HomePage />}
