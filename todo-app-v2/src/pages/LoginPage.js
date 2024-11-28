@@ -4,11 +4,22 @@ import React from 'react';
 import { auth, provider } from "../firebase";
 
 function LoginPage() {
-  const signInUser = (e) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  const signInUser = async (e) => {
     e.preventDefault();
-
-    signInWithPopup(auth, provider).catch((err) => alert(err.message));
-
+    setIsLoading(true);
+    setError("");
+    try {
+      const result = await signInWithPopup(auth, provider);
+      console.log("User signed in:", result.user);
+    } catch (error) {
+      setError("Failed to sign in. Please try again.");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -18,6 +29,8 @@ function LoginPage() {
         <button onClick={signInUser} className='button'>
           Sign in with Google
         </button>
+        {isLoading && <p>Loading...</p>}
+        {error && <p>{error}</p>}
       </div>
     </div>
   );

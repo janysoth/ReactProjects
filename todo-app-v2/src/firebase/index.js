@@ -2,8 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// https://firebase.google.com/docs/web/setup#available-libraries
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCU_SR-vWQLAnH0WDOwpwmWsDtrEGJYLUQ",
@@ -17,8 +15,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
+// Force re-authentication to allow switching accounts
+provider.setCustomParameters({ prompt: "select_account" });
+
 export { auth, db, provider };
+
