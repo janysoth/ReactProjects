@@ -3,6 +3,7 @@ import moment from 'moment';
 import randomcolor from 'randomcolor';
 import React, { useContext, useEffect, useState } from 'react';
 
+import { getAuth } from 'firebase/auth';
 import { calendarItems } from '../constants';
 import { TodoContext } from '../context';
 import { db } from "../firebase";
@@ -20,8 +21,17 @@ function AddNewTodo() {
   const [time, setTime] = useState(new Date());
   const [todoProject, setTodoProject] = useState(selectedProject);
 
+  // User Authentication
+  const auth = getAuth();
+  const user = auth.currentUser;
+
   function handleSubmit(e) {
     e.preventDefault();
+
+    if (!user) {
+      console.error("User not authenticated. Please log in.");
+      return;
+    }
 
     if (text && !calendarItems.includes(todoProject)) {
       addDoc(collection(db, 'todos'), {
@@ -32,6 +42,7 @@ function AddNewTodo() {
         checked: false,
         color: randomcolor(),
         projectName: todoProject,
+        userId: user.uid,
       })
         .then(() => {
           setShowModal(false);

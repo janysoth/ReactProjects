@@ -3,6 +3,7 @@ import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import { ArrowClockwise, CheckCircleFill, Circle, Trash } from 'react-bootstrap-icons';
 
+import { getAuth } from "firebase/auth";
 import { TodoContext } from '../context';
 import { db } from '../firebase';
 
@@ -13,10 +14,17 @@ const Todo = ({ todo }) => {
   // Context
   const { selectedTodo, setSelectedTodo } = useContext(TodoContext);
 
-  const handleDelete = todo => {
-    deleteTodo(todo);
+  const auth = getAuth();
+  const user = auth.currentUser;
 
-    if (selectedTodo === todo) setSelectedTodo(undefined);
+  const handleDelete = (todo) => {
+    if (user && todo.userId === user.uid) {
+      deleteTodo(todo);
+
+      if (selectedTodo === todo) setSelectedTodo(undefined);
+    } else {
+      console.error("Unauthorized action. Cannot delete this todo.");
+    }
   };
 
   const deleteTodo = (todo) => {
@@ -29,75 +37,44 @@ const Todo = ({ todo }) => {
       });
   };
 
-  // Longer version of checkTodo 
-  // const checkTodo = async (todo) => {
-  //   // Early return if the `todo` object is invalid
-  //   if (!todo || !todo.id) {
-  //     console.error("Invalid todo object provided.");
-  //     return;
-  //   }
-
-  //   try {
-  //     // Reference to the specific todo document
-  //     const todoRef = doc(db, "todos", todo.id);
-
-  //     // Update the checked status of the todo
-  //     await updateDoc(todoRef, { checked: !todo.checked });
-  //     console.log(`Todo "${todo.id}" successfully updated.`);
-
-  //     // Additional functionality: Fetch todos for optional processing (similar to your reference code)
-  //     const todosQuery = query(
-  //       collection(db, "todos"),
-  //       where("checked", "==", !todo.checked)
-  //     );
-  //     const todosSnapshot = await getDocs(todosQuery);
-
-  //     if (!todosSnapshot.empty) {
-  //       console.log(`Found ${todosSnapshot.docs.length} todos with the new checked status.`);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating todo:", error);
-  //   }
-  // };
-
   const checkTodo = async (todo) => {
-    try {
-      // Create a reference to the document in Firebase
-      const todoRef = doc(db, "todos", todo.id);
-
-      // Update checked property of Todo
-      await updateDoc(todoRef, { checked: !todo.checked });
-
-      console.log("Todo has been successfully checked.");
-    } catch (error) {
-      console.error("Error in checking Todo: ", error);
+    if (user && todo.userId === user.uid) {
+      try {
+        const todoRef = doc(db, "todos", todo.id);
+        await updateDoc(todoRef, { checked: !todo.checked });
+        console.log("Todo has been successfully checked.");
+      } catch (error) {
+        console.error("Error in checking Todo: ", error);
+      }
+    } else {
+      console.error("Unauthorized action. Cannot check this todo.");
     }
   };
 
-
   const repeatNextDay = async (todo) => {
-    try {
-      // Calculate the next day's date
-      const nextDayDate = moment(todo.date, "MM/DD/YYYY").add(1, "days");
+    if (user && todo.userId === user.uid) {
+      try {
+        const nextDayDate = moment(todo.date, "MM/DD/YYYY").add(1, "days");
 
-      // Create the new todo object with updated fields
-      const repeatedTodo = {
-        ...todo,
-        checked: false,
-        date: nextDayDate.format("MM/DD/YYYY"),
-        day: nextDayDate.format("d"),
-      };
+        const repeatedTodo = {
+          ...todo,
+          checked: false,
+          date: nextDayDate.format("MM/DD/YYYY"),
+          day: nextDayDate.format("d"),
+          userId: user.uid, // Ensure repeated todo is also associated with the user
+        };
 
-      // Remove the ID field to avoid conflicts with Firestore's auto-generated IDs
-      delete repeatedTodo.id;
+        delete repeatedTodo.id;
 
-      // Add the repeated todo to the "todos" collection
-      const todosRef = collection(db, "todos");
-      await addDoc(todosRef, repeatedTodo);
+        const todosRef = collection(db, "todos");
+        await addDoc(todosRef, repeatedTodo);
 
-      console.log("Repeated todo added successfully:", repeatedTodo);
-    } catch (error) {
-      console.error("Error adding repeated todo:", error);
+        console.log("Repeated todo added successfully:", repeatedTodo);
+      } catch (error) {
+        console.error("Error adding repeated todo:", error);
+      }
+    } else {
+      console.error("Unauthorized action. Cannot repeat this todo.");
     }
   };
 
