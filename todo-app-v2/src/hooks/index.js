@@ -1,45 +1,47 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import moment from 'moment';
 import { useEffect, useState } from "react";
 import { useSpring, useTransition } from 'react-spring';
-
 import { db } from "../firebase";
 
-export function useTodos() {
+export function useTodos(userId) {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'todos'), (snapshot) => {
+    if (!userId) return;
+
+    const todosQuery = query(collection(db, 'todos'), where('userId', '==', userId));
+    const unsubscribe = onSnapshot(todosQuery, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
       setTodos(data);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [userId]);
 
   return todos;
 }
 
-export function useProjects() {
+export function useProjects(userId) {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'projects'), (snapshot) => {
-      const data = snapshot.docs.map(doc => {
-        const projectName = doc.data().name;
-        return {
-          id: doc.id,
-          name: projectName,
-        };
-      });
+    if (!userId) return;
+
+    const projectsQuery = query(collection(db, 'projects'), where('userId', '==', userId));
+    const unsubscribe = onSnapshot(projectsQuery, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       setProjects(data);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [userId]);
 
   return projects;
 }
@@ -49,23 +51,22 @@ export function useFilterTodos(todos, selectedProject) {
 
   useEffect(() => {
     let data;
-    const todayDateFormated = moment().format('MM/DD/YYYY');
+    const todayDateFormatted = moment().format('MM/DD/YYYY');
 
-    if (selectedProject === 'today')
-      data = todos.filter(todo => todo.date === todayDateFormated);
-    else if (selectedProject === 'next 7 days') {
+    if (selectedProject === 'today') {
+      data = todos.filter(todo => todo.date === todayDateFormatted);
+    } else if (selectedProject === 'next 7 days') {
       data = todos.filter(todo => {
         const todoDate = moment(todo.date, 'MM/DD/YYYY');
-        const todayDate = moment(todayDateFormated, 'MM/DD/YYYY');
-
+        const todayDate = moment(todayDateFormatted, 'MM/DD/YYYY');
         const diffDays = todoDate.diff(todayDate, 'days');
-
         return diffDays >= 0 && diffDays < 7;
       });
-    } else if (selectedProject === 'all days')
+    } else if (selectedProject === 'all days') {
       data = todos;
-    else
+    } else {
       data = todos.filter(todo => todo.projectName === selectedProject);
+    }
 
     setFilteredTodos(data);
   }, [todos, selectedProject]);
@@ -77,12 +78,10 @@ export function useProjectsWithStats(projects, todos) {
   const [projectsWithStats, setProjectsWithStats] = useState([]);
 
   useEffect(() => {
-    const data = projects.map((project) => {
-      return {
-        numOfTodos: todos.filter(todo => todo.projectName === project.name && !todo.checked).length,
-        ...project
-      };
-    });
+    const data = projects.map((project) => ({
+      numOfTodos: todos.filter(todo => todo.projectName === project.name && !todo.checked).length,
+      ...project,
+    }));
 
     setProjectsWithStats(data);
   }, [projects, todos]);
