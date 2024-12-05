@@ -1,48 +1,65 @@
+import { onAuthStateChanged } from 'firebase/auth';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import { Plus } from 'react-bootstrap-icons';
-import { db } from "../firebase";
+
+import { auth, db } from '../firebase'; // Import auth for user identification
 import Modal from './Modal';
 import ProjectForm from './ProjectForm';
 
 function AddNewProject() {
   const [showModal, setShowModal] = useState(false);
   const [projectName, setProjectName] = useState('');
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  // Track the currently logged-in user
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user)
+        setCurrentUserId(user.uid);
+      else
+        setCurrentUserId(null);
+    });
+  });
 
   function capitalizeFirstLetter(name) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    if (projectName) {
+    if (!projectName) return;
+
+    try {
       const formattedName = capitalizeFirstLetter(projectName);
       const projectsRef = collection(db, 'projects');
 
-      // Create a query to check if the project already exists
-      const projectQuery = query(projectsRef, where('name', '==', formattedName));
+      // Query to check if the project already exists for this user
+      const projectQuery = query(
+        projectsRef,
+        where('name', '==', formattedName),
+        where('userId', '==', currentUserId),
+      );
 
-      getDocs(projectQuery)
-        .then(querySnapshot => {
-          if (querySnapshot.empty) {
-            // If no project with the same name exists, add a new project
-            addDoc(projectsRef, { name: formattedName })
-              .then(() => {
-                setShowModal(false);
-                setProjectName('');
-              })
-              .catch(error => {
-                console.error("Error adding project: ", error);
-              });
-          } else {
-            alert('Project already exists!');
-          }
-        })
-        .catch(error => {
-          console.error("Error checking project existence: ", error);
-        });
+      const querySnapshot = await getDocs(projectQuery);
+
+      if (!querySnapshot.empty) {
+        alert('Project already exists!');
+        return;
+      }
+
+      // Add the new project associated with the current user
+      await addDoc(projectsRef, {
+        name: formattedName,
+        userId: currentUserId,
+        createdAt: new Date()
+      });
+
+      setShowModal(false);
+      setProjectName("");
+    } catch (error) {
+      console.error("Error adding project: ", error);
     }
   }
 
