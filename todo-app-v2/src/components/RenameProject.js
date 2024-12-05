@@ -12,19 +12,24 @@ const RenameProject = ({ project, setShowModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (newProjectName === project.name) {
+    if (newProjectName.trim().toLowerCase() === project.name.trim().toLowerCase()) {
       setShowModal(false);
       return; // Skip if the name hasn't changed
     }
 
     try {
       const projectsRef = collection(db, 'projects');
-      const projectExistsQuery = query(projectsRef, where('name', '==', newProjectName));
-      const projectExistsSnapshot = await getDocs(projectExistsQuery);
 
-      if (!projectExistsSnapshot.empty) {
+      // Query to check if a project with the same name (case-insensitive) already exists
+      const projectsSnapshot = await getDocs(projectsRef);
+      const projectExists = projectsSnapshot.docs.some(
+        (doc) =>
+          doc.data().name.trim().toLowerCase() === newProjectName.trim().toLowerCase()
+      );
+
+      if (projectExists) {
         alert('A project with this name already exists!');
-        return setShowModal(true);
+        return;
       }
 
       // Update the project name
@@ -44,6 +49,7 @@ const RenameProject = ({ project, setShowModal }) => {
       );
       await Promise.all(updateTodoPromises);
 
+      // Update the selected project if necessary
       if (selectedProject === project.name) {
         setSelectedProject(newProjectName);
       }
