@@ -615,41 +615,148 @@
 }
 
 .LoginPage {
-  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  display: grid;
-  place-items: center;
+  background: linear-gradient(120deg, #f3f4f6, #ffffff);
+  font-family: 'Roboto', sans-serif;
 }
 
-.LoginPage .container {
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+}
+
+.branding {
+  margin-bottom: 2rem;
+}
+
+.branding h1 {
+  font-size: 2rem;
+  color: #003d73;
+  font-weight: bold;
+}
+
+.branding p {
+  font-size: 1rem;
+  color: #5a5a5a;
+}
+
+.login-form h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.login-form p {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 1.5rem;
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #005bb5;
+}
+
+.login-button:disabled {
+  background-color: #b3d4fc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* Divider between login options */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  color: #bebebe;
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #bebebe;
+}
+
+/* Email login form */
+.email-login-form {
   display: flex;
   flex-direction: column;
-  text-align: center;
-  gap: 1.5rem;
-  /* equivalent to space-y-6 */
+  gap: 1rem;
 }
 
-.LoginPage .container h1 {
-  font-size: 2.25rem;
-  /* equivalent to text-4xl */
-  font-weight: bold;
-}
-
-.LoginPage .container .button {
-  /* equivalent to bg-green-500 */
-  background-color: #22c55e;
-  /* equivalent to p-4 */
-  padding: 1rem;
-  /* equivalent to rounded-lg */
+.email-login-form input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #bebebe;
   border-radius: 0.5rem;
-  /* equivalent to text-sm */
-  font-size: 0.875rem;
-  font-weight: bold;
-  color: white;
-  transition: transform 0.2s ease-in-out;
+  font-size: 1rem;
 }
 
-.LoginPage .container .button:hover {
-  /* equivalent to hover:scale-110 */
-  transform: scale(1.1);
+.email-login-form input:focus {
+  outline: none;
+  border-color: #0080ff;
+  box-shadow: 0 0 3px #0080ff;
+}
+
+.email-login-form button {
+  background-color: #0080ff;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.email-login-form button:hover {
+  background-color: #005bb5;
+}
+
+/* Sign-up link */
+.signup-text {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.signup-text a {
+  color: #0080ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-text a:hover {
+  text-decoration: underline;
 }

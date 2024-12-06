@@ -1,5 +1,6 @@
 import { signInWithPopup } from 'firebase/auth';
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { auth, provider } from "../firebase";
 
@@ -23,14 +24,34 @@ function LoginPage() {
   };
 
   return (
-    <div className='LoginPage'>
-      <div className='container'>
-        <h1>My Todo App</h1>
-        <button onClick={signInUser} className='button'>
-          Sign in with Google
-        </button>
-        {isLoading && <p>Loading...</p>}
-        {error && <p>{error}</p>}
+    <div className="LoginPage">
+      <div className="login-container">
+        <div className="branding">
+          <h1>Welcome to My Todo App</h1>
+          <div className='divider' />
+          <p>Your tasks, organized effortlessly.</p>
+        </div>
+
+        <form class="email-login-form" onsubmit="handleEmailLogin(event)">
+          <input type="email" name="email" placeholder="Email Address" required />
+          <input type="password" name="password" placeholder="Password" required />
+          <button type="submit">Log in</button>
+        </form>
+
+        <div class="divider">
+          <span>OR</span>
+        </div>
+        <div className="login-form">
+          <button onClick={signInUser} className="login-button">
+            {isLoading ? "Signing In..." : "Sign in with Google"}
+          </button>
+          {error && <p className="error-message">{error}</p>}
+        </div>
+
+        <p class="signup-text">
+          Don't have an account?
+          <Link to="/signup" className="link">Sign Up</Link>
+        </p>
       </div>
     </div>
   );
