@@ -1,14 +1,14 @@
-import { signInWithPopup } from 'firebase/auth';
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import React, { useState } from 'react';
 import { auth, provider } from "../firebase";
 
-function LoginPage() {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState("");
+function LoginPage({ onSwitchToSignUp }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const signInUser = async (e) => {
+  const signInWithGoogle = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
@@ -23,34 +23,62 @@ function LoginPage() {
     }
   };
 
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    try {
+      // Sign in with email and password
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="LoginPage">
       <div className="login-container">
         <div className="branding">
           <h1>Welcome to My Todo App</h1>
-          <div className='divider' />
+          <div className="divider" />
           <p>Your tasks, organized effortlessly.</p>
         </div>
 
-        <form class="email-login-form" onsubmit="handleEmailLogin(event)">
-          <input type="email" name="email" placeholder="Email Address" required />
-          <input type="password" name="password" placeholder="Password" required />
-          <button type="submit">Log in</button>
+        <form className="email-login-form" onSubmit={handleEmailLogin}>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">
+            {isLoading ? "Signing In..." : "Log in"}
+          </button>
         </form>
 
-        <div class="divider">
+        <div className="divider">
           <span>OR</span>
         </div>
         <div className="login-form">
-          <button onClick={signInUser} className="login-button">
+          <button onClick={signInWithGoogle} className="login-button">
             {isLoading ? "Signing In..." : "Sign in with Google"}
           </button>
           {error && <p className="error-message">{error}</p>}
         </div>
 
-        <p class="signup-text">
-          Don't have an account?
-          <Link to="/signup" className="link">Sign Up</Link>
+        <p className="signup-text">
+          Don't have an account?{" "}
+          <button onClick={onSwitchToSignUp} className="link-button">
+            Sign Up
+          </button>
         </p>
       </div>
     </div>

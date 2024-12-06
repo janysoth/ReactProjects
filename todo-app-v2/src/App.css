@@ -634,7 +634,7 @@
 }
 
 .branding {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .branding h1 {
@@ -751,12 +751,105 @@
   color: #333;
 }
 
-.signup-text a {
+.signup-text button {
   color: #0080ff;
-  text-decoration: none;
-  font-weight: bold;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
-.signup-text a:hover {
+.signup-text button:hover {
   text-decoration: underline;
+  color: #005bb5;
+}
+
+/* Scoped styles for SignUpPage */
+.SignUpPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(120deg, #f3f4f6, #ffffff);
+  font-family: 'Roboto', sans-serif;
+}
+
+.signup-container {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+}
+
+.SignUpPage h1 {
+  font-size: 2rem;
+  color: #003d73;
+  font-weight: bold;
+  padding-bottom: 1rem;
+}
+
+.SignUpPage form {
+  display: flex;
+  flex-direction: column;
+}
+
+.SignUpPage input {
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.SignUpPage input:focus {
+  border-color: #4CAF50;
+  outline: none;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+.SignUpPage .button {
+  background-color: #0080ff;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.SignUpPage .button:hover {
+  background-color: #005bb5;
+}
+
+.SignUpPage .error {
+  color: #f44336;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* Log-in link */
+.login-text {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.login-text button {
+  color: #0080ff;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.login-text button:hover {
+  text-decoration: underline;
+  color: #005bb5;
 }
