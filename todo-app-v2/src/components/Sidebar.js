@@ -20,7 +20,7 @@ const Sidebar = ({ children }) => {
       setSelectedTodo(undefined);
   };
   return (
-    <div className="Header" ref={sidebarRef}>
+    <div className="Sidebar" ref={sidebarRef}>
       {children}
     </div>
   );

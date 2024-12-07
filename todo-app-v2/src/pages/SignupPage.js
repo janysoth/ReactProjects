@@ -1,7 +1,8 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
+
+import MainLogo from '../images/USA&Khmer.png';
 
 const SignUp = ({ onSwitchToLogin }) => {
   const [email, setEmail] = useState("");
@@ -33,7 +34,9 @@ const SignUp = ({ onSwitchToLogin }) => {
       <div className="signup-container">
         <div className="branding">
           <h1>Welcome to My Todo App</h1>
-          <div className='divider' />
+          <div className='divider'>
+            <img src={MainLogo} alt="flags" className="main-logo" />
+          </div>
           <p>Your tasks, organized effortlessly.</p>
         </div>
 
