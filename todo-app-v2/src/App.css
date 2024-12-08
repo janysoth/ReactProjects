@@ -709,6 +709,7 @@
 }
 
 .google-login-button {
+  height: 5vh;
   width: 100%;
   display: flex;
   align-items: center;
@@ -776,6 +777,8 @@
 }
 
 .email-login-form button {
+  height: 5vh;
+  width: 100%;
   background-color: #0080ff;
   color: white;
   font-size: 1rem;
@@ -852,6 +855,8 @@
 }
 
 .SignUpPage .button {
+  height: 5vh;
+  width: 100%;
   background-color: #0080ff;
   color: white;
   font-size: 1rem;
