@@ -2,7 +2,8 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../firebase";
 
-import MainLogo from '../images/USA&Khmer.png';
+import InputField from "../components/InputField"; // Adjust path based on your folder structure
+import MainLogo from "../images/USA&Khmer.png";
 
 const SignUp = ({ onSwitchToLogin }) => {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ const SignUp = ({ onSwitchToLogin }) => {
       <div className="signup-container">
         <div className="branding">
           <h1>Welcome to My Todo App</h1>
-          <div className='divider'>
+          <div className="divider">
             <img src={MainLogo} alt="flags" className="main-logo" />
           </div>
           <p>Your tasks, organized effortlessly.</p>
@@ -44,40 +45,35 @@ const SignUp = ({ onSwitchToLogin }) => {
 
         {error && <p className="error">{error}</p>}
 
-        <form onSubmit={handleSignUp}>
-          <input
+        <form className="signup-form" onSubmit={handleSignUp}>
+          <InputField
             type="text"
-            placeholder="Display Name"
+            label="Display Name"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             required
           />
-          <input
+          <InputField
             type="email"
-            placeholder="Email Address"
+            label="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
+          <InputField
             type="password"
-            placeholder="Password"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" className="button">Sign Up</button>
-        </form>
-        {/* 
-        <p>
-          Already have an account?{" "}
-          <button onClick={onSwitchToLogin} className="link-button">
-            Log In
+          <button type="submit" className="button">
+            Sign Up
           </button>
-        </p> */}
+        </form>
 
-        <p class="login-text">
-          Already have an account? {" "}
+        <p className="login-text">
+          Already have an account?{" "}
           <button onClick={onSwitchToLogin} className="link-button">
             Log In
           </button>

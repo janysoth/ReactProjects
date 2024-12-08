@@ -708,38 +708,34 @@
   color: #5a5a5a;
 }
 
-.login-form h2 {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.login-form p {
-  font-size: 1rem;
-  color: #777;
-  margin-bottom: 1.5rem;
-}
-
-.login-button {
+.google-login-button {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.75rem;
   background-color: #0070f3;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
+.google-login-button:hover {
   background-color: #005bb5;
 }
 
-.login-button:disabled {
+.google-login-button:disabled {
   background-color: #b3d4fc;
   cursor: not-allowed;
+}
+
+.google-icon {
+  font-size: 1rem;
+  margin-right: 10px;
 }
 
 .error-message {
@@ -771,15 +767,6 @@
 .email-login-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-.email-login-form input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #bebebe;
-  border-radius: 0.5rem;
-  font-size: 1rem;
 }
 
 .email-login-form input:focus {
@@ -846,6 +833,12 @@
   text-align: center;
 }
 
+.signup-form input:focus {
+  outline: none;
+  border-color: #0080ff;
+  box-shadow: 0 0 3px #0080ff;
+}
+
 .SignUpPage h1 {
   font-size: 2rem;
   color: #003d73;
@@ -856,20 +849,6 @@
 .SignUpPage form {
   display: flex;
   flex-direction: column;
-}
-
-.SignUpPage input {
-  margin-bottom: 15px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.SignUpPage input:focus {
-  border-color: #4CAF50;
-  outline: none;
-  box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
 }
 
 .SignUpPage .button {
@@ -914,4 +893,45 @@
   text-decoration: underline;
   color: #005bb5;
   cursor: pointer;
+}
+
+
+.field {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.field input {
+  color: #565656;
+  font-size: 16px;
+  background: none;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 1;
+  width: 100%;
+  position: relative;
+}
+
+.field label {
+  position: absolute;
+  top: 50%;
+  left: 0.7rem;
+  transform: translateY(-50%);
+  color: #6f6d70;
+  pointer-events: none;
+  z-index: 2;
+  transition: top 250ms, transform 250ms, font-size 250ms, background-color 250ms;
+}
+
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label {
+  top: -0.5rem;
+  transform: translateY(0);
+  font-size: 0.9rem;
+  background-color: white;
+}
+
+.field ::placeholder {
+  color: transparent;
 }

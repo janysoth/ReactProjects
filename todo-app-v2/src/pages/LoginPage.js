@@ -2,6 +2,8 @@ import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import React, { useState } from 'react';
 import { auth, provider } from "../firebase";
 
+import InputField from '../components/InputField';
+import GoogleLogo from '../images/google.png';
 import MainLogo from '../images/USA&Khmer.png';
 
 function LoginPage({ onSwitchToSignUp }) {
@@ -49,21 +51,17 @@ function LoginPage({ onSwitchToSignUp }) {
         <h1>Log In</h1>
 
         <form className="email-login-form" onSubmit={handleEmailLogin}>
-          <input
+          <InputField
             type="email"
-            name="email"
-            placeholder="Email Address"
+            label="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
-          <input
+          <InputField
             type="password"
-            name="password"
-            placeholder="Password"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
           <button type="submit">
             {isLoading ? "Signing In..." : "Log in"}
@@ -73,8 +71,10 @@ function LoginPage({ onSwitchToSignUp }) {
         <div className="divider">
           <span>OR</span>
         </div>
-        <div className="login-form">
-          <button onClick={signInWithGoogle} className="login-button">
+        <div>
+          <button onClick={signInWithGoogle} className="google-login-button">
+            {/* <FaGoogle className="google-icon" /> */}
+            <img src={GoogleLogo} alt="Google logo" className="google-icon" />
             {isLoading ? "Signing In..." : "Sign in with Google"}
           </button>
           {error && <p className="error-message">{error}</p>}
@@ -92,3 +92,4 @@ function LoginPage({ onSwitchToSignUp }) {
 }
 
 export default LoginPage;
+
