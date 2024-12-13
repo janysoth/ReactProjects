@@ -9,23 +9,22 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(null);
-  const [emailError, setEmailError] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!validateEmail(email)) {
-      setEmailError("Please enter a valid email address.");
-    }
-
-    if (!password) {
-      setPasswordError("Please enter a password.");
+      setError("Please enter a valid email address.");
       return;
     }
 
-    setEmailError("");
-    setPasswordError("");
+    if (!password) {
+      setError("Please enter a password.");
+      return;
+    }
+
+    setError("");
 
     // Login API Call
   };
@@ -48,19 +47,14 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {emailError &&
-              <p className="text-red-500 text-xs pb-3">
-                {emailError}
-              </p>
-            }
 
             <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {passwordError &&
+            {error &&
               <p className="text-red-500 text-xs pb-3">
-                {passwordError}
+                {error}
               </p>
             }
 
