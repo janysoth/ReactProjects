@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import PasswordInput from "../components/PasswordInput";
+import axiosInstance from "../utils/axiosInstance";
 import { validateEmail } from "../utils/helper";
 
 const SignUp = () => {
+
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -33,6 +36,7 @@ const SignUp = () => {
     setError("");
 
     // SignUp API Call
+
   };
 
   return (

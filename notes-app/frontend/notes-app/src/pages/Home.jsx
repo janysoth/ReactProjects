@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import NoteCard from "../components/NoteCard";
+import axiosInstance from "../utils/axiosInstance";
 import AddEditNotes from "./AddEditNotes";
 
 const Home = () => {
@@ -14,9 +16,37 @@ const Home = () => {
     data: null,
   });
 
+  const [userInfo, setUserInfo] = useState(null);
+
+  const navigate = useNavigate();
+
+  // Get User Info
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user)
+        setUserInfo(response.data.user);
+      else
+        console.error("Unexpected response structure:", response.data);
+
+    } catch (error) {
+      if (error.response?.status === 401) {
+        localStorage.clear();
+        navigate("/login");
+      } else {
+        console.error("Failed to fetch user info:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+    return () => { };
+  }, []);
+
   return (
     <>
-      <NavBar />
+      <NavBar userInfo={userInfo} />
 
       <div className="container mx-auto">
         <div className="grid grid-cols-3 gap-4 mt-8">

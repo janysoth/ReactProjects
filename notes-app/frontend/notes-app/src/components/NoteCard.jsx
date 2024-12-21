@@ -58,7 +58,7 @@ NoteCard.propTypes = {
   title: PropTypes.string,
   date: PropTypes.string,
   content: PropTypes.string,
-  tags: PropTypes.array,
+  tags: PropTypes.arrayOf(PropTypes.string),
   isPinned: PropTypes.bool,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
