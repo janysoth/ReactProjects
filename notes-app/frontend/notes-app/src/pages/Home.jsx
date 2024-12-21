@@ -39,6 +39,9 @@ const Home = () => {
     }
   };
 
+  // Get all notes
+
+
   useEffect(() => {
     getUserInfo();
     return () => { };
@@ -54,7 +57,7 @@ const Home = () => {
             title="Meeting on April 7th "
             date="Apr 3rd 2024"
             content="Meeting on April 7th"
-            tags="Meetings"
+            tags={["Meetings"]}
             isPinned={true}
             onEdit={() => { }}
             onDelete={() => { }}
