@@ -3,8 +3,9 @@ import { useState } from "react";
 import { MdClose } from "react-icons/md";
 
 import TagInput from "../components/TagInput";
+import axiosInstance from "../utils/axiosInstance";
 
-const AddEditNotes = ({ noteData, type, onClose }) => {
+const AddEditNotes = ({ noteData, type, getAllNotes, onClose }) => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -13,7 +14,23 @@ const AddEditNotes = ({ noteData, type, onClose }) => {
   const [error, setError] = useState(null);
 
   // Add Note
-  const addNewNote = async () => { };
+  const addNewNote = async () => {
+    try {
+      const response = await axiosInstance.post("/add-note", {
+        title,
+        content,
+        tags,
+      });
+
+      if (response.data && response.data.note) {
+        getAllNotes();
+        onClose();
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message)
+        setError(error.response.data.message);
+    }
+  };
 
   // Edit Note
   const editNote = async () => { };
@@ -91,6 +108,7 @@ AddEditNotes.propTypes = {
   onClose: PropTypes.func,
   noteData: PropTypes.array,
   type: PropTypes.string,
+  getAllNotes: PropTypes.func,
 };
 
 export default AddEditNotes;

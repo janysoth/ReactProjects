@@ -150,7 +150,7 @@ app.post("/add-note", authenticateToken, async (req, res) => {
 
     await note.save();
 
-    return res.status(400).json({
+    return res.status(201).json({
       error: false,
       note,
       message: "Note Added Successfully",
@@ -195,7 +195,7 @@ app.put("/edit-note/:noteId", authenticateToken, async (req, res) => {
 
     await note.save();
 
-    return res.status(400).json({
+    return res.status(200).json({
       error: false,
       note,
       message: "Note updated successfully",
@@ -289,7 +289,7 @@ app.put("/update-note-pinned/:noteId", authenticateToken, async (req, res) => {
 
     await note.save();
 
-    return res.status(400).json({
+    return res.status(200).json({
       error: false,
       note,
       message: "Note updated successfully",

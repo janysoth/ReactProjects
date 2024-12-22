@@ -8,8 +8,10 @@ import NoteCard from "../components/NoteCard";
 import axiosInstance from "../utils/axiosInstance";
 import AddEditNotes from "./AddEditNotes";
 
-const Home = () => {
+// Set the app element for accesssibility
+Modal.setAppElement("#root");
 
+const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
     isShown: false,
     type: "add",
@@ -25,6 +27,7 @@ const Home = () => {
   const getUserInfo = async () => {
     try {
       const response = await axiosInstance.get("/get-user");
+
       if (response.data && response.data.user)
         setUserInfo(response.data.user);
       else
@@ -107,6 +110,7 @@ const Home = () => {
           onClose={() => {
             setOpenAddEditModal({ isShown: false, type: "add", data: null });
           }}
+          getAllNotes={getAllNotes}
         />
       </Modal>
     </>
