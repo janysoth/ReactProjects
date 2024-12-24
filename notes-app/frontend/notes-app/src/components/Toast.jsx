@@ -8,7 +8,7 @@ const Toast = ({ isShown, message, onClose, type }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose(); // Close toast after 3 seconds
-    }, 3000);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, [onClose]);
