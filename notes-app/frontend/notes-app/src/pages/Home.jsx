@@ -3,6 +3,8 @@ import { MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 
 import { useNavigate } from "react-router-dom";
+import AddNotesImg from '../assets/images/add-notes.svg';
+import EmptyCard from "../components/EmptyCard";
 import NavBar from "../components/NavBar";
 import NoteCard from "../components/NoteCard";
 import Toast from "../components/Toast";
@@ -108,22 +110,28 @@ const Home = () => {
       <NavBar userInfo={userInfo} />
 
       <div className="container mx-auto">
-        <div className="grid grid-cols-3 gap-4 mt-8">
-          {allNotes.map((note) => (
-            <NoteCard
-              key={note._id}
-              title={note.title}
-              date={note.createdOn}
-              content={note.content}
-              tags={note.tags}
-              isPinned={note.isPinned}
-              onEdit={() => handleEdit(note)}
-              onDelete={() => deleteNote(note)}
-              onPinNote={() => { }}
-            />
-          ))}
-
-        </div>
+        {allNotes.length > 0 ? (
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            {allNotes.map((note) => (
+              <NoteCard
+                key={note._id}
+                title={note.title}
+                date={note.createdOn}
+                content={note.content}
+                tags={note.tags}
+                isPinned={note.isPinned}
+                onEdit={() => handleEdit(note)}
+                onDelete={() => deleteNote(note)}
+                onPinNote={() => { }}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyCard
+            imgSrc={AddNotesImg}
+            message={`Start creating your first note! Click the 'Add' button to jot down thoughts, ideas, and reminders. Let's get started!`}
+          />
+        )}
       </div>
 
       <button

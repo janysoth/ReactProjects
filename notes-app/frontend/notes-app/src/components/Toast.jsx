@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
@@ -7,8 +7,8 @@ const Toast = ({ isShown, message, onClose, type }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      onClose(); // Close toast after 3 seconds
-    }, 1500);
+      onClose();
+    }, 1500); // Close toast after 1.5 seconds
 
     return () => clearTimeout(timer);
   }, [onClose]);
@@ -40,6 +40,13 @@ const Toast = ({ isShown, message, onClose, type }) => {
       </div>
     </div>
   );
+};
+
+Toast.propTypes = {
+  isShown: PropTypes.bool,
+  message: PropTypes.string,
+  onClose: PropTypes.func,
+  type: PropTypes.string,
 };
 
 export default Toast;
