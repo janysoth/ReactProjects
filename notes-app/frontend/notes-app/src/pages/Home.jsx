@@ -5,10 +5,11 @@ import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import NoteCard from "../components/NoteCard";
+import Toast from "../components/Toast";
 import axiosInstance from "../utils/axiosInstance";
 import AddEditNotes from "./AddEditNotes";
 
-// Set the app element for accesssibility
+// Set the app element for accessibility
 Modal.setAppElement("#root");
 
 const Home = () => {
@@ -18,6 +19,12 @@ const Home = () => {
     data: null,
   });
 
+  const [showToastMsg, setShowToastMsg] = useState({
+    isShown: false,
+    message: "",
+    type: "add",
+  });
+
   const [allNotes, setAllNotes] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
 
@@ -25,6 +32,21 @@ const Home = () => {
 
   const handleEdit = (noteDetails) => {
     setOpenAddEditModal({ isShown: true, data: noteDetails, type: "edit" });
+  };
+
+  const handleShowToastMsg = (message, type) => {
+    setShowToastMsg({
+      isShown: true,
+      message,
+      type
+    });
+  };
+
+  const handleCloseToast = () => {
+    setShowToastMsg({
+      isShown: false,
+      message: "",
+    });
   };
 
   // Get User Info
@@ -115,8 +137,16 @@ const Home = () => {
             setOpenAddEditModal({ isShown: false, type: "add", data: null });
           }}
           getAllNotes={getAllNotes}
+          handleShowToastMsg={handleShowToastMsg}
         />
       </Modal>
+
+      <Toast
+        isShown={showToastMsg.isShown}
+        message={showToastMsg.message}
+        type={showToastMsg.type}
+        onClose={handleCloseToast}
+      />
     </>
   );
 };
