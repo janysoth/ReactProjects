@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileInfo from "./ProfileInfo";
 import SearchBar from "./SearchBar";
 
-const NavBar = ({ userInfo }) => {
+const NavBar = ({ userInfo, onSearchNote, handleClearSearch }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
@@ -16,11 +16,13 @@ const NavBar = ({ userInfo }) => {
   };
 
   const handleSearch = () => {
-
+    if (searchQuery)
+      onSearchNote(searchQuery);
   };
 
   const onClearSearch = () => {
     setSearchQuery("");
+    handleClearSearch();
   };
 
   return (
@@ -46,7 +48,9 @@ const NavBar = ({ userInfo }) => {
 
 // Define PropTypes
 NavBar.propTypes = {
-  userInfo: PropTypes.object
+  userInfo: PropTypes.object,
+  onSearchNote: PropTypes.func,
+  handleClearSearch: PropTypes.func,
 };
 
 export default NavBar;

@@ -4,6 +4,7 @@ import Modal from "react-modal";
 
 import { useNavigate } from "react-router-dom";
 import AddNotesImg from '../assets/images/add-notes.svg';
+import NoNotesImg from '../assets/images/no-notes.svg';
 import EmptyCard from "../components/EmptyCard";
 import NavBar from "../components/NavBar";
 import NoteCard from "../components/NoteCard";
@@ -29,6 +30,8 @@ const Home = () => {
 
   const [allNotes, setAllNotes] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
+
+  const [isSearch, setIsSearch] = useState(false);
 
   const navigate = useNavigate();
 
@@ -99,6 +102,27 @@ const Home = () => {
     }
   };
 
+  // Search for a Note
+  const onSearchNote = async (query) => {
+    try {
+      const response = await axiosInstance.get("/search-notes", {
+        params: { query },
+      });
+
+      if (response.data && response.data.notes) {
+        setIsSearch(true);
+        setAllNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.error("Error in Searching Note: ", error);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setIsSearch(false);
+    getAllNotes();
+  };
+
   useEffect(() => {
     getAllNotes();
     getUserInfo();
@@ -107,7 +131,11 @@ const Home = () => {
 
   return (
     <>
-      <NavBar userInfo={userInfo} />
+      <NavBar
+        userInfo={userInfo}
+        onSearchNote={onSearchNote}
+        handleClearSearch={handleClearSearch}
+      />
 
       <div className="container mx-auto">
         {allNotes.length > 0 ? (
@@ -128,8 +156,8 @@ const Home = () => {
           </div>
         ) : (
           <EmptyCard
-            imgSrc={AddNotesImg}
-            message={`Start creating your first note! Click the 'Add' button to jot down thoughts, ideas, and reminders. Let's get started!`}
+            imgSrc={isSearch ? NoNotesImg : AddNotesImg}
+            message={isSearch ? `Oops! No Notes found matching your search.` : `Start creating your first note! Click the 'Add' button to jot down thoughts, ideas, and reminders. Let's get started!`}
           />
         )}
       </div>
