@@ -97,7 +97,7 @@ const SignUp = () => {
             }
 
             <button type="submit" className="btn-primary">
-              Login
+              Sign Up
             </button>
 
             <p className="text-sm text-center mt-4">

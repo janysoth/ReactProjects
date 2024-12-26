@@ -10,6 +10,7 @@ const Note = require("./models/note.model");
 
 const express = require("express");
 const cors = require("cors");
+const admin = require("./firebase");
 const app = express();
 
 const jwt = require("jsonwebtoken");
@@ -101,6 +102,60 @@ app.post("/login", async (req, res) => {
       error: true,
       message: "Invalid Credentials"
     });
+  }
+});
+
+// Verify Firebase ID Token
+const authenticateFirebaseToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const idToken = authHeader.split("Bearer ")[1];
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+};
+
+// Google Login Endpoint
+app.post("/google-login", async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const { uid, email, name } = decodedToken;
+
+    // Check if user exists in database, or create a new one
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        fullName: name,
+        email: email,
+        firebaseUid: uid,
+      });
+      await user.save();
+    }
+
+    // Generate your app's custom JWT if needed
+    const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "36000m",
+    });
+
+    return res.json({
+      error: false,
+      user,
+      accessToken,
+      message: "Google login successful",
+    });
+  } catch (error) {
+    console.error("Error verifying Firebase ID token:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
