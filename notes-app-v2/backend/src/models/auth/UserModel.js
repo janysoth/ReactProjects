@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema(
 
     email: {
       type: String,
-      required: [true, "Please an email"],
+      required: [true, "Please provide your email"],
       unique: true,
       trim: true,
       match: [
@@ -18,6 +18,7 @@ const UserSchema = new mongoose.Schema(
         "Please add a valid email",
       ],
     },
+
     password: {
       type: String,
       required: [true, "Please add password!"],
@@ -44,6 +45,7 @@ const UserSchema = new mongoose.Schema(
       default: false,
     },
   },
+
   { timestamps: true, minimize: true }
 );
 
