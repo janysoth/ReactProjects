@@ -127,3 +127,15 @@ export const logoutUser = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "User logged out successfully." });
 });
+
+// Get user details
+export const getUser = asyncHandler(async (req, res) => {
+  // Get user details from the token --> exclude password
+  const user = await User.findById(req.user._id).select("-password");
+
+  if (user)
+    res.status(200).json(user);
+  else
+    // 404 Not Found
+    res.status(404).json({ message: "User not found" });
+});
