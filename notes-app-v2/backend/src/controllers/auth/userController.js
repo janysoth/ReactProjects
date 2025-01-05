@@ -139,3 +139,36 @@ export const getUser = asyncHandler(async (req, res) => {
     // 404 Not Found
     res.status(404).json({ message: "User not found" });
 });
+
+// Update User's details
+export const updateUser = asyncHandler(async (req, res) => {
+  // Retrieve user details from the token (protect middleware)
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    // Return 404 if user is not found
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Extract properties to update from the request body
+  const { name, bio, photo } = req.body;
+
+  // Update only the provided fields
+  user.name = name || user.name;
+  user.bio = bio || user.bio;
+  user.photo = photo || user.photo;
+
+  // Save the updated user document
+  const updatedUser = await user.save();
+
+  // Return updated user details
+  res.status(200).json({
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    email: updatedUser.email,
+    role: updatedUser.role,
+    photo: updatedUser.photo,
+    bio: updatedUser.bio,
+    isVerified: updatedUser.isVerified,
+  });
+});
