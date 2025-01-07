@@ -35,3 +35,14 @@ export const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
+// Admin middleware
+export const adminMiddleware = asyncHandler(async (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    // If User is admin, move to the next middleware/controller
+    next();
+    return;
+  }
+
+  // If User is not admin, send 403 Forbidden --> terminate the request
+  res.status(403).json({ message: "Not Authorized to perform this function." });
+});
