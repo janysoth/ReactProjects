@@ -8,7 +8,11 @@ import {
   registerUser,
   updateUser
 } from "../controllers/auth/userController.js";
-import { adminMiddleware, protect } from "../middleware/authMiddleware.js";
+import {
+  adminMiddleware,
+  creatorMiddleware,
+  protect
+} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -24,7 +28,7 @@ router.patch("/user", protect, updateUser);
 router.delete("/admin/users/:id", protect, adminMiddleware, deleteUser);
 
 // Get all Users
-router.get("/admin/users", protect, adminMiddleware, getAllUsers);
+router.get("/admin/users", protect, creatorMiddleware, getAllUsers);
 
 
 
