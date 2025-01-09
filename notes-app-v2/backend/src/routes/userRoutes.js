@@ -1,6 +1,6 @@
 import express from "express";
 
-import { deleteUser } from "../controllers/auth/adminController.js";
+import { deleteUser, getAllUsers } from "../controllers/auth/adminController.js";
 import {
   getUser,
   loginUser,
@@ -18,7 +18,14 @@ router.get("/logout", logoutUser);
 router.get("/user", protect, getUser);
 router.patch("/user", protect, updateUser);
 
-// admin route
+/* Admin Routes */
+
+// Delete User
 router.delete("/admin/users/:id", protect, adminMiddleware, deleteUser);
+
+// Get all Users
+router.get("/admin/users", protect, adminMiddleware, getAllUsers);
+
+
 
 export default router;
