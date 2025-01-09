@@ -1,8 +1,11 @@
 import bcrypt from "bcrypt";
 import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
 
 import generateToken from "../../helpers/generateToken.js";
 import User from "../../models/auth/UserModel.js";
+
+const jwtSecret = process.env.JWT_SECRET;
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -171,4 +174,21 @@ export const updateUser = asyncHandler(async (req, res) => {
     bio: updatedUser.bio,
     isVerified: updatedUser.isVerified,
   });
+});
+
+// Login status
+export const userLoginStatus = asyncHandler(async (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token)
+    // 401 Unauthorized
+    return res.status(401).json({ message: "Not authorized. Please login to continue." });
+
+  // Verify the token
+  const tokenVerified = jwt.verify(token, jwtSecret);
+
+  if (tokenVerified)
+    res.status(200).json(true);
+  else
+    res.status(401).json(false);
 });

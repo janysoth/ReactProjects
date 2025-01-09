@@ -6,7 +6,8 @@ import {
   loginUser,
   logoutUser,
   registerUser,
-  updateUser
+  updateUser,
+  userLoginStatus
 } from "../controllers/auth/userController.js";
 import {
   adminMiddleware,
@@ -29,6 +30,11 @@ router.delete("/admin/users/:id", protect, adminMiddleware, deleteUser);
 
 // Get all Users
 router.get("/admin/users", protect, creatorMiddleware, getAllUsers);
+
+/* *** */
+
+// Login status
+router.get("/login-status", userLoginStatus);
 
 
 
