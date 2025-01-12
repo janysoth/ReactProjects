@@ -7,6 +7,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  resetPassword,
   updateUser,
   userLoginStatus,
   verifyEmail,
@@ -47,5 +48,8 @@ router.post("/verify-user/:verificationToken", verifyUser);
 
 // Forgot password
 router.post("/forgot-password", forgotPassword);
+
+// Reset password
+router.post("/reset-password/:resetPasswordToken", resetPassword);
 
 export default router;

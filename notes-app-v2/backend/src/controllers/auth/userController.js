@@ -342,3 +342,36 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Email could not be sent for password-reset." });
   }
 });
+
+// Reset password
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { resetPasswordToken } = req.params;
+  const { newPassword } = req.body;
+
+  if (!newPassword)
+    return res.status(400).json({ message: "Please enter the new password." });
+
+  // Hash the reset Token
+  const hashedToken = hashToken(resetPasswordToken);
+
+  // Check if token exits and has not expired
+  const userToken = await Token.findOne({
+    passwordResetToken: hashedToken,
+
+    expiresAt: { $gt: Date.now() },
+  });
+
+  if (!userToken)
+    return res.status(400).json({ message: "Invalid or expired token." });
+
+  // Find User with the userId in the token
+  const user = await User.findById(userToken.userId);
+
+  // Update User's password
+  user.password = newPassword;
+
+  await user.save();
+
+  return res.json({ message: "Password has been reset successfully." });
+});
+
