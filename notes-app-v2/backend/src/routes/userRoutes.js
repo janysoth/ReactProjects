@@ -2,6 +2,7 @@ import express from "express";
 
 import { deleteUser, getAllUsers } from "../controllers/auth/adminController.js";
 import {
+  forgotPassword,
   getUser,
   loginUser,
   logoutUser,
@@ -43,5 +44,8 @@ router.post("/verify-email", protect, verifyEmail);
 
 // Verify User --> email verification
 router.post("/verify-user/:verificationToken", verifyUser);
+
+// Forgot password
+router.post("/forgot-password", forgotPassword);
 
 export default router;
