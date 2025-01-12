@@ -2,6 +2,7 @@ import express from "express";
 
 import { deleteUser, getAllUsers } from "../controllers/auth/adminController.js";
 import {
+  changePassword,
   forgotPassword,
   getUser,
   loginUser,
@@ -51,5 +52,8 @@ router.post("/forgot-password", forgotPassword);
 
 // Reset password
 router.post("/reset-password/:resetPasswordToken", resetPassword);
+
+// Change password
+router.patch("/change-password", protect, changePassword);
 
 export default router;
