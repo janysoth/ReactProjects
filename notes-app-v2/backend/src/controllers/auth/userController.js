@@ -2,11 +2,11 @@ import bcrypt from "bcrypt";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
-import Token from "../../models/auth/Token.js";
 
 import generateToken from "../../helpers/generateToken.js";
 import hashToken from "../../helpers/hashToken.js";
 import sendEmail from "../../helpers/sendEmail.js";
+import Token from "../../models/auth/Token.js";
 import User from "../../models/auth/UserModel.js";
 
 const jwtSecret = process.env.JWT_SECRET;
@@ -251,4 +251,39 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     console.log("Error in sending email: ", error);
     return res.status(500).json({ message: "Email could not be sent." });
   }
+});
+
+// Verify User
+export const verifyUser = asyncHandler(async (req, res) => {
+  const { verificationToken } = req.params;
+
+  if (!verificationToken)
+    return res.status(400).json({ message: "Invalid verification token" });
+
+  // Hash the verification token --> because it was hashed before saving
+  const hashedToken = hashToken(verificationToken);
+
+  // Find User with the verification token
+  const userToken = await Token.findOne({
+    verificationToken: hashedToken,
+
+    // Check if the token has not expired
+    expiresAt: { $gt: Date.now() },
+  });
+
+  if (!userToken)
+    return res.status(400).json({ message: "Invalid or expired verification token." });
+
+  // Find User with the userId in the token
+  const user = await User.findById(userToken.userId);
+
+  if (user.isVerified)
+    return res.status(400).json({ message: "User is already verified." });
+
+  // Update User to verified
+  user.isVerified = true;
+
+  await user.save();
+
+  res.status(200).json({ message: "User has  been verified." });
 });

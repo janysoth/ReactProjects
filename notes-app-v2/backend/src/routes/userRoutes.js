@@ -8,7 +8,8 @@ import {
   registerUser,
   updateUser,
   userLoginStatus,
-  verifyEmail
+  verifyEmail,
+  verifyUser
 } from "../controllers/auth/userController.js";
 import {
   adminMiddleware,
@@ -40,6 +41,7 @@ router.get("/login-status", userLoginStatus);
 // Email verification
 router.post("/verify-email", protect, verifyEmail);
 
-
+// Verify User --> email verification
+router.post("/verify-user/:verificationToken", verifyUser);
 
 export default router;
