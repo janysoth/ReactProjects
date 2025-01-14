@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 import fs from "node:fs";
 
-import connect from "./db/connect.js";
+import connect from "./src/db/connect.js";
 
 dotenv.config();
 
