@@ -1,11 +1,14 @@
 "use client"
+import { useUserContext } from '@/context/userContext';
 import React, { useState } from 'react';
 
 const RegisterForm = () => {
-
+  const { registerUser, userState, handleUserInput } = useUserContext();
+  const { name, email, password } = userState;
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => setShowPassword(!showPassword);
+
   return (
     <form className='relative m-[2rem] px-10 py-14 rounded-lg bg-white w-full max-w-[520px]'>
       <div className="relative z-10">
@@ -21,7 +24,8 @@ const RegisterForm = () => {
           <input
             type="text"
             id="name"
-            onChange={() => { }}
+            value={name}
+            onChange={(e) => handleUserInput("name")(e)}
             name="name"
             className="px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800"
             placeholder="John Doe"
@@ -36,7 +40,8 @@ const RegisterForm = () => {
           <input
             type="text"
             id="email"
-            onChange={() => { }}
+            value={email}
+            onChange={(e) => handleUserInput("email")(e)}
             name="email"
             className="px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800"
             placeholder="johndoe@gmail.com"
@@ -51,7 +56,8 @@ const RegisterForm = () => {
           <input
             type={showPassword ? "text" : "password"}
             id="password"
-            onChange={() => { }}
+            value={password}
+            onChange={(e) => handleUserInput("password")(e)}
             name="password"
             className="px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800"
             placeholder="Password"
@@ -71,8 +77,8 @@ const RegisterForm = () => {
         <div className="flex">
           <button
             type="submit"
-            // disabled={!name || !email || !password}
-            // onClick={registerUser}
+            disabled={!name || !email || !password}
+            onClick={registerUser}
             className="mt-[1.5rem] flex-1 px-4 py-3 font-bold bg-blue-600 text-white rounded-md hover:bg-blue-800 transition-colors"
           >
             Register Now
