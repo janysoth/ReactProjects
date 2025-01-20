@@ -50,6 +50,9 @@ export const UserContextProvider = ({ children }) => {
     }
   };
 
+  // Log in 
+  const loginUser = async (e) => { };
+
   // Dynamic form handler
   const handleUserInput = (name) => (e) => {
     const value = e.target.value;
