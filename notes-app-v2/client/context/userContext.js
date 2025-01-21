@@ -56,7 +56,6 @@ export const UserContextProvider = ({ children }) => {
   // Log in 
   const loginUser = async (e) => {
     e.preventDefault();
-
     try {
       const res = await axios.post(
         `${serverUrl}/api/v1/login`,
@@ -69,7 +68,7 @@ export const UserContextProvider = ({ children }) => {
         }
       );
 
-      toast.success("User logged in successfully.");
+      toast.success("User logged in successfully");
 
       // Clear the form
       setUserState({
@@ -78,14 +77,37 @@ export const UserContextProvider = ({ children }) => {
       });
 
       // Refresh the user details
-      await getUser(); // Fetch before redirecting 
+      await getUser(); // fetch before redirecting
 
       // Push user to the dashboard page
       router.push("/");
     } catch (error) {
-      console.log("Error in logging in user", error);
+      console.log("Error logging in user", error);
       toast.error(error.response.data.message);
     }
+  };
+
+  // Get User Logged in Status
+  const userLoginStatus = async () => {
+    let loggedIn = false;
+
+    try {
+      const res = await axios.get(`${serverUrl}/api/v1/login-status`, {
+        withCredentials: true,
+      });
+
+      // Coerce the string to boolean
+      loggedIn = !!res.data;
+      setLoading(false);
+
+      if (!loggedIn)
+        router.push("/login");
+
+    } catch (error) {
+      console.log("Error in userLoginStatus.", error);
+    }
+    console.log("User logged in status: ", loggedIn);
+    return loggedIn;
   };
 
   // getUser details
@@ -121,13 +143,18 @@ export const UserContextProvider = ({ children }) => {
     }));
   };
 
+  useEffect(() => {
+    userLoginStatus();
+  }, []);
+
   return (
     <UserContext.Provider value={{
-      registerUser,
       userState,
-      handleUserInput,
+      registerUser,
       loginUser,
+      userLoginStatus,
       getUser,
+      handleUserInput,
     }}>
       {children}
     </UserContext.Provider>
