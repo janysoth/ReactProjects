@@ -161,7 +161,15 @@ export const UserContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    userLoginStatus();
+    const loginStatusGetUser = async () => {
+      const isLoggedIn = await userLoginStatus();
+
+      if (isLoggedIn) {
+        await getUser();
+      }
+    };
+
+    loginStatusGetUser();
   }, []);
 
   return (
@@ -173,6 +181,7 @@ export const UserContextProvider = ({ children }) => {
       logoutUser,
       getUser,
       handleUserInput,
+      user,
     }}>
       {children}
     </UserContext.Provider>

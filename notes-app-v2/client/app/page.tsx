@@ -1,10 +1,13 @@
 "use client";
 
 import { useUserContext } from "@/context/userContext";
+import useRedirect from "@/hooks/useUserRedirect";
 
 export default function Home() {
-  const { logoutUser } = useUserContext();
-  const name = "Jonny Vorn Soth";
+  useRedirect("/login");
+
+  const { logoutUser, user } = useUserContext();
+  const { name, photo, isVerified, bio } = user;
 
   return (
     <main className="py-[2rem] mx-[10rem]">
