@@ -5,6 +5,9 @@ import toast from "react-hot-toast";
 
 const UserContext = createContext();
 
+// Ser Axios to include credentials with every request
+axios.defaults.withCredentials = true;
+
 export const UserContextProvider = ({ children }) => {
   const serverUrl = "http://localhost:8000";
 
@@ -18,7 +21,7 @@ export const UserContextProvider = ({ children }) => {
     password: "",
   });
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Register user
   const registerUser = async (e) => {
@@ -51,7 +54,62 @@ export const UserContextProvider = ({ children }) => {
   };
 
   // Log in 
-  const loginUser = async (e) => { };
+  const loginUser = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        `${serverUrl}/api/v1/login`,
+        {
+          email: userState.email,
+          password: userState.password,
+        },
+        {
+          withCredentials: true, // send cookies to the server
+        }
+      );
+
+      toast.success("User logged in successfully.");
+
+      // Clear the form
+      setUserState({
+        email: "",
+        password: "",
+      });
+
+      // Refresh the user details
+      await getUser(); // Fetch before redirecting 
+
+      // Push user to the dashboard page
+      router.push("/");
+    } catch (error) {
+      console.log("Error in logging in user", error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  // getUser details
+  const getUser = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${serverUrl}/api/v1/user`, {
+        withCredentials: true, // send cookies to the server
+      });
+
+      setUser((prevState) => {
+        return {
+          ...prevState,
+          ...res.data,
+        };
+      });
+
+      setLoading(false);
+    } catch (error) {
+      console.log("Error getting user details", error);
+      setLoading(false);
+      toast.error(error.response.data.message);
+    }
+  };
 
   // Dynamic form handler
   const handleUserInput = (name) => (e) => {
@@ -68,6 +126,8 @@ export const UserContextProvider = ({ children }) => {
       registerUser,
       userState,
       handleUserInput,
+      loginUser,
+      getUser,
     }}>
       {children}
     </UserContext.Provider>
