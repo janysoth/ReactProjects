@@ -110,6 +110,23 @@ export const UserContextProvider = ({ children }) => {
     return loggedIn;
   };
 
+  // Logout user
+  const logoutUser = async () => {
+    try {
+      const res = await axios.get(`${serverUrl}/api/v1/logout`, {
+        withCredentials: true,
+      });
+
+      toast.success("User logged out successfully.");
+
+      // Redirect to login page
+      router.push("/login");
+    } catch (error) {
+      console.log("Error in logoutUser.", error);
+      toast.error(error.response.data.message);
+    }
+  };
+
   // getUser details
   const getUser = async () => {
     setLoading(true);
@@ -153,6 +170,7 @@ export const UserContextProvider = ({ children }) => {
       registerUser,
       loginUser,
       userLoginStatus,
+      logoutUser,
       getUser,
       handleUserInput,
     }}>
