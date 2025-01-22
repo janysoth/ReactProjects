@@ -10,7 +10,7 @@ export default function Home() {
   const {
     logoutUser,
     user,
-    handlerUserInput,
+    handleUserInput,
     userState,
     updateUser,
   } = useUserContext();
@@ -20,12 +20,12 @@ export default function Home() {
 
   const myToggle = () => {
     setIsOpen(!isOpen);
-  }
+  };
 
   return (
-    <main className="py-[2rem] mx-[10rem]">
-      <header className="flex justify-between">
-        <h1 className="text-[2rem] font-bold">
+    <main className="py-8 px-4 sm:px-8 md:px-16">
+      <header className="flex flex-col md:flex-row md:justify-between items-center gap-4">
+        <h1 className="text-xl md:text-2xl font-bold text-center md:text-left">
           Welcome <span className="text-red-600">{name}</span>
         </h1>
 
@@ -33,19 +33,19 @@ export default function Home() {
           <img
             src={photo}
             alt={name}
-            className="w-[40px] h-[40px] rounded-full"
+            className="w-10 h-10 rounded-full"
           />
 
           {!isVerified && (
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm md:text-base"
             >
               Verify Account
             </button>
           )}
 
           <button
-            className="px-4 py-2 bg-red-600 text-white rounded-md"
+            className="px-4 py-2 bg-red-600 text-white rounded-md text-sm md:text-base"
             onClick={logoutUser}
           >
             Logout
@@ -53,13 +53,13 @@ export default function Home() {
         </div>
       </header>
 
-      <section>
-        <p className="text-[#999] text-[2rem]">{bio}</p>
+      <section className="mt-8">
+        <p className="text-gray-600 text-lg md:text-xl text-center md:text-left">{bio}</p>
 
-        <h1>
+        <h1 className="mt-6">
           <button
             onClick={myToggle}
-            className="px-4 py-2 bg-[#2ECC71] text-white rounded-md"
+            className="px-4 py-2 bg-green-500 text-white rounded-md text-sm md:text-base"
           >
             Update Bio
           </button>
@@ -75,18 +75,21 @@ export default function Home() {
               <textarea
                 name="bio"
                 defaultValue={bio}
-                className="px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800"
-                onChange={(e) => handlerUserInput("bio")(e)}
+                className="px-4 py-3 border-2 rounded-md outline-green-500 text-gray-800 text-sm"
+                onChange={(e) => handleUserInput("bio")(e)}
               />
-
-              <button
-                type="submit"
-                onClick={(e) => updateUser(e, { bio: userState.bio })}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-              >
-                Update Bio
-              </button>
             </div>
+            <button
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                updateUser(e, { bio: userState.bio });
+                myToggle();
+              }}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md text-sm md:text-base"
+            >
+              Submit
+            </button>
           </form>
         )}
       </section>

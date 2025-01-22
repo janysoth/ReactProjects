@@ -152,7 +152,30 @@ export const UserContextProvider = ({ children }) => {
 
   // Update user details
   const updateUser = async (e, data) => {
+    e.preventDefault();
+    setLoading(true);
 
+    try {
+      const res = await axios.patch(`${serverUrl}/api/v1/user`, data, {
+        withCredentials: true,
+      });
+
+      // Update the User state
+      setUser((prevState) => {
+        return {
+          ...prevState,
+          ...res.data,
+        };
+      });
+
+      toast.success("User updated successfully.");
+
+      setLoading(false);
+    } catch (error) {
+      console.log("Error in updating user details", error);
+      setLoading(false);
+      toast.error(error.response.data.message);
+    }
   };
 
   // Dynamic form handler
