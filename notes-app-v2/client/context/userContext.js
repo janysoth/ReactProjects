@@ -150,6 +150,11 @@ export const UserContextProvider = ({ children }) => {
     }
   };
 
+  // Update user details
+  const updateUser = async (e, data) => {
+
+  };
+
   // Dynamic form handler
   const handleUserInput = (name) => (e) => {
     const value = e.target.value;
@@ -182,6 +187,7 @@ export const UserContextProvider = ({ children }) => {
       getUser,
       handleUserInput,
       user,
+      updateUser,
     }}>
       {children}
     </UserContext.Provider>
