@@ -225,6 +225,52 @@ export const UserContextProvider = ({ children }) => {
     }
   };
 
+  // Forgot password email
+  const forgotPasswordEmail = async (email) => {
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        `${serverUrl}/api/v1/forgot-password`,
+        { email },
+        { withCredentials: true }
+      );
+
+      toast.success("Email has been sent successfully.");
+      setLoading(false);
+    } catch (error) {
+      console.log("Error in forgotPasswordEmail.", error);
+      toast.error(error.response.data.message);
+      setLoading(false);
+    }
+  };
+
+  // Reset password
+  const resetPassword = async (token, password) => {
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        `${serverUrl}/api/v1/reset-password/${token}`,
+        {
+          password,
+        },
+        {
+          withCredentials: true, // send cookies to the server
+        }
+      );
+
+      toast.success("Password reset successfully");
+      setLoading(false);
+      // redirect to login page
+      router.push("/login");
+    } catch (error) {
+      console.log("Error resetting password", error);
+      toast.error(error.response.data.message);
+      setLoading(false);
+    }
+  };
+
   // Dynamic form handler
   const handleUserInput = (name) => (e) => {
     const value = e.target.value;
@@ -259,7 +305,9 @@ export const UserContextProvider = ({ children }) => {
       user,
       updateUser,
       emailVerification,
-      verifyUser
+      verifyUser,
+      forgotPasswordEmail,
+      resetPassword,
     }}>
       {children}
     </UserContext.Provider>

@@ -346,9 +346,9 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 // Reset password
 export const resetPassword = asyncHandler(async (req, res) => {
   const { resetPasswordToken } = req.params;
-  const { newPassword } = req.body;
+  const { password } = req.body;
 
-  if (!newPassword)
+  if (!password)
     return res.status(400).json({ message: "Please enter the new password." });
 
   // Hash the reset Token
@@ -368,7 +368,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
   const user = await User.findById(userToken.userId);
 
   // Update User's password
-  user.password = newPassword;
+  user.password = password;
 
   await user.save();
 
