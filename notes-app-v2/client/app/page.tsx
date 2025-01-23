@@ -13,6 +13,7 @@ export default function Home() {
     handleUserInput,
     userState,
     updateUser,
+    emailVerification
   } = useUserContext();
   const { name, photo, isVerified, bio } = user;
 
@@ -39,6 +40,7 @@ export default function Home() {
           {!isVerified && (
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm md:text-base"
+              onClick={emailVerification}
             >
               Verify Account
             </button>
