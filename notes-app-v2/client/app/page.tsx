@@ -3,6 +3,7 @@
 import { useUserContext } from "@/context/userContext";
 import useRedirect from "@/hooks/useUserRedirect";
 import { useState } from "react";
+import ChangePasswordForm from "./components/auth/ChangePasswordForm";
 
 export default function Home() {
   useRedirect("/login");
@@ -95,6 +96,12 @@ export default function Home() {
           </form>
         )}
       </section>
+
+      <div className="mt-4 flex gap-8">
+        <div className="flex">
+          <ChangePasswordForm />
+        </div>
+      </div>
     </main>
   );
 }

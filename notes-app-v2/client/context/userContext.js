@@ -271,6 +271,26 @@ export const UserContextProvider = ({ children }) => {
     }
   };
 
+  // Change password
+  const changePassword = async (currentPassword, newPassword) => {
+    setLoading(true);
+
+    try {
+      const res = await axios.patch(
+        `${serverUrl}/api/v1/change-password`,
+        { currentPassword, newPassword },
+        { withCredentials: true }
+      );
+
+      toast.success("Password changed successfully.");
+      setLoading(false);
+    } catch (error) {
+      console.log("Error in changePassword", error);
+      toast.error(error.response.data.message);
+      setLoading(false);
+    }
+  };
+
   // Dynamic form handler
   const handleUserInput = (name) => (e) => {
     const value = e.target.value;
