@@ -328,6 +328,7 @@ export const UserContextProvider = ({ children }) => {
       verifyUser,
       forgotPasswordEmail,
       resetPassword,
+      changePassword,
     }}>
       {children}
     </UserContext.Provider>
