@@ -2,7 +2,8 @@
 import { useUserContext } from "@/context/userContext";
 import React, { useState } from "react";
 
-function ChangePasswordForm() {
+
+function ChangePasswordForm({ onSubmitSuccess }: { onSubmitSuccess: () => void }) {
   const { changePassword } = useUserContext();
 
   // state
@@ -29,6 +30,10 @@ function ChangePasswordForm() {
     // clear input
     setCurrentPassword("");
     setNewPassword("");
+
+    // Close the modal
+    if (onSubmitSuccess)
+      onSubmitSuccess();
   };
 
   return (
