@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const UserContext = createContext();
 
-// Ser Axios to include credentials with every request
+// Set Axios to include credentials with every request
 axios.defaults.withCredentials = true;
 
 export const UserContextProvider = ({ children }) => {
