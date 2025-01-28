@@ -41,7 +41,7 @@ export default function Home() {
             <img
               src={photo}
               alt={name}
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full cursor-pointer"
               onClick={() => {
                 togglePassword();
                 setIsOpen(false)
@@ -114,7 +114,7 @@ export default function Home() {
       {/* Password Modal Section */}
       {passwordModal && (
         <section className="mt-8 flex justify-center">
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 justify-end">
             <div className="flex">
               <ChangePasswordForm
                 onSubmitSuccess={() => setPasswordModal(false)}

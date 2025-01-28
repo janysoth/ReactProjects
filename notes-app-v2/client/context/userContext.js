@@ -294,19 +294,41 @@ export const UserContextProvider = ({ children }) => {
   /** Admin Routes **/
   const getAllUsers = async () => {
     setLoading(true);
+
     try {
       const res = await axios.get(
         `${serverUrl}/api/v1/admin/users`,
         {},
-        {
-          withCredentials: true, // send cookies to the server
-        }
+        { withCredentials: true }
       );
 
       setAllUsers(res.data);
       setLoading(false);
     } catch (error) {
       console.log("Error getting all users", error);
+      toast.error(error.response.data.message);
+      setLoading(false);
+    }
+  };
+
+  // Delete user
+  const deleteUser = async (id) => {
+    setLoading(true);
+
+    try {
+      const res = await axios.delete(
+        `${serverUrl}/api/v1/admin/users/${id}`,
+        {},
+        { withCredentials: true }
+      );
+
+      toast.success("User deleted successfully.");
+      setLoading(false);
+
+      // Refresh the users list
+      getAllUsers();
+    } catch (error) {
+      console.log("Error in deleting user.", error);
       toast.error(error.response.data.message);
       setLoading(false);
     }
@@ -357,6 +379,7 @@ export const UserContextProvider = ({ children }) => {
       changePassword,
       allUsers,
       getAllUsers,
+      deleteUser
     }}>
       {children}
     </UserContext.Provider>
