@@ -327,13 +327,17 @@ export const UserContextProvider = ({ children }) => {
     const loginStatusGetUser = async () => {
       const isLoggedIn = await userLoginStatus();
 
-      if (isLoggedIn) {
+      if (isLoggedIn)
         await getUser();
-      }
     };
 
     loginStatusGetUser();
   }, []);
+
+  useEffect(() => {
+    if (user.role === "admin")
+      getAllUsers();
+  }, [user.role]);
 
   return (
     <UserContext.Provider value={{
@@ -351,6 +355,7 @@ export const UserContextProvider = ({ children }) => {
       forgotPasswordEmail,
       resetPassword,
       changePassword,
+      allUsers,
       getAllUsers,
     }}>
       {children}
