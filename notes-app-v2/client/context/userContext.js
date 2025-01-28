@@ -291,6 +291,28 @@ export const UserContextProvider = ({ children }) => {
     }
   };
 
+  /** Admin Routes **/
+  const getAllUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `${serverUrl}/api/v1/admin/users`,
+        {},
+        {
+          withCredentials: true, // send cookies to the server
+        }
+      );
+
+      setAllUsers(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.log("Error getting all users", error);
+      toast.error(error.response.data.message);
+      setLoading(false);
+    }
+  };
+
+
   // Dynamic form handler
   const handleUserInput = (name) => (e) => {
     const value = e.target.value;
@@ -329,6 +351,7 @@ export const UserContextProvider = ({ children }) => {
       forgotPasswordEmail,
       resetPassword,
       changePassword,
+      getAllUsers,
     }}>
       {children}
     </UserContext.Provider>
