@@ -1,3 +1,6 @@
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 export const github = <i className="fa-brands fa-github"></i>;
 export const star = <i className="fas fa-star"></i>;
 export const trash = <i className="fas fa-trash"></i>;
@@ -11,3 +14,4 @@ export const badge = <i className="fa-solid fa-certificate"></i>;
 export const mail = <i className="fa-regular fa-envelope"></i>;
 export const profile = <i className="fa-solid fa-user"></i>;
 export const home = <i className="fas fa-home"></i>;
+export const logout = <FontAwesomeIcon icon={faArrowRightFromBracket} />

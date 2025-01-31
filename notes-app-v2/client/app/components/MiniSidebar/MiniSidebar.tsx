@@ -3,14 +3,29 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import React from "react";
 
+import { useUserContext } from "@/context/userContext";
 import IconCheck from "@/public/icons/IconCheck";
 import IconDeleteAll from "@/public/icons/IconDeleteAll";
 import IconFileCheck from "@/public/icons/IconFileCheck";
 import IconGrid from "@/public/icons/IconGrid";
 import IconStopwatch from "@/public/icons/IconStopwatch";
+import { github, logout } from "@/utils/Icons";
 import Link from "next/link";
 
 const MiniSidebar = () => {
+
+  const { logoutUser, user } = useUserContext();
+
+  const userId = user._id;
+
+  const handleLogout = () => {
+    logoutUser();
+
+    // Force page reload after logout
+    setTimeout(() => {
+      window.location.reload();
+    }, 500); // Delay to ensure logout completes before reloading
+  };
   /** *
    * const { deleteAllTasks } = useTasks()
    * 
@@ -69,16 +84,35 @@ const MiniSidebar = () => {
           ))}
         </ul>
 
-        {/* Delete All Button with Tooltip */}
-        <div className="mb-[1.5rem] relative group">
-          <button className="w-12 h-12 flex justify-center items-center border-2 border-[#EB4E31] p-2 rounded-full">
-            <IconDeleteAll strokeColor="#EB4E31" />
-          </button>
+        <div className="mb-[1.5rem] flex flex-col gap-2">
+          {/* Logout Button with Tooltip */}
+          {userId && (
+            <div className="relative group">
+              <button
+                className="w-12 h-12 flex justify-center items-center border-2 border-[#EB4E31] p-2 rounded-full"
+                onClick={handleLogout}
+              >
+                {logout}
+              </button>
 
-          {/* Hover Tooltip */}
-          <span className="u-triangle absolute top-[50%] translate-y-[-50%] left-14 text-xs pointer-events-none text-white bg-[#3aafae] px-2 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Delete All Tasks
-          </span>
+              {/* Hover Tooltip */}
+              <span className="absolute top-[50%] translate-y-[-50%] left-14 text-xs pointer-events-none text-white bg-[#3aafae] px-2 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Logout
+              </span>
+            </div>
+          )}
+
+          {/* Delete All Button with Tooltip */}
+          <div className="relative group">
+            <button className="w-12 h-12 flex justify-center items-center border-2 border-[#EB4E31] p-2 rounded-full">
+              <IconDeleteAll strokeColor="#EB4E31" />
+            </button>
+
+            {/* Hover Tooltip */}
+            <span className="absolute top-[50%] translate-y-[-50%] left-14 text-xs pointer-events-none text-white bg-[#3aafae] px-2 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              Delete All Tasks
+            </span>
+          </div>
         </div>
       </div>
     </div>
