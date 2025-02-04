@@ -31,11 +31,12 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 function RadialChart() {
+  const totalTasks = 10;
 
   const chartData = [
     {
-      pending: 5,
-      completed: 2,
+      pending: 6,
+      completed: 4,
     },
   ];
 
@@ -71,7 +72,7 @@ function RadialChart() {
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl font-bold"
                         >
-                          10
+                          {totalTasks}
                         </tspan>
                         <tspan
                           x={viewBox.cx}

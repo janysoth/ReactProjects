@@ -11,7 +11,7 @@ const Header = () => {
   const userId = user._id;
 
   return (
-    <header className="px-6 py-4 w-full flex flex-col sm:flex-row items-center justify-between bg-[#f9f9f9] shadow-md">
+    <header className="px-6 py-4 w-full flex flex-col sm:flex-row items-center justify-between bg-[#f9f9f9] shadow-md rounded-[1.5rem]">
       {/* Left Section */}
       <div className="text-center sm:text-left">
         <h1 className="text-lg font-medium">

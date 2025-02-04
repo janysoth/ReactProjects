@@ -8,7 +8,7 @@ const Profile = () => {
 
 
   return (
-    <div className='m-4'>
+    <div className='m-3'>
       {/* Greeting */}
       <div
         className="px-2 py-4 flex items-center gap-3 bg-[#E6E6E6]/20 rounded-[0.8rem]

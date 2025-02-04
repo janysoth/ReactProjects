@@ -23,7 +23,7 @@ function Sidebar() {
       </div>
 
       <button
-        className="mt-2 mb-6 mx-6 py-4 px-8 bg-[#EB4E31] text-white rounded-[50px] hover:bg-[#3aafae] transition duration-200 ease-in-out"
+        className="mt-auto mb-8 mx-6 py-4 px-8 bg-[#EB4E31] text-white rounded-[50px] hover:bg-[#3aafae] transition duration-200 ease-in-out"
         onClick={handleLogout}
       >
         Sign Out
