@@ -83,6 +83,24 @@ export const TasksProvider = ({ children }) => {
     }
   };
 
+  // Delete a task
+  const deleteTask = async (taskId) => {
+    setLoading(true);
+
+    try {
+      await axios.delete(`${serverUrl}/task/${taskId}`);
+
+      // Remove the task from the tasks away
+      const updatedTasks = tasks.filter(currentTask => currentTask._id !== taskId);
+
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.log("Error in deleting a task: ", error);
+    }
+
+    setLoading(false);
+  };
+
   useEffect(() => {
     getTasks();
   }, [userId]);
@@ -98,6 +116,7 @@ export const TasksProvider = ({ children }) => {
       getTasks,
       createTask,
       updateTask,
+      deleteTask,
     }}>
       {children}
     </TasksContext.Provider>
