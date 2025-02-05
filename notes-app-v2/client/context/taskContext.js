@@ -45,6 +45,44 @@ export const TasksProvider = ({ children }) => {
     setLoading(false);
   };
 
+  // Create a task
+  const createTask = async (task) => {
+    setLoading(true);
+
+    try {
+      const response = await axios.post(`${serverUrl}/task/create`, task);
+
+      console.log("Task created: ", response.data);
+
+      setTasks([...tasks, response.data]);
+      toast.success("Task created successfully.");
+    } catch (error) {
+      console.log("Error in creating a task.", error);
+    }
+
+    setLoading(false);
+  };
+
+  // Update a task
+  const updateTask = async (task) => {
+    setLoading(true);
+
+    try {
+      const response = await axios.patch(`${serverUrl}/task/${task._id}`, task);
+
+      // Update the task in the tasks array
+      const newTasks = tasks.map(oldTask => {
+        return oldTask._id === response.data._id ? response.data : oldTask;
+      });
+
+      toast.success("Task updated successfully.");
+
+      setTasks(newTasks);
+    } catch (error) {
+      console.log("Error in updating a task:", error);
+    }
+  };
+
   useEffect(() => {
     getTasks();
   }, [userId]);
@@ -57,7 +95,9 @@ export const TasksProvider = ({ children }) => {
       loading,
       task,
       getTask,
-      getTasks
+      getTasks,
+      createTask,
+      updateTask,
     }}>
       {children}
     </TasksContext.Provider>
