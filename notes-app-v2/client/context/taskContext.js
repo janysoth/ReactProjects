@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useUserContext } from "./userContext";
 
@@ -14,6 +14,8 @@ export const TasksProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState({});
+
+  const [priority, setPriority] = useState(("all"));
 
   // get tasks
   const getTasks = async () => {
@@ -117,8 +119,14 @@ export const TasksProvider = ({ children }) => {
       createTask,
       updateTask,
       deleteTask,
+      priority,
+      setPriority,
     }}>
       {children}
     </TasksContext.Provider>
   );
+};
+
+export const useTasks = () => {
+  return useContext(TasksContext);
 };
