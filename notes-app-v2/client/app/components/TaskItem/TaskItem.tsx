@@ -10,36 +10,35 @@ interface TaskItemProps {
 }
 
 const TaskItem = ({ task }: TaskItemProps) => {
-  const getPriorityColor = (priority: string) => {
+  const getPriorityClasses = (priority: string) => {
     switch (priority) {
       case 'low':
-        return "text-green-500";
+        return { text: "text-green-500", border: "border-green-500" };
       case "medium":
-        return "text-yellow-500";
+        return { text: "text-yellow-500", border: "border-yellow-500" };
       case "high":
-        return "text-red-500";
+        return { text: "text-red-500", border: "border-red-500" };
       default:
-        return "text-red-500";
+        return { text: "text-red-500", border: "border-red-500" };
     }
   };
 
+  const { text, border } = getPriorityClasses(task.priority);
   const { getTask, deleteTask } = useTasks();
 
   return (
-    <div
-      className="h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 border-white"
-    >
+    <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 ${border} ${text}`}>
       <div>
         <h4 className="font-bold text-2xl">{task.title}</h4>
         <p>{task.description}</p>
       </div>
 
       <div className='mt-auto flex justify-between items-center'>
-        <p className="text-sm text-gray-400">
+        <p className={`text-sm text-gray-400 ${text}`}>
           {formatTime(task.createdAt)}
         </p>
 
-        <p className={`text-sm font-bold ${getPriorityColor(task.priority)}`}>
+        <p className={`text-sm font-bold ${text}`}>
           {task.priority}
         </p>
 
@@ -79,4 +78,4 @@ const TaskItem = ({ task }: TaskItemProps) => {
   )
 }
 
-export default TaskItem
+export default TaskItem;
