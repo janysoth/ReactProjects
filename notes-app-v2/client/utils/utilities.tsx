@@ -25,7 +25,7 @@ export const formatTime = (createdAt: string) => {
     return created.fromNow();
   }
 
-  return created.format("DD/MM/YYYY");
+  return created.format("MM/DD/YYYY");
 };
 
 export const filteredTasks = (tasks: Task[], priority: string) => {

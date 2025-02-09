@@ -15,7 +15,39 @@ export const TasksProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState({});
 
+  const [isEditing, setIsEditing] = useState(false);
   const [priority, setPriority] = useState(("all"));
+  const [activeTask, setActiveTask] = useState(null);
+  const [modalMode, setModalMode] = useState("");
+  const [profileModal, setProfileModal] = useState(false);
+
+  // Open Modal to Add task
+  const openModalForAdd = () => {
+    setModalMode("add");
+    setIsEditing(true);
+    setTask({});
+  };
+
+  // Open Modal to Edit task
+  const openModalForEdit = (task) => {
+    setModalMode("edit");
+    setIsEditing(true);
+    setActiveTask(task);
+  };
+
+  // Open Profile Modal
+  const openProfileModal = () => {
+    setProfileModal(true);
+  };
+
+  // Close Modal
+  const closeModal = () => {
+    setIsEditing(false);
+    setProfileModal(false);
+    setModalMode("");
+    setActiveTask(null);
+    setTask({});
+  };
 
   // get tasks
   const getTasks = async () => {
@@ -103,6 +135,14 @@ export const TasksProvider = ({ children }) => {
     setLoading(false);
   };
 
+  // Handle input
+  const handleInput = (name) => (e) => {
+    if (name === "setTask")
+      setTask(e);
+    else
+      setTask({ ...task, [name]: e.target.value });
+  };
+
   useEffect(() => {
     getTasks();
   }, [userId]);
@@ -114,13 +154,23 @@ export const TasksProvider = ({ children }) => {
       tasks,
       loading,
       task,
+      tasks,
       getTask,
-      getTasks,
       createTask,
       updateTask,
       deleteTask,
       priority,
       setPriority,
+      handleInput,
+      isEditing,
+      setIsEditing,
+      openModalForAdd,
+      openModalForEdit,
+      activeTask,
+      closeModal,
+      modalMode,
+      openProfileModal,
+      profileModal,
     }}>
       {children}
     </TasksContext.Provider>
