@@ -27,7 +27,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
   const { getTask, deleteTask } = useTasks();
 
   return (
-    <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 ${border} ${text}`}>
+    <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 hover:bg-gray-200 ${border} ${text}`}>
       <div>
         <h4 className="font-bold text-2xl">{task.title}</h4>
         <p>{task.description}</p>

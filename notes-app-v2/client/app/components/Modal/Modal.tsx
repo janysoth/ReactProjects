@@ -1,8 +1,7 @@
 "use client"
-import React, { useEffect, useRef } from 'react';
-
 import { useTasks } from '@/context/taskContext';
 import useDetectOutside from '@/hooks/useDetectOutside';
+import React, { useEffect, useRef } from 'react';
 
 const Modal = () => {
   const {
@@ -16,15 +15,13 @@ const Modal = () => {
     updateTask,
   } = useTasks();
 
-  // Ref for handling clicks outside the Modal
   const ref = useRef(null);
 
-  // Use the hook to detect clicks outside the modal
   useDetectOutside({
     ref,
     callback: () => {
       if (isEditing) {
-        closeModal(); // Close modal if it is in add/edit mode
+        closeModal();
       }
     },
   });
@@ -37,21 +34,30 @@ const Modal = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (modalMode === "edit") {
+    if (modalMode === "edit")
       updateTask(task);
-    } else if (modalMode === "add") {
+    else if (modalMode === "add")
       createTask(task);
-    }
+
     closeModal();
   };
 
   return (
     <div className="fixed left-0 top-0 z-50 h-full w-full bg-[#333]/30 overflow-hidden">
       <form
-        className="py-5 px-6 max-w-[520px] w-full flex flex-col gap-3 bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-md"
+        className="relative py-5 px-6 max-w-[520px] w-full flex flex-col gap-3 bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-md"
         onSubmit={handleSubmit}
         ref={ref}
       >
+        {/* Close (X) Button */}
+        <button
+          type="button"
+          onClick={closeModal}
+          className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+        >
+          &times;
+        </button>
+
         {/* Title Input */}
         <div className='flex flex-col gap-1'>
           <label htmlFor="title">Title</label>
@@ -111,32 +117,37 @@ const Modal = () => {
           <label htmlFor="completed">Task Completed</label>
           <div className="flex items-center justify-between bg-[#F9F9F9] p-2 rounded-md border">
             <label htmlFor="completed">Completed</label>
-            <div>
-              <select
-                className="bg-[#F9F9F9] p-2 rounded-md border cursor-pointer"
-                name="completed"
-                value={task.completed ? "true" : "false"}
-                onChange={(e) => handleInput("completed")(e)}
-              >
-                <option value="false">No</option>
-                <option value="true">Yes</option>
-              </select>
-            </div>
+            <select
+              className="bg-[#F9F9F9] p-2 rounded-md border cursor-pointer"
+              name="completed"
+              value={task.completed ? "true" : "false"}
+              onChange={(e) => handleInput("completed")(e)}
+            >
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="mt-4">
+        {/* Buttons: Submit & Cancel */}
+        <div className="mt-4 flex justify-between gap-2">
           <button
-            type='submit'
-            className={`text-white py-3 w-full hover:bg-blue-500 transition duration-200 ease-in-out rounded-full ${modalMode === "edit" ? "bg-blue-400" : "bg-[#3aafae]"} `}
+            type="button"
+            onClick={closeModal}
+            className="w-1/2 py-3 border border-gray-300 rounded-full bg-red-500 text-white hover:bg-red-700 transition duration-200"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className={`w-1/2 text-white py-3 hover:bg-blue-500 transition duration-200 rounded-full ${modalMode === "edit" ? "bg-blue-400" : "bg-[#3aafae]"}`}
           >
             {modalMode === "edit" ? "Update Task" : "Create Task"}
           </button>
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Modal
+export default Modal;
