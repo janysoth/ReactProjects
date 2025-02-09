@@ -49,7 +49,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
         </p>
 
         <p className={`text-sm font-bold ${text}`}>
-          {task.priority}
+          {task.priority.toUpperCase()}
         </p>
 
         <div>
