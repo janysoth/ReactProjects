@@ -1,9 +1,8 @@
-import React from 'react';
-
 import { useTasks } from '@/context/taskContext';
 import { edit, star, trash } from "@/utils/Icons";
 import { Task } from '@/utils/types';
 import { formatTime } from '@/utils/utilities';
+import React from 'react';
 
 interface TaskItemProps {
   task: Task;
@@ -26,12 +25,23 @@ const TaskItem = ({ task }: TaskItemProps) => {
   const { text, border } = getPriorityClasses(task.priority);
   const { getTask, deleteTask } = useTasks();
 
+  // Determine if the due date is within 2 days
+  const today = new Date();
+  const dueDate = new Date(task.dueDate);
+  const timeDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const dueDateStyle = timeDiff <= 2 ? "text-red-500 font-bold" : "text-gray-400";
+
   return (
     <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 hover:bg-gray-200 ${border} ${text}`}>
-      <div>
+      {/* Header with Due Date */}
+      <div className="flex justify-between">
         <h4 className="font-bold text-2xl">{task.title}</h4>
-        <p>{task.description}</p>
+        <p className={`text-sm ${dueDateStyle}`}>
+          Due: {formatTime(task.dueDate)}
+        </p>
       </div>
+
+      <p>{task.description}</p>
 
       <div className='mt-auto flex justify-between items-center'>
         <p className={`text-sm text-gray-400 ${text}`}>
