@@ -23,7 +23,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
   };
 
   const { text, border } = getPriorityClasses(task.priority);
-  const { getTask, deleteTask } = useTasks();
+  const { getTask, deleteTask, openModalForEdit, modalMode } = useTasks();
 
   // Determine if the due date is within 2 days
   const today = new Date();
@@ -68,6 +68,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
               className="text-[#00A1F1]"
               onClick={() => {
                 getTask(task._id);
+                openModalForEdit(task);
               }}
             >
               {edit}
