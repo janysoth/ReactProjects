@@ -17,6 +17,7 @@ const Modal = () => {
 
   const ref = useRef(null);
 
+  // To Detect Click outside the modal
   useDetectOutside({
     ref,
     callback: () => {

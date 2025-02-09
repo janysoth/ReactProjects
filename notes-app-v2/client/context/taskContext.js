@@ -147,8 +147,6 @@ export const TasksProvider = ({ children }) => {
     getTasks();
   }, [userId]);
 
-  console.log(tasks);
-
   return (
     <TasksContext.Provider value={{
       tasks,
