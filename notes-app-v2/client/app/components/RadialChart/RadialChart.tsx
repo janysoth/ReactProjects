@@ -16,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useTasks } from "@/context/taskContext";
 
 export const description = "A radial chart with stacked sections";
 
@@ -31,12 +32,14 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 function RadialChart() {
-  const totalTasks = 10;
+  const { tasks, completedTasks, activeTasks } = useTasks();
+
+  const totalTasks = tasks.length;
 
   const chartData = [
     {
-      pending: 6,
-      completed: 4,
+      pending: activeTasks.length,
+      completed: completedTasks.length,
     },
   ];
 

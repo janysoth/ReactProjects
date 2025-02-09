@@ -143,6 +143,12 @@ export const TasksProvider = ({ children }) => {
       setTask({ ...task, [name]: e.target.value });
   };
 
+  // Get Completed Tasks
+  const completedTasks = tasks.filter((task) => task.completed);
+
+  // Get Pending/Active Tasks
+  const activeTasks = tasks.filter((task) => !task.completed);
+
   useEffect(() => {
     getTasks();
   }, [userId]);
@@ -169,6 +175,8 @@ export const TasksProvider = ({ children }) => {
       modalMode,
       openProfileModal,
       profileModal,
+      completedTasks,
+      activeTasks
     }}>
       {children}
     </TasksContext.Provider>
