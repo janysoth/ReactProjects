@@ -159,3 +159,34 @@ export const deleteAllTasks = asyncHandler(async (req, res) => {
     res.status(500).json(error.message);
   }
 });
+
+// Toggle Complete 
+export const toggleComplete = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { id } = req.params;
+    const { completed } = req.body;
+
+    const task = await Task.findById(id);
+
+    if (!task)
+      return res.status(404).json({ message: "No task was found." });
+
+    // Check if the User is the owner for the task
+    if (!task.user.equals(userId))
+      return res.status(401).json({ message: "Not authorized." });
+
+    task.completed = completed;
+
+    await task.save();
+
+    return res.status(200).json({
+      error: false,
+      task,
+      message: "Task updated successfully."
+    });
+
+  } catch (error) {
+    console.log("Error in toggleComplete: ", error);
+  }
+});

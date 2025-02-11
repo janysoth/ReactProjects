@@ -23,7 +23,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
   };
 
   const { text, border } = getPriorityClasses(task.priority);
-  const { getTask, deleteTask, openModalForEdit, modalMode } = useTasks();
+  const { getTask, deleteTask, openModalForEdit, modalMode, toggleComplete } = useTasks();
 
   // Determine if the due date is within 2 days
   const today = new Date();
@@ -62,6 +62,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
               className={
                 `${task.completed ? "text-yellow-400" : "text-gray-400"}`
               }
+              onClick={() => toggleComplete(task)}
             >
               {star}
             </button>

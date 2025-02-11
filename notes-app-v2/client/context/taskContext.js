@@ -135,6 +135,23 @@ export const TasksProvider = ({ children }) => {
     setLoading(false);
   };
 
+  // Toggle Complete Task
+  const toggleComplete = async (task) => {
+    setLoading(false);
+
+    try {
+      const response = await axios.put(`${serverUrl}/toggle-complete/${task._id}`, {
+        completed: !task.completed
+      });
+
+      toast.success("Task updated successfully.");
+
+      getTasks();
+    } catch (error) {
+      console.log("Error in toggleComplete: ", error);
+    }
+  };
+
   // Handle input
   const handleInput = (name) => (e) => {
     if (name === "setTask")
@@ -177,6 +194,7 @@ export const TasksProvider = ({ children }) => {
       profileModal,
       completedTasks,
       activeTasks,
+      toggleComplete,
     }}>
       {children}
     </TasksContext.Provider>
