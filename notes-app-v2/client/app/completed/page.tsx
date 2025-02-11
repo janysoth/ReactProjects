@@ -7,7 +7,7 @@ import React, { useEffect } from 'react';
 import Filters from '../components/Filters/Filters';
 import TaskItem from '../components/TaskItem/TaskItem';
 
-const CompletedTaskPage = () => {
+const CompletedTasksPage = () => {
   useRedirect("/login");
 
   const { openModalForAdd, priority, completedTasks, setPriority } = useTasks();
@@ -46,4 +46,4 @@ const CompletedTaskPage = () => {
   )
 }
 
-export default CompletedTaskPage
+export default CompletedTasksPage
