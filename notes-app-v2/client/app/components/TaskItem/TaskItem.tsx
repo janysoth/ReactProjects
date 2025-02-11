@@ -35,7 +35,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
   const completedDueDateStyle = "line-through text-green-500";
 
   return (
-    <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 hover:bg-gray-200 ${border} ${text} ${task.completed ? completedDueDateStyle : dueDateStyle}`}>
+    <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 hover:bg-gray-200 ${border} ${text}`}>
       {/* Header with Due Date */}
       <div className="flex justify-between">
         <h4 className="font-bold text-2xl">{task.title}</h4>

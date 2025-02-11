@@ -20,11 +20,13 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="m-6 h-screen flex flex-col">
+    <main className="m-2 h-screen flex flex-col rounded-[1rem]">
       {/* Sticky Header */}
-      <div className="flex justify-between sticky top-3 z-10 p-4 shadow-md bg-gray-100 rounded-[1rem]">
-        <h1 className="text-2xl font-bold">All Tasks:</h1>
-        <Filters />
+      <div className='sticky top-3 z-10 p-2  rounded-md'>
+        <h1 className="text-3xl font-semibold text-gray-800 mb-4">All Tasks</h1>
+        <div className="rounded-md shadow-md">
+          <Filters />
+        </div>
       </div>
 
       {/* Scrollable Content */}
