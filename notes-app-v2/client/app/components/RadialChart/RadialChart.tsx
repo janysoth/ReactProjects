@@ -32,14 +32,15 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 function RadialChart() {
+  // Import items from the global context file called useTasks
   const { tasks, completedTasks, activeTasks } = useTasks();
 
   const totalTasks = tasks.length;
 
   const chartData = [
     {
-      pending: activeTasks.length,
-      completed: completedTasks.length,
+      Pending: activeTasks.length,
+      Completed: completedTasks.length,
     },
   ];
 
@@ -91,14 +92,14 @@ function RadialChart() {
               />
             </PolarRadiusAxis>
             <RadialBar
-              dataKey="completed"
+              dataKey="Completed"
               stackId="a"
               cornerRadius={5}
               fill="var(--color-desktop)"
               className="stroke-transparent stroke-2"
             />
             <RadialBar
-              dataKey="pending"
+              dataKey="Pending"
               fill="var(--color-mobile)"
               stackId="a"
               cornerRadius={5}

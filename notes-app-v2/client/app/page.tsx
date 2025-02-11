@@ -28,7 +28,7 @@ export default function Home() {
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto mt-6 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-[1.5rem] pb-[6rem]">
+      <div className="flex-1 overflow-y-auto mt-6 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-[1.5rem] pb-[18rem]">
         {tasksFiltered.map((task: Task, i: number) => (
           <TaskItem key={i} task={task} />
         ))}

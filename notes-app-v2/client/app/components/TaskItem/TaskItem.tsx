@@ -1,7 +1,7 @@
 import { useTasks } from '@/context/taskContext';
 import { edit, star, trash } from "@/utils/Icons";
 import { Task } from '@/utils/types';
-import { formatTime } from '@/utils/utilities';
+import { formatDueDate, formatTime } from '@/utils/utilities';
 import React from 'react';
 
 interface TaskItemProps {
@@ -31,13 +31,16 @@ const TaskItem = ({ task }: TaskItemProps) => {
   const timeDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   const dueDateStyle = timeDiff <= 2 ? "text-red-500 font-bold" : "text-gray-400";
 
+  // Additional styling for completed tasks
+  const completedDueDateStyle = "line-through text-green-500";
+
   return (
-    <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 hover:bg-gray-200 ${border} ${text}`}>
+    <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 hover:bg-gray-200 ${border} ${text} ${task.completed ? completedDueDateStyle : dueDateStyle}`}>
       {/* Header with Due Date */}
       <div className="flex justify-between">
         <h4 className="font-bold text-2xl">{task.title}</h4>
-        <p className={`text-sm ${dueDateStyle}`}>
-          Due: {formatTime(task.dueDate)}
+        <p className={`text-sm ${task.completed ? completedDueDateStyle : dueDateStyle}`}>
+          Due: {formatDueDate(task.dueDate)}
         </p>
       </div>
 
