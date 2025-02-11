@@ -108,7 +108,7 @@ const Modal = () => {
             className="bg-[#F9F9F9] p-2 rounded-md border"
             type="date"
             name="dueDate"
-            value={task.dueDate || ""}
+            value={task.dueDate ? task.dueDate.split('T')[0] : ""}
             onChange={(e) => handleInput("dueDate")(e)}
           />
         </div>
