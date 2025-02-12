@@ -1,10 +1,12 @@
 "use client";
+import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 import { useTasks } from "@/context/taskContext";
 import useRedirect from "@/hooks/useUserRedirect";
+import { container, item } from "@/utils/animations";
 import { Task } from "@/utils/types";
 import { filteredTasks } from "@/utils/utilities";
-import { useEffect } from "react";
 import Filters from "./components/Filters/Filters";
 import TaskItem from "./components/TaskItem/TaskItem";
 
@@ -30,19 +32,25 @@ export default function Home() {
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto mt-6 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-[1.5rem] pb-[18rem]">
+      <motion.div
+        className="flex-1 overflow-y-auto mt-6 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-[1.5rem] pb-[18rem]"
+        variants={container}
+        initial="hidden"
+        animate="visible"
+      >
         {tasksFiltered.map((task: Task, i: number) => (
           <TaskItem key={i} task={task} />
         ))}
 
-        <button
+        <motion.button
           className="h-[16rem] w-full py-2 rounded-md text-lg font-medium text-gray-500 border-dashed border-2 border-gray-400
           hover:bg-gray-300 hover:border-none transition duration-200 ease-in-out"
           onClick={openModalForAdd}
+          variants={item}
         >
           Add New Task
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </main>
   );
 }
