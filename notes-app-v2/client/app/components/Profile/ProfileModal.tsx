@@ -110,6 +110,15 @@ const ProfileModal = () => {
           className="mt-4 pt-2 flex flex-col gap-4 border-t-2 border-t-[#323232]/10"
           onSubmit={handleSubmit}
         >
+
+          {/* Close (X) Button */}
+          <button
+            type="button"
+            onClick={closeModal}
+            className="absolute top-1 right-3 text-gray-500 text-2xl font-bold hover:text-red-500"
+          >
+            &times;
+          </button>
           {/* Full Name */}
           <div className="pt-2 grid grid-cols-[150px_1fr] items-center">
             <label htmlFor="name" className="text-sm font-medium">
