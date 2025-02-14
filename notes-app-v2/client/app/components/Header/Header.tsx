@@ -1,9 +1,10 @@
 "use client"
+import { FaGithub, FaMoon, FaUser } from "react-icons/fa"; // Example icons from react-icons
+
 import { useTasks } from '@/context/taskContext';
 import { useUserContext } from '@/context/userContext';
-import { github, moon, profile } from '@/utils/Icons';
-import Link from 'next/link';
 import React from 'react';
+import IconLink from '../IconLink/IconLink';
 
 const Header = () => {
   const { user } = useUserContext();
@@ -43,37 +44,23 @@ const Header = () => {
           {userId ? "Add a new Task" : "Login / Register"}
         </button>
 
-        <div className="flex gap-4 mt-4 sm:mt-0">
-          <Link
+        {/* Icon Links */}
+        {userId && (<div className="flex gap-4 mt-4 sm:mt-0">
+          <IconLink
             href="https://github.com/janysoth"
-            passHref
-            target="_blank"
-            rel="noopener noreferrer"
-            className="h-10 w-10 text-purple-500 rounded-full flex items-center justify-center text-lg border-2 border-[#E6E6E6] hover:bg-[#E6E6E6]"
-          >
-            {github}
-          </Link>
+            icon={<FaGithub />}
+          />
 
-          <Link
+          <IconLink
             href="https://github.com/janysoth"
-            passHref
-            target="_blank"
-            rel="noopener noreferrer"
-            className="h-10 w-10 text-purple-500 rounded-full flex items-center justify-center text-lg border-2 border-[#E6E6E6] hover:bg-[#E6E6E6]"
-          >
-            {moon}
-          </Link>
+            icon={<FaMoon />}
+          />
 
-          <Link
+          <IconLink
             href="https://github.com/janysoth"
-            passHref
-            target="_blank"
-            rel="noopener noreferrer"
-            className="h-10 w-10 text-purple-500 rounded-full flex items-center justify-center text-lg border-2 border-[#E6E6E6] hover:bg-[#E6E6E6]"
-          >
-            {profile}
-          </Link>
-        </div>
+            icon={<FaUser />}
+          />
+        </div>)}
       </div>
     </header>
   );
