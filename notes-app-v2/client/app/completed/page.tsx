@@ -6,7 +6,7 @@ import { useTasks } from '@/context/taskContext';
 import useRedirect from '@/hooks/useUserRedirect';
 import { container, item } from "@/utils/animations";
 import { Task } from '@/utils/types';
-import { filteredTasks } from '@/utils/utilities';
+import { filteredTasks, sortTasksByDueDate } from '@/utils/utilities';
 import Filters from '../components/Filters/Filters';
 import TaskItem from '../components/TaskItem/TaskItem';
 
@@ -15,7 +15,10 @@ const CompletedTasksPage = () => {
 
   const { openModalForAdd, priority, completedTasks, setPriority } = useTasks();
 
-  const tasksFiltered = filteredTasks(completedTasks, priority);
+  let tasksFiltered = filteredTasks(completedTasks, priority);
+
+  // Sorts Tasks by earliest due date
+  tasksFiltered = sortTasksByDueDate(tasksFiltered);
 
   useEffect(() => {
     setPriority("all");

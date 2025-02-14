@@ -85,3 +85,13 @@ export const overdueTasks = (tasks: Task[]) => {
     return !task.completed && moment(task.dueDate).isBefore(todayDate);
   });
 };
+
+// Sort Tasks by earliest due date
+export const sortTasksByDueDate = (tasks: Task[]) => {
+  return tasks.sort((taskA, taskB) => {
+    const taskADueDate = new Date(taskA.dueDate).getTime();
+    const taskBDueDate = new Date(taskB.dueDate).getTime();
+
+    return taskADueDate - taskBDueDate; // Sort in ascending order
+  });
+};
