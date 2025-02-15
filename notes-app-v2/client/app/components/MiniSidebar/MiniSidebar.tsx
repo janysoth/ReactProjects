@@ -3,6 +3,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import React from "react";
 
+import { useTasks } from "@/context/taskContext";
 import { useUserContext } from "@/context/userContext";
 import IconCheck from "@/public/icons/IconCheck";
 import IconDeleteAll from "@/public/icons/IconDeleteAll";
@@ -15,6 +16,8 @@ import Link from "next/link";
 const MiniSidebar = () => {
 
   const { logoutUser, user } = useUserContext();
+
+  const { tasks } = useTasks();
 
   const userId = user._id;
 
@@ -89,7 +92,7 @@ const MiniSidebar = () => {
           {userId && (
             <div className="relative group">
               <button
-                className="w-12 h-12 flex justify-center items-center border-2 border-[#EB4E31] p-2 rounded-full"
+                className="w-12 h-12 flex justify-center items-center border-2 border-[#EB4E31] p-2 rounded-full hover:text-white hover:bg-red-500"
                 onClick={handleLogout}
               >
                 {logout}
@@ -103,7 +106,7 @@ const MiniSidebar = () => {
           )}
 
           {/* Delete All Button with Tooltip */}
-          <div className="relative group">
+          {tasks && (<div className="relative group">
             <button className="w-12 h-12 flex justify-center items-center border-2 border-[#EB4E31] p-2 rounded-full">
               <IconDeleteAll strokeColor="#EB4E31" />
             </button>
@@ -112,7 +115,7 @@ const MiniSidebar = () => {
             <span className="absolute top-[50%] translate-y-[-50%] left-14 text-xs pointer-events-none text-white bg-[#3aafae] px-2 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Delete All Tasks
             </span>
-          </div>
+          </div>)}
         </div>
       </div>
     </div>
