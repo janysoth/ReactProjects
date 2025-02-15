@@ -18,7 +18,7 @@ router.get("/tasks", protect, getTasks);
 router.get("/task/:id", protect, getTask);
 router.patch("/task/:id", protect, updateTask);
 router.delete("/task/:id", protect, deleteTask);
-router.delete("/delete-tasks", protect, deleteAllTasks);
+router.delete("/delete-all-tasks", protect, deleteAllTasks);
 router.put("/toggle-complete/:id", protect, toggleComplete);
 
 export default router;

@@ -143,12 +143,17 @@ export const deleteTask = asyncHandler(async (req, res) => {
 // Delete All tasks
 export const deleteAllTasks = asyncHandler(async (req, res) => {
   try {
-    const userId = req.user._id;
+    const { userId } = req.body; // Get userId from the request body
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
 
     const tasks = await Task.find({ user: userId });
 
-    if (!tasks || tasks.length === 0)
+    if (!tasks || tasks.length === 0) {
       return res.status(404).json({ message: "No tasks found." });
+    }
 
     // Delete all tasks for the user
     await Task.deleteMany({ user: userId });

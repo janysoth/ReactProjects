@@ -135,6 +135,28 @@ export const TasksProvider = ({ children }) => {
     setLoading(false);
   };
 
+  // Delete all tasks
+  const deleteAllTasks = async () => {
+    setLoading(true);
+
+    try {
+      // Make a request to delete all tasks for the current user
+      await axios.delete(`${serverUrl}/delete-all-tasks`, {
+        data: { userId }, // Send userId in the request body
+      });
+
+      // Clear the tasks array
+      setTasks([]);
+
+      toast.success("All tasks deleted successfully.");
+    } catch (error) {
+      console.log("Error in deleting all tasks: ", error);
+      toast.error("Failed to delete all tasks.");
+    }
+
+    setLoading(false);
+  };
+
   // Toggle Complete Task
   const toggleComplete = async (task) => {
     setLoading(false);
@@ -195,6 +217,7 @@ export const TasksProvider = ({ children }) => {
       completedTasks,
       activeTasks,
       toggleComplete,
+      deleteAllTasks
     }}>
       {children}
     </TasksContext.Provider>

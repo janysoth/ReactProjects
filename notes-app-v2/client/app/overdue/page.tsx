@@ -27,7 +27,7 @@ const OverdueTasksPage = () => {
     <main className="m-2 h-screen flex flex-col rounded-[1rem]">
       {/* Sticky Header */}
       <div className='sticky top-3 z-10 p-2  rounded-md'>
-        <h1 className="text-3xl font-semibold text-gray-800 mb-4">Completed Tasks</h1>
+        <h1 className="text-3xl font-semibold text-gray-800 mb-4">Overdue Tasks</h1>
         <div className="rounded-md shadow-md">
           <Filters />
         </div>
