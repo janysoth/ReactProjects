@@ -5,7 +5,7 @@ interface IconGridProps {
   className?: string;
 }
 
-const IconGrid: React.FC<IconGridProps> = ({ className, strokeColor = "black" }) => {
+const IconGrid: React.FC<IconGridProps> = ({ className, strokeColor }) => {
   return (
     <svg
       className={className}
