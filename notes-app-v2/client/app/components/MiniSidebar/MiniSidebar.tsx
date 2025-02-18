@@ -12,6 +12,7 @@ import IconGrid from "@/public/icons/IconGrid";
 import IconStopwatch from "@/public/icons/IconStopwatch";
 import { logout } from "@/utils/Icons";
 import Link from "next/link";
+import Tooltip from "../Tooltip/Tooltip";
 
 const MiniSidebar = () => {
 
@@ -65,9 +66,7 @@ const MiniSidebar = () => {
               <Link href={link}>
                 <Icon strokeColor={getStrokeColor(link)} />
               </Link>
-              <span className="u-triangle absolute top-1/2 left-full ml-2 transform -translate-y-1/2 text-xs text-white bg-[#3aafae] px-2 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {title}
-              </span>
+              <Tooltip text={title} />
             </li>
           ))}
         </ul>
@@ -84,9 +83,7 @@ const MiniSidebar = () => {
               </button>
 
               {/* Hover Tooltip */}
-              <span className="u-triangle absolute top-1/2 left-full ml-2 transform -translate-y-1/2 text-xs text-white bg-[#3aafae] px-2 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Logout
-              </span>
+              <Tooltip text="Logout" />
             </div>
           )}
 
@@ -100,9 +97,7 @@ const MiniSidebar = () => {
             </button>
 
             {/* Hover Tooltip */}
-            <span className="u-triangle absolute top-[50%] translate-y-[-50%] left-14 text-xs pointer-events-none text-white bg-[#3aafae] px-2 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Delete All Tasks
-            </span>
+            <Tooltip text="Delete All Task" />
           </div>)}
         </div>
       </div>
