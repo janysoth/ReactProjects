@@ -1,7 +1,7 @@
 import { useTasks } from '@/context/taskContext';
 import { edit, star, trash } from "@/utils/Icons";
 import { Task } from '@/utils/types';
-import { formatDueDate, formatTime } from '@/utils/utilities';
+import { formatTime } from '@/utils/utilities';
 import React from 'react';
 
 interface TaskItemProps {
@@ -40,7 +40,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
       <div className="flex justify-between">
         <h4 className="font-bold text-2xl">{task.title}</h4>
         <p className={`text-sm ${task.completed ? completedDueDateStyle : dueDateStyle}`}>
-          Due: {formatDueDate(task.dueDate)}
+          Due: {formatTime(task.dueDate)}
         </p>
       </div>
 
