@@ -1,7 +1,7 @@
 import { useTasks } from '@/context/taskContext';
 import { edit, star, trash } from "@/utils/Icons";
 import { Task } from '@/utils/types';
-import { formatTime } from '@/utils/utilities';
+import { formatDueDate, formatTime } from '@/utils/utilities';
 import React from 'react';
 
 interface TaskItemProps {
@@ -27,7 +27,11 @@ const TaskItem = ({ task }: TaskItemProps) => {
 
   // Determine if the due date is within 2 days
   const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalize today to midnight local time
+
   const dueDate = new Date(task.dueDate);
+  dueDate.setUTCHours(0, 0, 0, 0); // Ensure dueDate remains in UTC
+
   const timeDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   const dueDateStyle = timeDiff <= 2 ? "text-red-500 font-bold" : "text-gray-400";
 
@@ -40,7 +44,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
       <div className="flex justify-between">
         <h4 className="font-bold text-2xl">{task.title}</h4>
         <p className={`text-sm ${task.completed ? completedDueDateStyle : dueDateStyle}`}>
-          Due: {formatTime(task.dueDate)}
+          Due: {formatDueDate(task.dueDate)}
         </p>
       </div>
 

@@ -6,7 +6,7 @@ import { useTasks } from "@/context/taskContext";
 import useRedirect from "@/hooks/useUserRedirect";
 import { container, item } from "@/utils/animations";
 import { Task } from "@/utils/types";
-import { filteredTasks } from "@/utils/utilities";
+import { filteredTasks, sortTasksByDueDate } from "@/utils/utilities";
 import Filters from "./components/Filters/Filters";
 import TaskItem from "./components/TaskItem/TaskItem";
 
@@ -15,7 +15,9 @@ export default function Home() {
 
   const { tasks, setPriority, priority, openModalForAdd } = useTasks();
 
-  const tasksFiltered = filteredTasks(tasks, priority);
+  let tasksFiltered = filteredTasks(tasks, priority);
+
+  tasksFiltered = sortTasksByDueDate(tasksFiltered);
 
   useEffect(() => {
     setPriority("all");

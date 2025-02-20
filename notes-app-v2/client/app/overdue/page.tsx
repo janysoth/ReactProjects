@@ -6,7 +6,7 @@ import { useTasks } from '@/context/taskContext';
 import useRedirect from '@/hooks/useUserRedirect';
 import { container, item } from "@/utils/animations";
 import { Task } from '@/utils/types';
-import { filteredTasks, overdueTasks } from '@/utils/utilities';
+import { filteredTasks, overdueTasks, sortTasksByDueDate } from '@/utils/utilities';
 import Filters from '../components/Filters/Filters';
 import TaskItem from '../components/TaskItem/TaskItem';
 
@@ -17,7 +17,9 @@ const OverdueTasksPage = () => {
 
   const TasksOverdue = overdueTasks(tasks);
 
-  const tasksFiltered = filteredTasks(TasksOverdue, priority);
+  let tasksFiltered = filteredTasks(TasksOverdue, priority);
+
+  tasksFiltered = sortTasksByDueDate(tasksFiltered);
 
   useEffect(() => {
     setPriority("all");

@@ -28,6 +28,43 @@ export const formatTime = (createdAt: string) => {
   return created.format("MM/DD/YYYY");
 };
 
+export const formatDueDate = (date: string) => {
+  const now = moment.utc().startOf('day'); // Start of today
+  const givenDate = moment.utc(date).startOf('day'); // Start of given date (dueDate)
+  const withinSevenDays = now.clone().add(7, "days");
+  const withinOneMonth = now.clone().add(4, 'weeks');
+
+  // If the task is due today
+  if (givenDate.isSame(now, 'day')) {
+    return 'Today';
+  }
+
+  // If the task is due tomorrow
+  const tomorrow = moment.utc().add(1, 'days').startOf('day');
+  if (givenDate.isSame(tomorrow, 'day')) {
+    return 'Tomorrow';
+  }
+
+  // If the task was due yesterday
+  const yesterday = moment.utc().subtract(1, 'days').startOf('day');
+  if (givenDate.isSame(yesterday, 'day')) {
+    return 'Yesterday';
+  }
+
+  // // If the task is due within the last 7 days
+  if (givenDate.isBefore(withinSevenDays))
+    return givenDate.fromNow();
+
+  // if (givenDate.isSame(withinSevenDays, "day"))
+  //   return givenDate.fromNow();
+
+  if (givenDate.isAfter(withinSevenDays) && givenDate.isBefore(withinOneMonth))
+    return givenDate.fromNow();
+
+  // For any other past dates, return the full date in MM/DD/YYYY format
+  return givenDate.format('MM/DD/YYYY');
+};
+
 export const filteredTasks = (tasks: Task[], priority: string) => {
   const filteredTasks = () => {
     switch (priority) {
