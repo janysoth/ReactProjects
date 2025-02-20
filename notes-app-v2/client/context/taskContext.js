@@ -80,13 +80,22 @@ export const TasksProvider = ({ children }) => {
   };
 
   // Create a task
+
   const createTask = async (task) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${serverUrl}/task/create`, task);
+      const response = await axios.post(
+        `${serverUrl}/task/create`,
+        task,
+        // Add this for deployment
+        {
+          withCredentials: true, // Allow cookies to be sent
+          headers: { "Content-Type": "application/json" }
+        }
+      );
 
-      console.log("Task created: ", response.data);
+      //console.log("Task created: ", response.data);
 
       setTasks([...tasks, response.data]);
       toast.success("Task created successfully.");
@@ -126,6 +135,8 @@ export const TasksProvider = ({ children }) => {
 
       // Remove the task from the tasks away
       const updatedTasks = tasks.filter(currentTask => currentTask._id !== taskId);
+
+      toast.success("Task deleted successfully.");
 
       setTasks(updatedTasks);
     } catch (error) {
