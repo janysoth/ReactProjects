@@ -119,7 +119,7 @@ const SidebarStyled = styled.nav`
 
   .profile {
     margin: 1.5rem;
-    padding: 1rem 0.8rem;
+    padding: 1rem 1rem;
     position: relative;
 
     border-radius: 1rem;
@@ -166,7 +166,7 @@ const SidebarStyled = styled.nav`
       display: inline-block;
       overflow: hidden;
       transition: all 0.5s ease;
-      border-radius: 100%;
+      border-radius: 12px;
 
       width: 70px;
       height: 70px;
@@ -174,6 +174,7 @@ const SidebarStyled = styled.nav`
       img {
         border-radius: 100%;
         transition: all 0.5s ease;
+        border: 1px solid #ccc;
       }
     }
 
@@ -181,6 +182,8 @@ const SidebarStyled = styled.nav`
       margin-left: 0.8rem;
       font-size: clamp(1.2rem, 4vw, 1.4rem);
       line-height: 100%;
+      font-weight: 600;
+      color: white;
     }
 
     &:hover {
@@ -194,7 +197,7 @@ const SidebarStyled = styled.nav`
       }
     }
   }
-
+    
   .nav-item {
     position: relative;
     padding: 0.8rem 1rem 0.9rem 2.1rem;
