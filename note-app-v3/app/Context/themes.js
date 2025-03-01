@@ -74,6 +74,7 @@ const themes = [
     colorGrey5: "#2a2e35",
     colorGrey6: "#12181b",
     colorWhite: "#fff",
+    colorRed: "#FF0000",
     buttonGradient1:
       "linear-gradient(110.42deg, rgba(107, 190, 146, 0.7) 29.2%, rgba(245, 102, 146, 0.7) 63.56%)",
     buttonGradient2:

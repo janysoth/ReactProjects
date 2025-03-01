@@ -54,6 +54,7 @@ const Button = ({
   )
 };
 
+
 const ButtonStyled = styled.button`
   position: relative;
   display: flex;
@@ -65,16 +66,15 @@ const ButtonStyled = styled.button`
 
   i {
     margin-right: 1rem;
-    color: ${props => props.theme.colorGrey2};
+    color: ${(props) => props.theme.colorRed};
     font-size: 1.5rem;
-    transation: all 0.55s ease-in-out;
+    transition: all 0.55s ease-in-out;
+  }
 
-    &:hover {
-      color: ${props => props.theme.colorGrey2};
-
-      i {
-        color: ${props => props.theme.colorGrey2};
-      }
+  &:hover {
+    color: ${(props) => props.theme.colorGrey0};
+    i {
+      color: ${(props) => props.theme.colorGrey0};
     }
   }
 `;

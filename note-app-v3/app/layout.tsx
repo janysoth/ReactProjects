@@ -23,7 +23,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth(); // Await the result of auth()
+  const { userId } = await auth();
 
   return (
     <ClerkProvider>
