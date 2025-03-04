@@ -1,13 +1,44 @@
 "use client"
 import { useUserContext } from '@/context/userContext';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const LoginForm = () => {
   const { loginUser, userState, handleUserInput } = useUserContext();
   const { email, password } = userState;
   const [showPassword, setShowPassword] = useState(false);
+  const [formErrors, setFormErrors] = useState({ email: '', password: '' });
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const togglePassword = () => setShowPassword(!showPassword);
+
+  // Validation function
+  const validateInput = (name: string, value: string) => {
+    let error = '';
+    const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
+    if (!value.trim()) {
+      error = `${formattedName} is required.`;
+    } else {
+      if (name === 'email' && !/^\S+@\S+\.\S+$/.test(value)) {
+        error = 'Invalid Email format';
+      } else if (name === 'password' && value.length < 6) {
+        error = 'Password must be at least 6 characters';
+      }
+    }
+
+    setFormErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+  };
+
+  // Handle input change and validation
+  const handleChange = (field: 'email' | 'password') => (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleUserInput(field)(e);
+    validateInput(field, e.target.value);
+  };
+
+  // Check form validity
+  useEffect(() => {
+    setIsFormValid(!formErrors.email && !formErrors.password && email && password);
+  }, [formErrors, email, password]);
 
   return (
     <form className='relative m-[2rem] px-10 py-14 rounded-lg bg-white w-full max-w-[520px]'>
@@ -25,11 +56,12 @@ const LoginForm = () => {
             type="text"
             id="email"
             value={email}
-            onChange={(e) => handleUserInput("email")(e)}
+            onChange={handleChange("email")}
             name="email"
-            className="px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800"
+            className={`px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800 ${formErrors.email ? 'border-red-500' : ''}`}
             placeholder="johndoe@gmail.com"
           />
+          {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
         </div>
 
         {/* Password */}
@@ -41,21 +73,19 @@ const LoginForm = () => {
             type={showPassword ? "text" : "password"}
             id="password"
             value={password}
-            onChange={(e) => handleUserInput("password")(e)}
+            onChange={handleChange("password")}
             name="password"
-            className="px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800"
+            className={`px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800 ${formErrors.password ? 'border-red-500' : ''}`}
             placeholder="Password"
           />
           <button
             type="button"
             className="absolute p-1 right-4 top-[43%] text-[22px] text-blue-500 opacity-45"
+            onClick={togglePassword}
           >
-            {showPassword ? (
-              <i className="fas fa-eye-slash" onClick={togglePassword}></i>
-            ) : (
-              <i className="fas fa-eye" onClick={togglePassword}></i>
-            )}
+            {showPassword ? <i className="fas fa-eye-slash"></i> : <i className="fas fa-eye"></i>}
           </button>
+          {formErrors.password && <p className="text-red-500 text-sm mt-1">{formErrors.password}</p>}
         </div>
 
         <div className="mt-4 flex justify-end">
@@ -70,9 +100,10 @@ const LoginForm = () => {
         <div className="flex">
           <button
             type="submit"
-            disabled={!email || !password}
+            disabled={!isFormValid}
             onClick={loginUser}
-            className="mt-[1.5rem] flex-1 px-4 py-3 font-bold bg-blue-600 text-white rounded-md hover:bg-blue-800 transition-colors"
+            className={`mt-[1.5rem] flex-1 px-4 py-3 font-bold text-white rounded-md transition-colors 
+              ${isFormValid ? 'bg-blue-600 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'}`}
           >
             Log in
           </button>
@@ -93,4 +124,4 @@ const LoginForm = () => {
   )
 }
 
-export default LoginForm
+export default LoginForm;
