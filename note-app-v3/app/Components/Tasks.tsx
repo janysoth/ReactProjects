@@ -3,13 +3,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useGlobalState } from '../Context/globalProvider';
+import CreateContent from './CreateContent';
 
 const Tasks = () => {
   const { theme } = useGlobalState();
 
   return (
     <TaskStyled theme={theme}>
-      <h1>Tasks</h1>
+      <CreateContent />
     </TaskStyled>
   )
 }
