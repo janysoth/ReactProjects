@@ -2,6 +2,7 @@
 import { useUserContext } from '@/context/userContext';
 import useValidation from '@/hooks/useValidation';
 import React, { useEffect, useState } from 'react';
+import InputField from '../InputField/InputField';
 
 const LoginForm = () => {
   const { loginUser, userState, handleUserInput } = useUserContext();
@@ -33,54 +34,27 @@ const LoginForm = () => {
         </h1>
 
         {/* Email */}
-        <div className="flex flex-col mt-[1rem]">
-          <label htmlFor='email' className='mb-1 text-[#999]'>
-            Email
-          </label>
-
-          <input
-            type="text"
-            id="email"
-            value={email}
-            onChange={handleChange("email")}
-            name="email"
-            className={`px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800 ${formErrors.email ? 'border-red-500' : ''}`}
-            placeholder="johndoe@gmail.com"
-          />
-
-          {formErrors.email &&
-            <div className="text-red-500 text-sm mt-1">{formErrors.email}</div>
-          }
-        </div>
+        <InputField
+          label='Email'
+          id='email'
+          value={email}
+          onChange={handleChange("email")}
+          error={formErrors.email}
+          placeholder='johndoe@gmail.com'
+        />
 
         {/* Password */}
-        <div className="flex flex-col mt-[1rem] relative">
-          <label htmlFor='password' className='mb-1 text-[#999]'>
-            Password
-          </label>
-
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            value={password}
-            onChange={handleChange("password")}
-            name="password"
-            className={`px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800 ${formErrors.password ? 'border-red-500' : ''}`}
-            placeholder="Password"
-          />
-
-          <button
-            type="button"
-            className="absolute p-1 right-4 top-[43%] text-[22px] text-blue-500 opacity-45"
-            onClick={togglePassword}
-          >
-            {showPassword ? <i className="fas fa-eye-slash"></i> : <i className="fas fa-eye"></i>}
-          </button>
-
-          {formErrors.password &&
-            <div className="text-red-500 text-sm mt-1">{formErrors.password}</div>
-          }
-        </div>
+        <InputField
+          label='Password'
+          type={showPassword ? "text" : "password"}
+          id='password'
+          value={password}
+          onChange={handleChange("password")}
+          togglePassword={togglePassword}
+          showPassword={showPassword}
+          placeholder='Password'
+          error={formErrors.password}
+        />
 
         <div className="mt-4 flex justify-end">
           <a

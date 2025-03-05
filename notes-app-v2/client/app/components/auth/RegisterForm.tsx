@@ -2,6 +2,7 @@
 import { useUserContext } from '@/context/userContext';
 import useValidation from '@/hooks/useValidation';
 import React, { useEffect, useState } from 'react';
+import InputField from '../InputField/InputField';
 
 const RegisterForm = () => {
   const { registerUser, userState, handleUserInput } = useUserContext();
@@ -27,75 +28,41 @@ const RegisterForm = () => {
     <form className='relative m-[2rem] px-10 py-14 rounded-lg bg-white w-full max-w-[520px]'>
       <div className="relative z-10">
         <h1 className='mb-2 text-center text-[1.35rem] font-medium'>
-          Account Register
+          Account Registration
         </h1>
 
         {/* Full Name */}
-        <div className="flex flex-col">
-          <label htmlFor='name' className='mb-1 text-[#999]'>
-            Full Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={handleChange("name")}
-            name="name"
-            className={`px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800 ${formErrors.name ? 'border-red-500' : ''}`}
-            placeholder="John Doe"
-          />
-          {formErrors.name &&
-            <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
-          }
-        </div>
+        <InputField
+          label='Full Name'
+          id="name"
+          value={name}
+          onChange={handleChange("name")}
+          error={formErrors.name}
+          placeholder='John Doe'
+        />
 
         {/* Email */}
-        <div className="flex flex-col mt-[1rem]">
-          <label htmlFor='email' className='mb-1 text-[#999]'>
-            Email
-          </label>
-          <input
-            type="text"
-            id="email"
-            value={email}
-            onChange={handleChange("email")}
-            name="email"
-            className={`px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800 ${formErrors.email ? 'border-red-500' : ''}`}
-            placeholder="johndoe@gmail.com"
-          />
-          {formErrors.email &&
-            <div className="text-red-500 text-sm mt-1">{formErrors.email}</div>
-          }
-        </div>
+        <InputField
+          label='Email'
+          id="email"
+          value={email}
+          onChange={handleChange("email")}
+          error={formErrors.email}
+          placeholder='johndoe@gmail.com'
+        />
 
         {/* Password */}
-        <div className="flex flex-col mt-[1rem] relative">
-          <label htmlFor='password' className='mb-1 text-[#999]'>
-            Password
-          </label>
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            value={password}
-            onChange={handleChange("password")}
-            name="password"
-            className={`px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800 ${formErrors.password ? 'border-red-500' : ''}`}
-            placeholder="Password"
-          />
-          {formErrors.password &&
-            <div className="text-red-500 text-sm mt-1">{formErrors.password}</div>
-          }
-          <button
-            type="button"
-            className="absolute p-1 right-4 top-[43%] text-[22px] text-blue-500 opacity-45"
-          >
-            {showPassword ? (
-              <i className="fas fa-eye-slash" onClick={togglePassword}></i>
-            ) : (
-              <i className="fas fa-eye" onClick={togglePassword}></i>
-            )}
-          </button>
-        </div>
+        <InputField
+          label="Password"
+          id="password"
+          type={showPassword ? "text" : "password"}
+          value={password}
+          onChange={handleChange("password")}
+          error={formErrors.password}
+          placeholder="Password"
+          togglePassword={togglePassword}
+          showPassword={showPassword}
+        />
 
         <div className="flex">
           <button
