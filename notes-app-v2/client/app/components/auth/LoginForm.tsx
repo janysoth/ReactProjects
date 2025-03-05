@@ -1,7 +1,9 @@
 "use client"
+
 import { useUserContext } from '@/context/userContext';
 import useValidation from '@/hooks/useValidation';
 import React, { useEffect, useState } from 'react';
+
 import InputField from '../InputField/InputField';
 
 const LoginForm = () => {
@@ -27,9 +29,17 @@ const LoginForm = () => {
   }, [formErrors, email, password]);
 
   return (
-    <form className='relative m-[2rem] px-10 py-14 rounded-lg bg-white w-full max-w-[520px]'>
+    <form
+      className='relative m-[2rem] px-10 py-14 rounded-lg bg-white w-full max-w-[520px]'
+      aria-labelledby="register-heading"
+      noValidate
+    >
       <div className="relative z-10">
-        <h1 className='mb-2 text-center text-[1.35rem] font-medium'>
+        {/* Accessible Heading */}
+        <h1
+          id="register-heading"
+          className='mb-2 text-center text-[1.35rem] font-medium'
+        >
           Login to Your Account
         </h1>
 
@@ -41,6 +51,7 @@ const LoginForm = () => {
           onChange={handleChange("email")}
           error={formErrors.email}
           placeholder='johndoe@gmail.com'
+          aria-describedby={formErrors.email ? "email-error" : undefined}
         />
 
         {/* Password */}
@@ -54,6 +65,7 @@ const LoginForm = () => {
           showPassword={showPassword}
           placeholder='Password'
           error={formErrors.password}
+          aria-describedby={formErrors.password ? "password-error" : undefined}
         />
 
         <div className="mt-4 flex justify-end">
@@ -65,13 +77,14 @@ const LoginForm = () => {
           </a>
         </div>
 
+        {/* Submit Button */}
         <div className="flex">
           <button
             type="submit"
             disabled={!isFormValid}
             onClick={loginUser}
-            className={`mt-[1.5rem] flex-1 px-4 py-3 font-bold text-white rounded-md transition-colors 
-              ${isFormValid ? 'bg-blue-600 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'}`}
+            className={`mt-[1.5rem] flex-1 px-4 py-3 font-bold text-white rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 
+              ${isFormValid ? "bg-blue-600 hover:bg-blue-800" : "bg-gray-400 cursor-not-allowed"}`}
           >
             Log in
           </button>
@@ -81,7 +94,7 @@ const LoginForm = () => {
           Don't have an account?{" "}
           <a
             href="/register"
-            className='font-bold text-blue-400 hover:text-[#7263f3] transition-all duration-300'
+            className="font-bold text-blue-400 hover:text-[#7263f3] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Register here
           </a>
