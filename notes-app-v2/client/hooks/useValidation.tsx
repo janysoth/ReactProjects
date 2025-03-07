@@ -32,6 +32,15 @@ const useValidation = () => {
             error = "Username must be at least 3 characters"
           break;
 
+        case "title":
+          if (value.length < 3)
+            error = "Title must be at least 3 characters"
+          break;
+
+        case "description":
+          if (value.length < 5) error = "Description must be at least 5 characters.";
+          break;
+
         default:
           break;
       }

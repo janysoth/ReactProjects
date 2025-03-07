@@ -1,7 +1,9 @@
-"use client"
+"use client";
 import { useTasks } from '@/context/taskContext';
 import useDetectOutside from '@/hooks/useDetectOutside';
+import useValidation from '@/hooks/useValidation';
 import React, { useEffect, useRef } from 'react';
+import InputField from '../InputField/InputField';
 
 const Modal = () => {
   const {
@@ -15,6 +17,7 @@ const Modal = () => {
     updateTask,
   } = useTasks();
 
+  const { formErrors, validateInput } = useValidation();
   const ref = useRef(null);
 
   // To Detect Click outside the modal
@@ -32,8 +35,18 @@ const Modal = () => {
       handleInput("setTask")(activeTask);
   }, [modalMode, activeTask]);
 
+  // Check if all required fields are filled and there are no validation errors
+  const isFormValid =
+    task.title?.trim() &&
+    task.description?.trim() &&
+    task.priority?.trim() &&
+    task.dueDate?.trim() &&
+    !Object.values(formErrors).some(error => error); // Ensure no validation errors
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!isFormValid) return; // Prevent submission if invalid
 
     if (modalMode === "edit")
       updateTask(task);
@@ -60,30 +73,36 @@ const Modal = () => {
         </button>
 
         {/* Title Input */}
-        <div className='flex flex-col gap-1'>
-          <label htmlFor="title">Title</label>
-          <input
-            className="bg-[#F9F9F9] p-2 rounded-md border"
-            type="text"
-            id="title"
-            placeholder="Task Title"
-            name="title"
-            value={task.title || ""}
-            onChange={(e) => handleInput("title")(e)}
-          />
-        </div>
+        <InputField
+          label="Title"
+          id="title"
+          value={task.title || ""}
+          placeholder="Task Title"
+          onChange={(e) => {
+            handleInput("title")(e);
+            validateInput("title", e.target.value);
+          }}
+          error={formErrors.title}
+        />
 
         {/* Description Input */}
         <div className="flex flex-col gap-1">
           <label htmlFor="description">Description</label>
           <textarea
-            className="bg-[#F9F9F9] p-2 rounded-md border resize-none"
+            className={`bg-[#F9F9F9] p-2 rounded-md border resize-none ${formErrors.description ? "border-red-500" : "border-gray-300"
+              }`}
             name="description"
             placeholder="Task Description"
             rows={4}
             value={task.description || ""}
-            onChange={(e) => handleInput("description")(e)}
+            onChange={(e) => {
+              handleInput("description")(e);
+              validateInput("description", e.target.value);
+            }}
           />
+          {formErrors.description && (
+            <p className="text-red-500 text-sm">{formErrors.description}</p>
+          )}
         </div>
 
         {/* Priority Input */}
@@ -93,8 +112,12 @@ const Modal = () => {
             className="bg-[#F9F9F9] p-2 rounded-md border cursor-pointer"
             name="priority"
             value={task.priority || ""}
-            onChange={(e) => handleInput("priority")(e)}
+            onChange={(e) => {
+              handleInput("priority")(e);
+              validateInput("priority", e.target.value);
+            }}
           >
+            <option value="">Select Priority</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
@@ -109,7 +132,10 @@ const Modal = () => {
             type="date"
             name="dueDate"
             value={task.dueDate ? task.dueDate.split('T')[0] : ""}
-            onChange={(e) => handleInput("dueDate")(e)}
+            onChange={(e) => {
+              handleInput("dueDate")(e);
+              validateInput("dueDate", e.target.value);
+            }}
           />
         </div>
 
@@ -141,7 +167,9 @@ const Modal = () => {
           </button>
           <button
             type="submit"
-            className={`w-1/2 text-white py-3 hover:bg-blue-500 transition duration-200 rounded-full ${modalMode === "edit" ? "bg-blue-400" : "bg-[#3aafae]"}`}
+            className={`w-1/2 text-white py-3 hover:bg-blue-500 transition duration-200 rounded-full ${modalMode === "edit" ? "bg-blue-400" : "bg-[#3aafae]"
+              } ${!isFormValid ? "opacity-50 bg-gray-400 cursor-not-allowed" : ""}`}
+            disabled={!isFormValid} // Disable if any field is empty
           >
             {modalMode === "edit" ? "Update Task" : "Create Task"}
           </button>
