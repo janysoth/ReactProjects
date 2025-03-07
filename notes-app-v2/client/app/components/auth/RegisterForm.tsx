@@ -4,7 +4,7 @@ import { useUserContext } from "@/context/userContext";
 import useValidation from "@/hooks/useValidation";
 import React, { useEffect, useState } from "react";
 
-import InputField from "../InputField/InputField";
+import FormField from "../InputField/FormField";
 
 const RegisterForm = () => {
   const { registerUser, userState, handleUserInput } = useUserContext();
@@ -41,7 +41,7 @@ const RegisterForm = () => {
         </h1>
 
         {/* Full Name */}
-        <InputField
+        <FormField
           label="Full Name"
           id="name"
           value={name}
@@ -52,7 +52,7 @@ const RegisterForm = () => {
         />
 
         {/* Email */}
-        <InputField
+        <FormField
           label="Email"
           id="email"
           value={email}
@@ -63,7 +63,7 @@ const RegisterForm = () => {
         />
 
         {/* Password */}
-        <InputField
+        <FormField
           label="Password"
           id="password"
           type={showPassword ? "text" : "password"}

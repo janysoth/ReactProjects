@@ -4,7 +4,7 @@ import { useUserContext } from '@/context/userContext';
 import useValidation from '@/hooks/useValidation';
 import React, { useEffect, useState } from 'react';
 
-import InputField from '../InputField/InputField';
+import FormField from '../InputField/FormField';
 
 const LoginForm = () => {
   const { loginUser, userState, handleUserInput } = useUserContext();
@@ -44,7 +44,7 @@ const LoginForm = () => {
         </h1>
 
         {/* Email */}
-        <InputField
+        <FormField
           label='Email'
           id='email'
           value={email}
@@ -55,7 +55,7 @@ const LoginForm = () => {
         />
 
         {/* Password */}
-        <InputField
+        <FormField
           label='Password'
           type={showPassword ? "text" : "password"}
           id='password'

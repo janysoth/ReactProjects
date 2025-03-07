@@ -3,7 +3,7 @@ import { useTasks } from '@/context/taskContext';
 import useDetectOutside from '@/hooks/useDetectOutside';
 import useValidation from '@/hooks/useValidation';
 import React, { useEffect, useRef } from 'react';
-import InputField from '../InputField/InputField';
+import FormField from '../InputField/FormField';
 
 const Modal = () => {
   const {
@@ -73,7 +73,7 @@ const Modal = () => {
         </button>
 
         {/* Title Input */}
-        <InputField
+        <FormField
           label="Title"
           id="title"
           value={task.title || ""}
@@ -85,76 +85,61 @@ const Modal = () => {
           error={formErrors.title}
         />
 
-        {/* Description Input */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="description">Description</label>
-          <textarea
-            className={`bg-[#F9F9F9] p-2 rounded-md border resize-none ${formErrors.description ? "border-red-500" : "border-gray-300"
-              }`}
-            name="description"
-            placeholder="Task Description"
-            rows={4}
-            value={task.description || ""}
-            onChange={(e) => {
-              handleInput("description")(e);
-              validateInput("description", e.target.value);
-            }}
-          />
-          {formErrors.description && (
-            <p className="text-red-500 text-sm">{formErrors.description}</p>
-          )}
-        </div>
+        {/* Description Input (Textarea) */}
+        <FormField
+          label="Description"
+          id="description"
+          type="textarea"
+          value={task.description || ""}
+          placeholder="Task Description"
+          onChange={(e) => {
+            handleInput("description")(e);
+            validateInput("description", e.target.value);
+          }}
+          error={formErrors.description}
+        />
 
-        {/* Priority Input */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="priority">Select Priority</label>
-          <select
-            className="bg-[#F9F9F9] p-2 rounded-md border cursor-pointer"
-            name="priority"
-            value={task.priority || ""}
-            onChange={(e) => {
-              handleInput("priority")(e);
-              validateInput("priority", e.target.value);
-            }}
-          >
-            <option value="">Select Priority</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </div>
+        {/* Priority Input (Select) */}
+        <FormField
+          label="Select Priority"
+          id="priority"
+          type="select"
+          value={task.priority || ""}
+          onChange={(e) => {
+            handleInput("priority")(e);
+            validateInput("priority", e.target.value);
+          }}
+          options={[
+            { value: "low", label: "Low" },
+            { value: "medium", label: "Medium" },
+            { value: "high", label: "High" },
+          ]}
+        />
 
         {/* Due Date Input */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="dueDate">Due Date</label>
-          <input
-            className="bg-[#F9F9F9] p-2 rounded-md border"
-            type="date"
-            name="dueDate"
-            value={task.dueDate ? task.dueDate.split('T')[0] : ""}
-            onChange={(e) => {
-              handleInput("dueDate")(e);
-              validateInput("dueDate", e.target.value);
-            }}
-          />
-        </div>
+        <FormField
+          label="Due Date"
+          id="dueDate"
+          type="date"
+          value={task.dueDate ? task.dueDate.split('T')[0] : ""}
+          onChange={(e) => {
+            handleInput("dueDate")(e);
+            validateInput("dueDate", e.target.value);
+          }}
+        />
 
-        {/* Status Input */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="completed">Task Completed</label>
-          <div className="flex items-center justify-between bg-[#F9F9F9] p-2 rounded-md border">
-            <label htmlFor="completed">Completed</label>
-            <select
-              className="bg-[#F9F9F9] p-2 rounded-md border cursor-pointer"
-              name="completed"
-              value={task.completed || ""}
-              onChange={(e) => handleInput("completed")(e)}
-            >
-              <option value="false">No</option>
-              <option value="true">Yes</option>
-            </select>
-          </div>
-        </div>
+        {/* Status Input (Select) */}
+        <FormField
+          label="Task Completed"
+          id="completed"
+          type="select"
+          value={task.completed || ""}
+          onChange={(e) => handleInput("completed")(e)}
+          options={[
+            { value: "false", label: "No" },
+            { value: "true", label: "Yes" },
+          ]}
+        />
 
         {/* Buttons: Submit & Cancel */}
         <div className="mt-4 flex justify-between gap-2">
