@@ -82,15 +82,6 @@ const LoginForm = () => {
 
         {/* Submit Button */}
         <div className="flex">
-          {/* <button
-            type="submit"
-            disabled={!isFormValid}
-            onClick={loginUser}
-            className={`mt-[1.5rem] flex-1 px-4 py-3 font-bold text-white rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 
-              ${isFormValid ? "bg-blue-600 hover:bg-blue-800" : "bg-gray-400 cursor-not-allowed"}`}
-          >
-            Log in
-          </button> */}
           <Button type="submit" onClick={loginUser} disabled={!isFormValid}>
             Log in
           </Button>
