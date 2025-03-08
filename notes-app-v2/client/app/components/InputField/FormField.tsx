@@ -81,11 +81,11 @@ const FormField: React.FC<FormFieldProps> = ({
         )}
 
         {/* Eye Button for Password Visibility */}
-        {togglePassword && type === "password" && (
+        {togglePassword && (
           <button
             type="button"
             onClick={togglePassword}
-            className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? "🙈" : "👁️"}
