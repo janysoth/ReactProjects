@@ -4,6 +4,7 @@ import { useUserContext } from '@/context/userContext';
 import useValidation from '@/hooks/useValidation';
 import React, { useEffect, useState } from 'react';
 
+import Button from '../Button/Button';
 import FormField from '../InputField/FormField';
 
 const LoginForm = () => {
@@ -81,7 +82,7 @@ const LoginForm = () => {
 
         {/* Submit Button */}
         <div className="flex">
-          <button
+          {/* <button
             type="submit"
             disabled={!isFormValid}
             onClick={loginUser}
@@ -89,7 +90,10 @@ const LoginForm = () => {
               ${isFormValid ? "bg-blue-600 hover:bg-blue-800" : "bg-gray-400 cursor-not-allowed"}`}
           >
             Log in
-          </button>
+          </button> */}
+          <Button type="submit" onClick={loginUser} disabled={!isFormValid}>
+            Log in
+          </Button>
         </div>
 
         <p className='mt-4 px-[2rem] text-center text-[#999] text-[14px]'>
