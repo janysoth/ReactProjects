@@ -17,10 +17,11 @@ const RegisterForm = () => {
   const togglePassword = () => setShowPassword((prev) => !prev);
 
   const handleChange =
-    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      handleUserInput(field)(e);
-      validateInput(field, e.target.value);
-    };
+    (field: string) =>
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        handleUserInput(field)(e);
+        validateInput(field, e.target.value);
+      };
 
   useEffect(() => {
     setIsFormValid(

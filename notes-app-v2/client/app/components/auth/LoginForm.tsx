@@ -18,10 +18,12 @@ const LoginForm = () => {
   const togglePassword = () => setShowPassword(!showPassword);
 
   // Handle input change and validation
-  const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleUserInput(field)(e);
-    validateInput(field, e.target.value);
-  };
+  const handleChange =
+    (field: string) =>
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        handleUserInput(field)(e);
+        validateInput(field, e.target.value);
+      };
 
   // Check form validity
   useEffect(() => {
