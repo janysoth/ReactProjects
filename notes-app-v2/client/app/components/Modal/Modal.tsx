@@ -3,6 +3,7 @@ import { useTasks } from '@/context/taskContext';
 import useDetectOutside from '@/hooks/useDetectOutside';
 import useValidation from '@/hooks/useValidation';
 import React, { useEffect, useRef } from 'react';
+import Button from '../Button/Button';
 import FormField from '../InputField/FormField';
 
 const Modal = () => {
@@ -39,8 +40,6 @@ const Modal = () => {
   const isFormValid =
     task.title?.trim() &&
     task.description?.trim() &&
-    task.priority?.trim() &&
-    task.dueDate?.trim() &&
     !Object.values(formErrors).some(error => error); // Ensure no validation errors
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -121,7 +120,7 @@ const Modal = () => {
           label="Due Date"
           id="dueDate"
           type="date"
-          value={task.dueDate ? task.dueDate.split('T')[0] : ""}
+          value={task.dueDate ? task.dueDate.split('T')[0] : new Date().toISOString().split('T')[0]} // Default to today's date if not provided
           onChange={(e) => {
             handleInput("dueDate")(e);
             validateInput("dueDate", e.target.value);
@@ -142,8 +141,8 @@ const Modal = () => {
         />
 
         {/* Buttons: Submit & Cancel */}
-        <div className="mt-4 flex justify-between gap-2">
-          <button
+        <div className="flex justify-between gap-2">
+          {/* <button
             type="button"
             onClick={closeModal}
             className="w-1/2 py-3 border border-gray-300 rounded-full bg-red-500 text-white hover:bg-red-700 transition duration-200"
@@ -157,7 +156,25 @@ const Modal = () => {
             disabled={!isFormValid} // Disable if any field is empty
           >
             {modalMode === "edit" ? "Update Task" : "Create Task"}
-          </button>
+          </button> */}
+          <Button
+            type='button'
+            onClick={closeModal}
+            className='bg-red-500 hover:bg-red-700'
+          >
+            Cancel
+          </Button>
+
+          <Button
+            type='submit'
+            className={`
+              ${modalMode === "edit" ? "bg-green-500 hover:bg-green-700" : ""} 
+              ${!isFormValid ? "opacity-50 bg-gray-400 cursor-not-allowed" : ""}
+            `}
+            disabled={!isFormValid}
+          >
+            {modalMode === "edit" ? "Update Task" : "Create Task"}
+          </Button>
         </div>
       </form>
     </div>
