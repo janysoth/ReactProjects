@@ -2,11 +2,11 @@
 
 import React from 'react'
 
-import { commandIcon } from '@/app/utils/Icons'
 import { Button } from '@/components/ui/button'
 import { Command, CommandInput } from "@/components/ui/command"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 
+import { commandIcon } from '@/app/utils/Icons'
 
 const SearchBar = () => {
   return (
@@ -33,8 +33,6 @@ const SearchBar = () => {
         <DialogContent className='p-0'>
           <Command className="rounded-lg border shadow-md">
             <CommandInput
-              value=""
-              onChangeCapture={() => { }}
               placeholder="Type a command or search..."
             />
 
