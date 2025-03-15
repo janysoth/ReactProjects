@@ -7,12 +7,16 @@ export async function GET(req: NextRequest) {
 
     const searchParams = req.nextUrl.searchParams;
 
-    const lat = searchParams.get("lat");
-    const lon = searchParams.get("lon");
+    // const lat = searchParams.get("lat");
+    // const lon = searchParams.get("lon");
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon={$lon}&appid=${apiKey}`
+    const lat = 40.4165;
+    const lon = -3.7026;
+
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
 
     const res = await axios.get(url);
+    console.log(res.data)
 
     return NextResponse.json(res.data);
   } catch (error) {
