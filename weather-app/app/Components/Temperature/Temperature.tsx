@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 
 const Temperature = () => {
   const { forecast } = useGlobalContext();
-  const { main, timezone, name, weather } = forecast;
+  const { main, timezone, name, weather, coord } = forecast;
 
   if (!forecast || !weather)
     return <div>Loading...</div>
@@ -18,6 +18,7 @@ const Temperature = () => {
 
   const [localTime, setLocalTime] = useState<String>("");
   const [currentDay, setCurrentDay] = useState<String>("");
+  const [currentDate, setCurrentDate] = useState<String>("");
 
   const { main: weatherMain, description } = weather[0];
 
@@ -45,18 +46,32 @@ const Temperature = () => {
       const localMoment = moment().utcOffset(timezone / 60);
 
       // Custom format: 24 hours format
-      const formatedTime = localMoment.format("HH:mm:ss");
+      const formatedTime = localMoment.format("HH:mm A");
 
       // Day of the week
       const day = localMoment.format("dddd");
 
+      // Full date
+      const date = localMoment.format("MMMM D, YYYY");
+
       setLocalTime(formatedTime);
       setCurrentDay(day);
+      setCurrentDate(date);
     }, 1000);
 
     // Clear interval
     return () => clearInterval(interval);
   }, [timezone]);
+
+  // Navigate to Google Maps
+  const handleNavigate = () => {
+    if (coord?.lat && coord?.lon) {
+      const googleMapUrl = `https://www.google.com/maps?q=${coord.lat},${coord.lon}`;
+      window.open(googleMapUrl, "_blank");
+    } else {
+      console.log("Latitude and Longitude are not available.");
+    }
+  }
 
   return (
     <div
@@ -65,12 +80,18 @@ const Temperature = () => {
     >
       <p className="flex justify-between items-center">
         <span className="font-medium">{currentDay}</span>
+        <span className="font-medium">{currentDate}</span>
         <span className="font-medium">{localTime}</span>
       </p>
 
       <p className="pt-2 font-bold flex gap-1">
         <span>{name}</span>
-        <span>{navigation}</span>
+        <span
+          className='cursor-pointer'
+          onClick={handleNavigate}
+        >
+          {navigation}
+        </span>
       </p>
 
       <p className="py-10 text-9xl font-bold self-center">{temp}°c</p>
