@@ -17,6 +17,7 @@ export const GlobalContextProvider = ({ children }) => {
       const res = await axios.get("api/weather");
 
       setForecast(res.data);
+      console.log(res.data);
     } catch (error) {
       console.log("Error in fetching forecast data: ", error.message);
     }
