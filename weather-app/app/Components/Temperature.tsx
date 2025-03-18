@@ -1,26 +1,33 @@
-"use client"
-import { useGlobalContext } from '@/app/Context/globalContext';
-import { clearSky, cloudy, drizzleIcon, navigation, rain, snow } from '@/app/utils/Icons';
-import { kelvinToCelsius } from '@/app/utils/misc';
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+"use client";
+import { useGlobalContext } from "@/app/Context/globalContext";
+import { clearSky, cloudy, drizzleIcon, navigation, rain, snow } from "@/app/utils/Icons";
+import { kelvinToCelsius } from "@/app/utils/misc";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 
 const Temperature = () => {
   const { forecast } = useGlobalContext();
-  const { main, timezone, name, weather, coord } = forecast;
 
-  if (!forecast || !weather)
-    return <div>Loading...</div>
+  // Ensure forecast is valid before accessing properties
+  if (!forecast || !forecast.main || !forecast.weather?.length) {
+    return <div>Loading...</div>;
+  }
 
-  const temp = kelvinToCelsius(main?.temp);
-  const minTemp = kelvinToCelsius(main?.temp_min);
-  const maxTemp = kelvinToCelsius(main?.temp_max);
+  const { main, timezone = 0, name, weather, coord } = forecast;
 
-  const [localTime, setLocalTime] = useState<String>("");
-  const [currentDay, setCurrentDay] = useState<String>("");
-  const [currentDate, setCurrentDate] = useState<String>("");
+  const temp = kelvinToCelsius(main?.temp ?? 0);
+  const minTemp = kelvinToCelsius(main?.temp_min ?? 0);
+  const maxTemp = kelvinToCelsius(main?.temp_max ?? 0);
 
-  const { main: weatherMain, description } = weather[0];
+  // Hooks should always be called in the same order
+  const [localTime, setLocalTime] = useState<string>("");
+  const [currentDay, setCurrentDay] = useState<string>("");
+  const [currentDate, setCurrentDate] = useState<string>("");
+
+  // Ensure weather[0] exists before destructuring
+  const weatherDetails = weather[0] || {};
+  const weatherMain = weatherDetails.main ?? "Clear";
+  const description = weatherDetails.description ?? "";
 
   const getIcon = () => {
     switch (weatherMain) {
@@ -39,45 +46,30 @@ const Temperature = () => {
     }
   };
 
-  // Live Time update
   useEffect(() => {
-    // Update time every second
-    const interval = setInterval(() => {
+    const updateLocalTime = () => {
       const localMoment = moment().utcOffset(timezone / 60);
+      setLocalTime(localMoment.format("HH:mm A"));
+      setCurrentDay(localMoment.format("dddd"));
+      setCurrentDate(localMoment.format("MMMM D, YYYY"));
+    };
 
-      // Custom format: 24 hours format
-      const formatedTime = localMoment.format("HH:mm A");
+    updateLocalTime();
+    const interval = setInterval(updateLocalTime, 1000);
 
-      // Day of the week
-      const day = localMoment.format("dddd");
-
-      // Full date
-      const date = localMoment.format("MMMM D, YYYY");
-
-      setLocalTime(formatedTime);
-      setCurrentDay(day);
-      setCurrentDate(date);
-    }, 1000);
-
-    // Clear interval
     return () => clearInterval(interval);
   }, [timezone]);
 
-  // Navigate to Google Maps
   const handleNavigate = () => {
     if (coord?.lat && coord?.lon) {
-      const googleMapUrl = `https://www.google.com/maps?q=${coord.lat},${coord.lon}`;
-      window.open(googleMapUrl, "_blank");
+      window.open(`https://www.google.com/maps?q=${coord.lat},${coord.lon}`, "_blank");
     } else {
       console.log("Latitude and Longitude are not available.");
     }
-  }
+  };
 
   return (
-    <div
-      className="pt-6 pb-5 px-4 border rounded-lg flex flex-col 
-        justify-between dark:bg-dark-grey shadow-sm dark:shadow-none"
-    >
+    <div className="pt-6 pb-5 px-4 border rounded-lg flex flex-col justify-between dark:bg-dark-grey shadow-sm dark:shadow-none">
       <p className="flex justify-between items-center">
         <span className="font-medium">{currentDay}</span>
         <span className="font-medium">{currentDate}</span>
@@ -86,10 +78,7 @@ const Temperature = () => {
 
       <p className="pt-2 font-bold flex gap-1">
         <span>{name}</span>
-        <span
-          className='cursor-pointer'
-          onClick={handleNavigate}
-        >
+        <span className="cursor-pointer" onClick={handleNavigate}>
           {navigation}
         </span>
       </p>
@@ -108,6 +97,6 @@ const Temperature = () => {
       </div>
     </div>
   );
-}
+};
 
-export default Temperature
+export default Temperature;
