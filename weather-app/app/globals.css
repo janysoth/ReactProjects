@@ -270,3 +270,65 @@ footer:hover .footer-text>img {
     flex: initial;
   }
 }
+
+@layer components {
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+      opacity: 0.6;
+    }
+
+    50% {
+      opacity: 0.8;
+    }
+
+    100% {
+      background-position: 200% 0;
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes flash {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  .skeleton-animate {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.25s infinite ease-in-out;
+    border-radius: 8px;
+    /* filter: blur(0.5px); */
+  }
+
+  /* Flashing "Loading..." Text */
+  .skeleton-animate::after {
+    content: "Loading...";
+    position: absolute;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4b5563;
+    animation: flash 1.2s infinite;
+  }
+
+  /* Dark Mode Enhancement */
+  .dark .skeleton-animate {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    filter: blur(1px);
+  }
+
+  .dark .skeleton-animate::after {
+    color: #9ca3af;
+  }
+}

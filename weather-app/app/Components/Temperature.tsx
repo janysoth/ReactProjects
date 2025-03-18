@@ -2,6 +2,7 @@
 import { useGlobalContext } from "@/app/Context/globalContext";
 import { clearSky, cloudy, drizzleIcon, navigation, rain, snow } from "@/app/utils/Icons";
 import { kelvinToCelsius } from "@/app/utils/misc";
+import { Skeleton } from "@/components/ui/skeleton";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 
@@ -10,7 +11,7 @@ const Temperature = () => {
 
   // Ensure forecast is valid before accessing properties
   if (!forecast || !forecast.main || !forecast.weather?.length) {
-    return <div>Loading...</div>;
+    return <Skeleton className="h-[24rem] w-full col-span-2 md:col-span-full skeleton-animate" />
   }
 
   const { main, timezone = 0, name, weather, coord } = forecast;

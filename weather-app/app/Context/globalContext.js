@@ -19,7 +19,6 @@ export const GlobalContextProvider = ({ children }) => {
       const res = await axios.get("api/weather");
 
       setForecast(res.data);
-      console.log(res.data);
     } catch (error) {
       console.log("Error in fetching forecast data: ", error.message);
     }
@@ -28,7 +27,7 @@ export const GlobalContextProvider = ({ children }) => {
   // Ai quality
   const fetchAirQuality = async (lat, lon) => {
     try {
-      const res = await axios.get(`api/pollution?lat=${lat}&lon=${lon}`);
+      const res = await axios.get(`api/pollution`);
 
       setAirQuality(res.data);
     } catch (error) {
