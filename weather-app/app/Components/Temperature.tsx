@@ -91,8 +91,8 @@ const Temperature = () => {
           <p className="pt-2 capitalize text-lg font-medium">{description}</p>
         </div>
         <p className="flex items-center gap-2">
-          <span>Low: {minTemp}°</span>
-          <span>High: {maxTemp}°</span>
+          <span>Low: {minTemp}°c</span>
+          <span>High: {maxTemp}°c</span>
         </p>
       </div>
     </div>
