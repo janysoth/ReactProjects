@@ -53,9 +53,10 @@ export const UserContextProvider = ({ children }) => {
     }
   };
 
-  // Log in 
+  // Login User
   const loginUser = async (e) => {
     e.preventDefault();
+
     try {
       const res = await axios.post(
         `${serverUrl}/api/v1/login`,
@@ -64,26 +65,25 @@ export const UserContextProvider = ({ children }) => {
           password: userState.password,
         },
         {
-          withCredentials: true, // send cookies to the server
+          withCredentials: true,
         }
       );
 
+      if (!res.data.success)
+        return toast.error(res.data.message || "Invalid login attempt");
+
       toast.success("User logged in successfully");
 
-      // Clear the form
       setUserState({
         email: "",
         password: "",
       });
 
-      // Refresh the user details
-      await getUser(); // fetch before redirecting
-
-      // Push user to the dashboard page
+      await getUser();
       router.push("/");
     } catch (error) {
-      console.log("Error logging in user", error);
-      toast.error(error.response.data.message);
+      console.log("Error logging in user:", error);
+      toast.error("Something went wrong, please try again.");
     }
   };
 

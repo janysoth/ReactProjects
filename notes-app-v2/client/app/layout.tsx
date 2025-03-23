@@ -15,7 +15,6 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,6 +36,8 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <UserProvider>
+          {/* Always render the Toaster */}
+          <Toaster position="top-center" />
           <LayoutContent>{children}</LayoutContent>
         </UserProvider>
       </body>
@@ -66,8 +67,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Toaster position="top-center" />
-      <div className="h-full flex overflow-hidden">
+      <div className="h-full flex overflow-hidden Layout-view">
         <MiniSidebar />
         <div className="flex-1 flex flex-col">
           <Header />

@@ -67,59 +67,47 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 // User login
 export const loginUser = asyncHandler(async (req, res) => {
-  // get email and password from req.body
   const { email, password } = req.body;
 
   // Validation
   if (!email || !password) {
-    // 400 Bad Request
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(200).json({ success: false, message: "All fields are required" });
   }
 
   // Check if user exists
   const userExists = await User.findOne({ email });
 
   if (!userExists) {
-    return res.status(404).json({ message: "User not found, sign up!" });
+    return res.status(200).json({ success: false, message: "User not found, sign up!" });
   }
 
-  // Check id the password match the hashed password in the database
+  // Check if the password matches
   const isMatch = await bcrypt.compare(password, userExists.password);
 
   if (!isMatch) {
-    // 400 Bad Request
-    return res.status(400).json({ message: "Invalid credentials" });
+    return res.status(200).json({ success: false, message: "Invalid Credentials. Please try again." });
   }
 
-  // Generate token with user id
+  // Generate token
   const token = generateToken(userExists._id);
 
-  if (userExists && isMatch) {
-    const { _id, name, email, role, photo, bio, isVerified } = userExists;
+  // Set the token in the cookie
+  res.cookie("token", token, {
+    path: "/",
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    sameSite: "none",
+    secure: true,
+  });
 
-    // Set the token in the cookie
-    res.cookie("token", token, {
-      path: "/",
-      httpOnly: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      sameSite: "none", // cross-site access --> allow all third-party cookies
-      secure: true,
-    });
-
-    // Send back the user and token in the response to the client
-    res.status(200).json({
-      _id,
-      name,
-      email,
-      role,
-      photo,
-      bio,
-      isVerified,
-      token,
-    });
-  } else {
-    res.status(400).json({ message: "Invalid email or password" });
-  }
+  // Send successful login response
+  const { _id, name, email: userEmail, role, photo, bio, isVerified } = userExists;
+  res.status(200).json({
+    success: true,
+    message: "Login successful",
+    user: { _id, name, email: userEmail, role, photo, bio, isVerified },
+    token,
+  });
 });
 
 // User logout
