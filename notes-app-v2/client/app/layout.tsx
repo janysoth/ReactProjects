@@ -50,33 +50,25 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
+    async function checkLoginStatus() {
       const loggedIn = await userLoginStatus();
       setIsLoggedIn(loggedIn);
-    };
+    }
     checkLoginStatus();
   }, [userLoginStatus]);
 
-  if (!isLoggedIn) {
-    return (
-      <>
-        {children}
-      </>
-    );
-  }
+  if (!isLoggedIn) return children;
 
   return (
-    <>
-      <div className="h-full flex overflow-hidden Layout-view">
-        <MiniSidebar />
-        <div className="flex-1 flex flex-col">
-          <Header />
-          <MainContentLayout>
-            <MainLayout>{children}</MainLayout>
-            <SidebarProvider />
-          </MainContentLayout>
-        </div>
+    <div className="h-full flex overflow-hidden Layout-view">
+      <MiniSidebar />
+      <div className="flex-1 flex flex-col">
+        <Header />
+        <MainContentLayout>
+          <MainLayout>{children}</MainLayout>
+          <SidebarProvider />
+        </MainContentLayout>
       </div>
-    </>
+    </div>
   );
 }

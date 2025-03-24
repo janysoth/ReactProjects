@@ -54,11 +54,18 @@ export const TasksProvider = ({ children }) => {
     setLoading(true);
 
     try {
-      const response = await axios.get(`${serverUrl}/tasks`);
+      const response = await axios.get(`${serverUrl}/tasks`, {
+        withCredentials: true, // Ensures cookies are included
+      });
 
-      setTasks(response.data.tasks);
+      if (response.data.success) {
+        setTasks(response.data.tasks);
+      } else {
+        console.log("Failed to fetch tasks:", response.data.message);
+        setTasks([]); // Clear tasks if unauthorized
+      }
     } catch (error) {
-      console.log("Error getting tasks", error);
+      console.error("Unexpected error getting tasks", error);
     }
 
     setLoading(false);

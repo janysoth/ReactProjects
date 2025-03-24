@@ -93,19 +93,18 @@ export const UserContextProvider = ({ children }) => {
 
     try {
       const res = await axios.get(`${serverUrl}/api/v1/login-status`, {
-        withCredentials: true,
+        withCredentials: true, // Ensures cookies are sent
       });
 
-      // Coerce the string to boolean
-      loggedIn = !!res.data;
-      setLoading(false);
-
-      if (!loggedIn)
+      if (res.data.success)
+        loggedIn = true;
+      else
         router.push("/login");
 
     } catch (error) {
-      console.log("Error in userLoginStatus.", error);
+      console.error("Unexpected error in userLoginStatus:", error);
     }
+
     console.log("User logged in status: ", loggedIn);
     return loggedIn;
   };

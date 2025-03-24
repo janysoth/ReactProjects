@@ -36,21 +36,23 @@ export const createTask = asyncHandler(async (req, res) => {
 // Get All Tasks
 export const getTasks = asyncHandler(async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user?._id;
 
-    if (!userId)
-      return res.status(400).json({ message: "User not found." });
+    if (!userId) {
+      return res.status(200).json({ success: false, message: "User not authenticated." });
+    }
 
     const tasks = await Task.find({ user: userId });
 
     res.status(200).json({
+      success: true,
       length: tasks.length,
       tasks,
     });
 
   } catch (error) {
     console.log("Error in getTasks: ", error.message);
-    res.status(500).json(error.message);
+    res.status(200).json({ success: false, message: "Server error. Please try again." });
   }
 });
 

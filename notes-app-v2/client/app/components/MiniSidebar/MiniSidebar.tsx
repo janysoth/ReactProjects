@@ -54,7 +54,15 @@ const MiniSidebar = () => {
       {/* Logo */}
       <div className="flex items-center justify-center h-[5rem]">
         <Link href="/">
-          <Image src="/logo.png" width={28} height={28} alt="logo" />
+          <div className="relative w-12 h-12"> {/* 28px x 28px */}
+            <Image
+              src="/logo.png"
+              alt="logo"
+              fill
+              sizes="28px"
+              style={{ objectFit: "contain" }}
+            />
+          </div>
         </Link>
       </div>
 
