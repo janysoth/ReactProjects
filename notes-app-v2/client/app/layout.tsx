@@ -60,15 +60,21 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   if (!isLoggedIn) return children;
 
   return (
-    <div className="h-full flex overflow-hidden Layout-view">
-      <MiniSidebar />
-      <div className="flex-1 flex flex-col">
-        <Header />
-        <MainContentLayout>
-          <MainLayout>{children}</MainLayout>
-          <SidebarProvider />
-        </MainContentLayout>
+    <div className="w-full h-full flex flex-col overflow-hidden Layout-view">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        <MiniSidebar />
+        <div className="flex-1 flex overflow-hidden">
+          <MainContentLayout>
+            <MainLayout className="w-full md:block sm:flex-1">
+              {children}
+            </MainLayout>
+            <div className="hidden md:block">
+              <SidebarProvider />
+            </div>
+          </MainContentLayout>
+        </div>
       </div>
-    </div>
+    </div >
   );
 }

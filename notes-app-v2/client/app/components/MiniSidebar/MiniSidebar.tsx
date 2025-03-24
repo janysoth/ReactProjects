@@ -22,8 +22,6 @@ const MiniSidebar = () => {
 
   const userId = user?._id;
 
-  const router = useRouter();
-
   const handleLogout = () => {
     logoutUser();
 
@@ -31,11 +29,7 @@ const MiniSidebar = () => {
       window.location.reload()
     }, 500)
   };
-  /** *
-   * const { deleteAllTasks } = useTasks()
-   * 
-   * use this function in the deleteAllTasks button
-  */
+
   const pathname = usePathname();
 
   const getStrokeColor = (link: string) => {
@@ -50,7 +44,7 @@ const MiniSidebar = () => {
   ];
 
   return (
-    <div className="basis-[5rem] flex flex-col bg-[url('/flurry.png')] bg-cover bg-repeat">
+    <div className="basis-[5rem] flex flex-col bg-[url('/flurry.png')] bg-cover bg-repeat rounded-[1.5rem]">
       {/* Logo */}
       <div className="flex items-center justify-center h-[5rem]">
         <Link href="/">

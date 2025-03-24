@@ -16,7 +16,7 @@ function Sidebar() {
   };
 
   return (
-    <div className="w-[20rem] mt-[5.3rem] h-[calc(100%-5rem)] fixed right-0 top-0 bg-[#f9f9f9] flex flex-col rounded-[1.5rem]s">
+    <div className="w-[20rem] mt-[5.3rem] h-[calc(100%-5rem)] fixed right-0 top-0 bg-[#f9f9f9] flex flex-col rounded-[1.5rem]">
       <Profile />
       <div className="mx-4">
         <RadialChart />
