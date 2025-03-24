@@ -8,6 +8,7 @@ import { container, item } from "@/utils/animations";
 import { Task } from "@/utils/types";
 import { filteredTasks, sortTasksByDueDate } from "@/utils/utilities";
 import Filters from "./components/Filters/Filters";
+import Sidebar from "./components/Sidebar/Sidebar";
 import TaskItem from "./components/TaskItem/TaskItem";
 
 export default function Home() {

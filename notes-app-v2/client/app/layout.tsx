@@ -63,10 +63,12 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     <div className="w-full h-full flex flex-col overflow-hidden Layout-view">
       <Header />
       <div className="flex flex-1 overflow-hidden">
-        <MiniSidebar />
+        <div className="hidden md:block">
+          <MiniSidebar />
+        </div>
         <div className="flex-1 flex overflow-hidden">
           <MainContentLayout>
-            <MainLayout className="w-full md:block sm:flex-1">
+            <MainLayout className="w-full">
               {children}
             </MainLayout>
             <div className="hidden md:block">
