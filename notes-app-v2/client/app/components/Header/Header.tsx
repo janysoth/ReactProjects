@@ -18,7 +18,7 @@ const Header = () => {
   };
 
   return (
-    <header className="p-4 w-full flex flex-col sm:flex-row items-center justify-between bg-[#f9f9f9] shadow-md bg-[url('/flurry.png')] bg-repeat bg-fill">
+    <header className="p-4 w-full flex flex-col sm:flex-row items-center justify-between bg-[#f9f9f9] rounded-[1.5rem] shadow-md bg-[url('/flurry.png')] bg-repeat bg-fill">
       {/* Left Section */}
       <div className=" sm:w-auto flex items-center justify-between sm:justify-start">
         <div className="text-center sm:text-left">

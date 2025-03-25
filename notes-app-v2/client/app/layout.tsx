@@ -63,6 +63,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     <div className="w-full h-full flex flex-col overflow-hidden Layout-view">
       <Header />
       <div className="flex flex-1 overflow-hidden">
+        {/* Render MiniSidebar at the top on larger screens */}
         <div className="hidden md:block">
           <MiniSidebar />
         </div>
@@ -77,6 +78,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           </MainContentLayout>
         </div>
       </div>
-    </div >
+      {/* Render MiniSidebar at the bottom on small screens */}
+      <div className="md:hidden">
+        <MiniSidebar isHorizontal />
+      </div>
+    </div>
   );
 }

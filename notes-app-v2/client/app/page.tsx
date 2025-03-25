@@ -25,9 +25,9 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="m-2 h-screen flex flex-col rounded-[1rem]">
+    <main className="m-4 h-screen flex flex-col rounded-[1.5rem]">
       {/* Sticky Header */}
-      <div className='sticky top-3 z-10 p-2  rounded-md'>
+      <div className='sticky top-3 z-10 p-2 rounded-md'>
         <h1 className="text-3xl font-semibold text-gray-800 mb-4">All Tasks</h1>
         <div className="rounded-md shadow-md">
           <Filters />
