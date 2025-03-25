@@ -1,5 +1,5 @@
 import { useTasks } from '@/context/taskContext';
-import { edit, star, trash } from "@/utils/Icons";
+import { edit, repeat, star, trash } from "@/utils/Icons"; // Import the copy/duplicate icon
 import { Task } from '@/utils/types';
 import { formatDueDate, formatTime } from '@/utils/utilities';
 import React from 'react';
@@ -23,20 +23,33 @@ const TaskItem = ({ task }: TaskItemProps) => {
   };
 
   const { text, border } = getPriorityClasses(task.priority);
-  const { getTask, deleteTask, openModalForEdit, modalMode, toggleComplete } = useTasks();
+  const { getTask, deleteTask, openModalForEdit, modalMode, toggleComplete, createTask } = useTasks();
 
-  // Determine if the due date is within 2 days
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Normalize today to midnight local time
+  today.setHours(0, 0, 0, 0);
 
   const dueDate = new Date(task.dueDate);
-  dueDate.setUTCHours(0, 0, 0, 0); // Ensure dueDate remains in UTC
+  dueDate.setUTCHours(0, 0, 0, 0);
 
   const timeDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   const dueDateStyle = timeDiff <= 2 ? "text-red-500 font-bold" : "text-gray-400";
-
-  // Additional styling for completed tasks
   const completedDueDateStyle = "line-through text-green-500";
+
+  // Function to duplicate task for the next day
+  const duplicateTask = () => {
+    const nextDay = new Date(task.dueDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    const duplicatedTask = {
+      ...task,
+      // _id: crypto.randomUUID(), // Generate a new unique ID
+      dueDate: nextDay.toISOString(),
+      createdAt: new Date().toISOString(),
+      completed: false,
+    };
+
+    createTask(duplicatedTask);
+  };
 
   return (
     <div className={`h-[16rem] px-4 py-3 flex flex-col gap-4 shadow-sm bg-[#f9f9f9] rounded-lg border-2 hover:bg-gray-200 ${border} ${text}`}>
@@ -59,43 +72,45 @@ const TaskItem = ({ task }: TaskItemProps) => {
           {task.priority.toUpperCase()}
         </p>
 
-        <div>
-          <div className='flex items-center gap-3 text-gray-400 text-[1.2rem]'>
-            {/* Complete Task */}
-            <button
-              className={
-                `${task.completed ? "text-yellow-400" : "text-gray-400"}`
-              }
-              onClick={() => toggleComplete(task)}
-            >
-              {star}
-            </button>
+        <div className='flex items-center gap-3 text-gray-400 text-[1.2rem]'>
+          {/* Complete Task */}
+          <button
+            className={`${task.completed ? "text-yellow-400" : "text-gray-400"}`}
+            onClick={() => toggleComplete(task)}
+          >
+            {star}
+          </button>
 
-            {/* Edit Task */}
-            <button
-              className="text-[#00A1F1]"
-              onClick={() => {
-                getTask(task._id);
-                openModalForEdit(task);
-              }}
-            >
-              {edit}
-            </button>
+          {/* Duplicate Task */}
+          <button
+            className="text-[#32CD32]" // Green color for duplication
+            onClick={duplicateTask}
+          >
+            {repeat} {/* Assuming copy is an icon for duplication */}
+          </button>
 
-            {/* Delete Task */}
-            <button
-              className="text-[#F65314]"
-              onClick={() => {
-                deleteTask(task._id);
-              }}
-            >
-              {trash}
-            </button>
-          </div>
+          {/* Edit Task */}
+          <button
+            className="text-[#00A1F1]"
+            onClick={() => {
+              getTask(task._id);
+              openModalForEdit(task);
+            }}
+          >
+            {edit}
+          </button>
+
+          {/* Delete Task */}
+          <button
+            className="text-[#F65314]"
+            onClick={() => deleteTask(task._id)}
+          >
+            {trash}
+          </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default TaskItem;

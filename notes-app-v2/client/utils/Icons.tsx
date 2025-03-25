@@ -15,3 +15,5 @@ export const mail = <i className="fa-regular fa-envelope"></i>;
 export const profile = <i className="fa-solid fa-user"></i>;
 export const home = <i className="fas fa-home"></i>;
 export const logout = <FontAwesomeIcon icon={faArrowRightFromBracket} />
+export const copy = <i className="fas fa-copy"></i>;
+export const repeat = <i className="fas fa-redo"></i>;
