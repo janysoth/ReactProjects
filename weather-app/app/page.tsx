@@ -6,6 +6,7 @@ import FiveDayForecast from "./Components/FiveDayForecast";
 import Navbar from "./Components/Navbar";
 import Sunset from "./Components/Sunset";
 import Temperature from "./Components/Temperature";
+import UvIndex from "./Components/UvIndex";
 import Wind from "./Components/Wind";
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
             <Sunset />
             <Wind />
             <DailyForecast />
+            <UvIndex />
           </div>
         </div>
       </div>
