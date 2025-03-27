@@ -1,10 +1,10 @@
 "use client"
 import React from 'react';
 
+import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGlobalContext } from '../Context/globalContext';
 import { sun } from '../utils/Icons';
-import { UvProgress } from './UvProgress';
 
 const UvIndex = () => {
   const { uvIndex } = useGlobalContext();
@@ -42,7 +42,7 @@ const UvIndex = () => {
             <span className="text-sm"> ({uvCategory.text})</span>
           </p>
 
-          <UvProgress value={marginLeftPercentage} max={14} className='progress' />
+          <Progress value={marginLeftPercentage} max={14} className='progress' />
         </div>
       </div>
 
