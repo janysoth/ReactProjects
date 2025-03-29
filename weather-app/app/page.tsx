@@ -1,16 +1,19 @@
 "use client";
 
-import AirPollution from "./Components/AirPollution";
-import DailyForecast from "./Components/DailyForecast";
-import FeelsLike from "./Components/FeelsLike";
+import { lazy } from "react";
 import FiveDayForecast from "./Components/FiveDayForecast";
-import Humidity from "./Components/Humidity";
 import Navbar from "./Components/Navbar";
-import Population from "./Components/Population";
-import Sunset from "./Components/Sunset";
 import Temperature from "./Components/Temperature";
-import UvIndex from "./Components/UvIndex";
-import Wind from "./Components/Wind";
+
+// Lazy-loaded components
+const AirPollution = lazy(() => import("./Components/AirPollution"));
+const DailyForecast = lazy(() => import("./Components/DailyForecast"));
+const FeelsLike = lazy(() => import("./Components/FeelsLike"));
+const Humidity = lazy(() => import("./Components/Humidity"));
+const Population = lazy(() => import("./Components/Population"));
+const Sunset = lazy(() => import("./Components/Sunset"));
+const UvIndex = lazy(() => import("./Components/UvIndex"));
+const Wind = lazy(() => import("./Components/Wind"));
 
 export default function Home() {
   return (
@@ -18,15 +21,15 @@ export default function Home() {
       <Navbar />
 
       <div className="pb-4 flex flex-col gap-4 md:flex-row">
-        <div className="flex flex-col gap-4 w-full min-w-[18rem] md:w-[35rem]">
+        {/* Left Section */}
+        <section className="flex flex-col gap-4 w-full min-w-[18rem] md:w-[35rem]">
           <Temperature />
           <FiveDayForecast />
-        </div>
+        </section>
 
-        <div className="flex flex-col w-full">
-          <div
-            className="instruments grid  gap-4 col-span-full sm-2:col-span-2 lg:grid-cols-3 xl:grid-cols-4"
-          >
+        {/* Right Section */}
+        <section className="flex flex-col w-full">
+          <div className="grid gap-4 col-span-full sm:col-span-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <AirPollution />
             <Sunset />
             <Wind />
@@ -36,7 +39,7 @@ export default function Home() {
             <FeelsLike />
             <Humidity />
           </div>
-        </div>
+        </section>
       </div>
     </main>
   );
