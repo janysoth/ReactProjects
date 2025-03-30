@@ -4,6 +4,7 @@ import { lazy } from "react";
 
 import Image from "next/image";
 import FiveDayForecast from "./Components/FiveDayForecast";
+import Mapbox from "./Components/Mapbox";
 import Navbar from "./Components/Navbar";
 import Temperature from "./Components/Temperature";
 
@@ -25,14 +26,12 @@ export default function Home() {
       <Navbar />
 
       <div className="pb-4 flex flex-col gap-4 md:flex-row">
-        {/* Left Section */}
-        <section className="flex flex-col gap-4 w-full min-w-[18rem] md:w-[35rem]">
+        <div className="flex flex-col gap-4 w-full min-w-[18rem] md:w-[35rem]">
           <Temperature />
           <FiveDayForecast />
-        </section>
+        </div>
 
-        {/* Right Section */}
-        <section className="flex flex-col w-full">
+        <div className="flex flex-col w-full">
           <div className="grid gap-4 col-span-full sm:col-span-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <AirPollution />
             <Sunset />
@@ -45,7 +44,18 @@ export default function Home() {
             <Visibility />
             <Pressure />
           </div>
-        </section>
+
+          <div className="mapbox-com mt-4 flex gap-4">
+            <Mapbox />
+
+            <div className="states flex flex-col gap-3 flex-1">
+              <h2 className="flex items-center gap-2 font-medium">
+                Top Large Cities
+              </h2>
+
+            </div>
+          </div>
+        </div>
       </div>
 
       <footer className="py-4 flex justify-center pb-8">

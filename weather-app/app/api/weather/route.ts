@@ -10,8 +10,8 @@ export async function GET(req: NextRequest) {
     // const lat = searchParams.get("lat");
     // const lon = searchParams.get("lon");
 
-    const lat = 11.4592;
-    const lon = 104.9447;
+    const lat = 53.4800;
+    const lon = -2.2400;
 
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
 

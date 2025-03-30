@@ -261,11 +261,11 @@ footer:hover .footer-text>img {
 }
 
 @media screen and (max-width: 1010px) {
-  .mapbox-con {
+  .mapbox-com {
     flex-direction: column;
   }
 
-  .mapbox-con>div:first-child {
+  .mapbox-com>div:first-child {
     height: 24rem;
     flex: initial;
   }
