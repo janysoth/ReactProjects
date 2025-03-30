@@ -59,7 +59,7 @@ export default function Home() {
             className="rounded-full"
           />
           <a
-            href="https://thecodedealer.com"
+            href="https://github.com/janysoth"
             target="_blank"
             className=" text-green-300 font-bold"
           >
