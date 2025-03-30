@@ -1,6 +1,7 @@
 "use client";
 
 import { lazy } from "react";
+
 import FiveDayForecast from "./Components/FiveDayForecast";
 import Navbar from "./Components/Navbar";
 import Temperature from "./Components/Temperature";
@@ -14,6 +15,8 @@ const Population = lazy(() => import("./Components/Population"));
 const Sunset = lazy(() => import("./Components/Sunset"));
 const UvIndex = lazy(() => import("./Components/UvIndex"));
 const Wind = lazy(() => import("./Components/Wind"));
+const Visibility = lazy(() => import("./Components/Visibility"));
+const Pressure = lazy(() => import("./Components/Pressure"));
 
 export default function Home() {
   return (
@@ -38,6 +41,8 @@ export default function Home() {
             <Population />
             <FeelsLike />
             <Humidity />
+            <Visibility />
+            <Pressure />
           </div>
         </section>
       </div>
