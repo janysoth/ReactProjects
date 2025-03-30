@@ -2,6 +2,7 @@
 
 import { lazy } from "react";
 
+import Image from "next/image";
 import FiveDayForecast from "./Components/FiveDayForecast";
 import Navbar from "./Components/Navbar";
 import Temperature from "./Components/Temperature";
@@ -46,6 +47,26 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      <footer className="py-4 flex justify-center pb-8">
+        <p className="footer-text text-sm flex items-center gap-1">
+          Made by
+          <Image
+            src={"/USAKhmer.png"}
+            alt="logo"
+            width={30}
+            height={30}
+            className="rounded-full"
+          />
+          <a
+            href="https://thecodedealer.com"
+            target="_blank"
+            className=" text-green-300 font-bold"
+          >
+            Jonny Vorn Soth
+          </a>
+        </p>
+      </footer>
     </main>
   );
 }
