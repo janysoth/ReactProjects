@@ -7,6 +7,7 @@ import FiveDayForecast from "./Components/FiveDayForecast";
 import Mapbox from "./Components/Mapbox";
 import Navbar from "./Components/Navbar";
 import Temperature from "./Components/Temperature";
+import defaultStates from "./utils/defaultStates";
 
 // Lazy-loaded components
 const AirPollution = lazy(() => import("./Components/AirPollution"));
@@ -21,6 +22,7 @@ const Visibility = lazy(() => import("./Components/Visibility"));
 const Pressure = lazy(() => import("./Components/Pressure"));
 
 export default function Home() {
+
   return (
     <main className="mx-[1rem] lg:mx-[2rem] xl:mx-[6rem] 2xl:mx-[16rem] m-auto">
       <Navbar />
@@ -50,9 +52,24 @@ export default function Home() {
 
             <div className="states flex flex-col gap-3 flex-1">
               <h2 className="flex items-center gap-2 font-medium">
-                Top Large Cities
+                Top Large Cities:
               </h2>
 
+              <div className="flex flex-col gap-4">
+                {defaultStates.map((state, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="border rounded-lg cursor-pointer dark:bg-dark-grey shadow-sm dark:shadow-none hover:bg-gray-400"
+                      onClick={() => { }}
+                    >
+                      <p className="px-6 py-4">
+                        {state.name}
+                      </p>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           </div>
         </div>
