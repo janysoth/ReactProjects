@@ -27,7 +27,7 @@ function FlyToActiveCity({ activeCityCords }) {
 }
 
 function Mapbox() {
-  const { forecast } = useGlobalContext();
+  const { forecast } = useGlobalContext(); // Your coordinates
 
   const activeCityCords = forecast?.coord;
 
@@ -40,7 +40,7 @@ function Mapbox() {
   }
 
   return (
-    <div className="flex-1 basis-[50%] border rounded-lg h-[20rem]">
+    <div className="flex-1 basis-[50%] border rounded-lg">
       <MapContainer
         center={[activeCityCords.lat, activeCityCords.lon]}
         zoom={13}

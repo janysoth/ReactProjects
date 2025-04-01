@@ -50,7 +50,7 @@ const FiveDayForecast = () => {
 
   return (
     <div
-      className="pt-6 pb-5 px-4 flex-1 border rounded-lg flex flex-col
+      className="pt-3 pb-5 px-4  border rounded-lg flex flex-col
         justify-between dark:bg-dark-grey shadow-sm dark:shadow-none"
     >
       <div>
