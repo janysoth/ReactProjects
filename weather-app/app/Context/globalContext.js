@@ -89,7 +89,7 @@ export const GlobalContextProvider = ({ children }) => {
         uvIndex,
         geoCodedList,
         handleInput,
-        handleInput,
+        inputValue,
         setActiveCityCoords,
       }}
     >
