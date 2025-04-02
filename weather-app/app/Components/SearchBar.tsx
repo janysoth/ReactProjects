@@ -11,7 +11,7 @@ const SearchBar = () => {
   const { geoCodedList, inputValue, handleInput } = useGlobalContext();
   const { setActiveCityCoords } = useGlobalContextUpdate();
 
-  const [hoveredIndex, setHoveredIndex] = React.useState<number>(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number>(0);
 
   const getClickedCoords = (lat: number, lon: number) => {
     setActiveCityCoords([lat, lon]);

@@ -88,8 +88,8 @@ export const GlobalContextProvider = ({ children }) => {
         fiveDayForecast,
         uvIndex,
         geoCodedList,
-        handleInput,
         inputValue,
+        handleInput,
         setActiveCityCoords,
       }}
     >
