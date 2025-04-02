@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, use, useContext, useEffect, useState } from 'react';
 
 import axios from 'axios';
 import defaultStates from "../utils/defaultStates";
@@ -10,6 +10,8 @@ const GlobalContextUpdate = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
   const [forecast, setForecast] = useState({});
+  const [geoCodedList, setGeoCodedList] = useState(defaultStates);
+  const [inputValue, setInputValue] = useState("");
 
   const [activeCityCoords, setActiveCityCoords] = useState([
     51.752021, -1.257726,
@@ -63,6 +65,14 @@ export const GlobalContextProvider = ({ children }) => {
     }
   };
 
+  // Handle input
+  const handleInput = (e) => {
+    setInputValue(e.target.value);
+
+    if (e.target.value === "")
+      setGeoCodedList(defaultStates);
+  };
+
   useEffect(() => {
     fetchForecast();
     fetchAirQuality();
@@ -77,10 +87,16 @@ export const GlobalContextProvider = ({ children }) => {
         airQuality,
         fiveDayForecast,
         uvIndex,
+        geoCodedList,
+        handleInput,
+        handleInput,
+        setActiveCityCoords,
       }}
     >
       <GlobalContextUpdate.Provider
-        value={{}}
+        value={{
+          setActiveCityCoords
+        }}
       >
         {children}
       </GlobalContextUpdate.Provider>
