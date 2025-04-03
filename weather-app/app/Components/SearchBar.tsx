@@ -70,7 +70,7 @@ const SearchBar = () => {
                         }}
                       >
                         <p className=" text">
-                          {name}, {state && state + ","} {country}
+                          {name}, {state}, {country}
                         </p>
                       </li>
                     );

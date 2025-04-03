@@ -14,7 +14,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [inputValue, setInputValue] = useState("");
 
   const [activeCityCoords, setActiveCityCoords] = useState([
-    51.752021, -1.257726,
+    11.4592, 104.9447,
   ]);
 
   const [airQuality, setAirQuality] = useState({});
@@ -22,9 +22,9 @@ export const GlobalContextProvider = ({ children }) => {
   const [uvIndex, setUvIndex] = useState({});
 
   // Daily Forecast
-  const fetchForecast = async () => {
+  const fetchForecast = async (lat, lon) => {
     try {
-      const res = await axios.get("api/weather");
+      const res = await axios.get(`api/weather?lat=${lat}&lon=${lon}`);
 
       setForecast(res.data);
     } catch (error) {
@@ -35,7 +35,7 @@ export const GlobalContextProvider = ({ children }) => {
   // Air quality
   const fetchAirQuality = async (lat, lon) => {
     try {
-      const res = await axios.get(`api/pollution`);
+      const res = await axios.get(`api/pollution?lat=${lat}&lon=${lon}`);
 
       setAirQuality(res.data);
     } catch (error) {
@@ -46,7 +46,7 @@ export const GlobalContextProvider = ({ children }) => {
   // Five Day Forecast
   const fetchFiveDayForecast = async (lat, lon) => {
     try {
-      const res = await axios.get(`api/fiveday`);
+      const res = await axios.get(`api/fiveday?lat=${lat}&lon=${lon}`);
 
       setFiveDayForecast(res.data);
     } catch (error) {
@@ -57,7 +57,7 @@ export const GlobalContextProvider = ({ children }) => {
   // Fetch UV Data
   const fetchUvIndex = async (lat, lon) => {
     try {
-      const res = await axios.get(`api/uv`);
+      const res = await axios.get(`api/uv?lat=${lat}&lon=${lon}`);
 
       setUvIndex(res.data);
     } catch (error) {
@@ -74,11 +74,12 @@ export const GlobalContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchForecast();
-    fetchAirQuality();
-    fetchFiveDayForecast();
-    fetchUvIndex();
+    fetchForecast(activeCityCoords[0], activeCityCoords[1]);
+    fetchAirQuality(activeCityCoords[0], activeCityCoords[1]);
+    fetchFiveDayForecast(activeCityCoords[0], activeCityCoords[1]);
+    fetchUvIndex(activeCityCoords[0], activeCityCoords[1]);
   }, [activeCityCoords]);
+
 
   return (
     <GlobalContext.Provider
