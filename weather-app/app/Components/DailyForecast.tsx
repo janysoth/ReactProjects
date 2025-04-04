@@ -20,7 +20,7 @@ const DailyForecast = () => {
     (forecast: { dt_txt: string; main: { temp: number } }) => forecast.dt_txt.startsWith(todayString)
   );
 
-  if (todayForecast.length === 0) {
+  if (todayForecast.length < 1) {
     return (
       <div className="h-[12rem] w-full col-span-full sm-2:col-span-2 md:col-span-2 xl:col-span-2 flex justify-center items-center">
         <h1 className="text-[3rem] line-through text-rose-500">
@@ -61,7 +61,7 @@ const DailyForecast = () => {
                 key={dt_txt}
                 className="flex flex-col gap-4 basis-1/4 cursor-grab items-center"
               >
-                <p className="text-gray-300">{formatTime(dt_txt)}</p>
+                <p>{formatTime(dt_txt)}</p>
                 <p>{getIcon()}</p>
                 <p className="mt-4">{kelvinToCelsius(main.temp)}°c</p>
               </CarouselItem>

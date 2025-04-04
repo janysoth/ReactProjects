@@ -1,8 +1,9 @@
 "use client";
 
-import React, { createContext, use, useContext, useEffect, useState } from 'react';
-
 import axios from 'axios';
+import { debounce } from 'lodash';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+
 import defaultStates from "../utils/defaultStates";
 
 const GlobalContext = createContext();
@@ -54,6 +55,17 @@ export const GlobalContextProvider = ({ children }) => {
     }
   };
 
+  // Fetch geoCodedList
+  const fetchGeoCodedList = async (search) => {
+    try {
+      const res = await axios.get(`/api/geocoded?search=${search}`);
+
+      setGeoCodedList(res.data);
+    } catch (error) {
+      console.log("Error in fetching geoCoded List in globalContext: ", error.message);
+    }
+  };
+
   // Fetch UV Data
   const fetchUvIndex = async (lat, lon) => {
     try {
@@ -72,6 +84,19 @@ export const GlobalContextProvider = ({ children }) => {
     if (e.target.value === "")
       setGeoCodedList(defaultStates);
   };
+
+  // Debounce function from lodash
+  useEffect(() => {
+    const debounceFetch = debounce((search) => {
+      fetchGeoCodedList(search);
+    }, 500);
+
+    if (inputValue)
+      debounceFetch(inputValue);
+
+    // Cleanup function
+    return () => debounceFetch.cancel();
+  }, [inputValue]);
 
   useEffect(() => {
     fetchForecast(activeCityCoords[0], activeCityCoords[1]);

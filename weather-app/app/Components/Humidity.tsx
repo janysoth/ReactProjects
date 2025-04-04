@@ -18,7 +18,7 @@ function Humidity() {
   const getHumidityText = (humidity: number) => {
     if (humidity < 30) return "Dry: May cause skin irritation";
     if (humidity < 50) return "Comfortable: Ideal for health and comfort";
-    if (humidity < 70) return "Moderate: Sticky, may increase allergens";
+    if (humidity < 70) return "Moderate: Sticky, may increase allergies";
     return "High: Uncomfortable, mold growth risk";
   };
 

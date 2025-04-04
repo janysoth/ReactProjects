@@ -7,6 +7,7 @@ import FiveDayForecast from "./Components/FiveDayForecast";
 import Mapbox from "./Components/Mapbox";
 import Navbar from "./Components/Navbar";
 import Temperature from "./Components/Temperature";
+import { useGlobalContextUpdate } from "./Context/globalContext";
 import defaultStates from "./utils/defaultStates";
 
 // Lazy-loaded components
@@ -22,6 +23,16 @@ const Visibility = lazy(() => import("./Components/Visibility"));
 const Pressure = lazy(() => import("./Components/Pressure"));
 
 export default function Home() {
+  const { setActiveCityCoords } = useGlobalContextUpdate();
+
+  const getClickedCityCoords = (lat: number, lon: number) => {
+    setActiveCityCoords([lat, lon]);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
 
   return (
     <main className="mx-[1rem] lg:mx-[2rem] xl:mx-[6rem] 2xl:mx-[16rem] m-auto">
@@ -61,7 +72,7 @@ export default function Home() {
                     <div
                       key={index}
                       className="border rounded-lg cursor-pointer dark:bg-dark-grey shadow-sm dark:shadow-none hover:bg-gray-400"
-                      onClick={() => { }}
+                      onClick={() => getClickedCityCoords(state.lat, state.lon)}
                     >
                       <p className="px-6 py-4">
                         {state.name}
