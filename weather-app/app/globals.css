@@ -245,10 +245,9 @@ footer:hover .footer-text>img {
 
   .temp-change {
     position: fixed;
-    bottom: 2%;
-    left: 1rem;
-    /* Move to the left */
-    z-index: 1000;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .temp-change button {
