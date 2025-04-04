@@ -22,6 +22,11 @@ export const GlobalContextProvider = ({ children }) => {
   const [fiveDayForecast, setFiveDayForecast] = useState({});
   const [uvIndex, setUvIndex] = useState({});
 
+  const [unit, setUnit] = useState("C");
+
+  // Toggle Temperature unit
+  const toggleUnit = () => setUnit((prev) => (prev === "C" ? "F" : "C"));
+
   // Daily Forecast
   const fetchForecast = async (lat, lon) => {
     try {
@@ -117,6 +122,8 @@ export const GlobalContextProvider = ({ children }) => {
         inputValue,
         handleInput,
         setActiveCityCoords,
+        unit,
+        toggleUnit,
       }}
     >
       <GlobalContextUpdate.Provider

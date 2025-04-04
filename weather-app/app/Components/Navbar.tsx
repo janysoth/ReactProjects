@@ -6,6 +6,7 @@ import React from 'react'
 import { github } from '../utils/Icons'
 import SearchBar from './SearchBar'
 import ThemeToggle from './ThemeToggle'
+import UnitToggle from './UnitToggle'
 
 const Navbar = () => {
 
@@ -13,7 +14,9 @@ const Navbar = () => {
 
   return (
     <div className='w-full py-4 flex items-center justify-between'>
-      <div className="left"></div>
+      <div className="left temp-change">
+        <UnitToggle />
+      </div>
       <div className="search-container flex shrink-0 w-full gap-2 sm:w-fit">
         <SearchBar />
 

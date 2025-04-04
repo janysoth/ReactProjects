@@ -243,6 +243,18 @@ footer:hover .footer-text>img {
     box-shadow: 2px 3px 0.3rem 0.3rem rgba(0, 0, 0, 0.1);
   }
 
+  .temp-change {
+    position: fixed;
+    bottom: 2%;
+    left: 1rem;
+    /* Move to the left */
+    z-index: 1000;
+  }
+
+  .temp-change button {
+    box-shadow: 2px 3px 0.3rem 0.3rem rgba(0, 0, 0, 0.1);
+  }
+
   .search-container {
     width: 100%;
   }
