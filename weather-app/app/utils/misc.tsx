@@ -67,3 +67,23 @@ export const airQualityIndexText = [
     description: "very poor",
   },
 ];
+
+export const useCurrentLocation = (callback: (lat: number, lon: number) => void) => {
+  const getLocation = () => {
+    if (!navigator.geolocation)
+      alert("Geolocation is not supported by this browser.");
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        callback(latitude, longitude);
+      },
+
+      error => {
+        alert("Unable to retrieve your location. Please check your browser settings.");
+        console.error("Error retrieving location:", error);
+      }
+    );
+  }
+  return getLocation;
+}

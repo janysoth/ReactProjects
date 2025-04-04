@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
+import { commandIcon } from '@/app/utils/Icons'
 import { Button } from '@/components/ui/button'
 import { Command, CommandInput } from "@/components/ui/command"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-
-import { commandIcon } from '@/app/utils/Icons'
 import { useGlobalContext, useGlobalContextUpdate } from '../Context/globalContext'
+import { useCurrentLocation } from '../utils/misc'
 
 const SearchBar = () => {
   const { geoCodedList, inputValue, handleInput } = useGlobalContext();
@@ -18,6 +18,8 @@ const SearchBar = () => {
     setActiveCityCoords([lat, lon]);
     setOpen(false);
   };
+
+  const useMyLocation = useCurrentLocation(getClickedCoords);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -59,6 +61,15 @@ const SearchBar = () => {
             />
             <ul className="px-3 pb-2">
               <p className="p-2 text-sm text-muted-foreground">Suggestions</p>
+
+
+              {/* Use current location */}
+              <li
+                onClick={useMyLocation}
+                className="py-3 px-2 text-sm rounded-sm cursor-pointer hover:bg-accent"
+              >
+                📍 Use Current Location
+              </li>
 
               {geoCodedList?.length === 0 ||
                 (!geoCodedList && <p>No Results</p>)}
