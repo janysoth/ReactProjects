@@ -7,7 +7,7 @@ import { calender } from '../utils/Icons';
 import { kelvinToCelsius, unixToDay } from '../utils/misc';
 
 const FiveDayForecast = () => {
-  const { fiveDayForecast } = useGlobalContext();
+  const { fiveDayForecast, unit, convertedTemp } = useGlobalContext();
 
   const { city, list } = fiveDayForecast;
 
@@ -36,8 +36,8 @@ const FiveDayForecast = () => {
 
     return {
       day: unixToDay(dailyData[0].dt),
-      minTemp: kelvinToCelsius(minTemp),
-      maxTemp: kelvinToCelsius(maxTemp),
+      minTemp: convertedTemp(minTemp),
+      maxTemp: convertedTemp(maxTemp),
     };
   };
 
@@ -72,9 +72,9 @@ const FiveDayForecast = () => {
                 </p>
 
                 <div className="flex-1 flex items-center justify-between gap-4">
-                  <p className="font-bold">{day.minTemp}°c</p>
+                  <p className="font-bold">{day.minTemp}°{unit}</p>
                   <div className="temperature flex-1 w-full h-2 rounded-lg"></div>
-                  <p className="font-bold">{day.maxTemp}°c</p>
+                  <p className="font-bold">{day.maxTemp}°{unit}</p>
                 </div>
               </div>
             );

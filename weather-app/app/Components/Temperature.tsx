@@ -1,13 +1,13 @@
 "use client";
 import { useGlobalContext } from "@/app/Context/globalContext";
 import { clearSky, cloudy, drizzleIcon, navigation, rain, snow } from "@/app/utils/Icons";
-import { kelvinToCelsius } from "@/app/utils/misc";
+import { kelvinToCelsius, kelvinToFahrenheit } from "@/app/utils/misc";
 import { Skeleton } from "@/components/ui/skeleton";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 
 const Temperature = () => {
-  const { forecast } = useGlobalContext();
+  const { forecast, convertedTemp, unit } = useGlobalContext();
 
   // Ensure forecast is valid before accessing properties
   if (!forecast || !forecast.main || !forecast.weather?.length) {
@@ -16,9 +16,9 @@ const Temperature = () => {
 
   const { main, timezone = 0, name, weather, coord } = forecast;
 
-  const temp = kelvinToCelsius(main?.temp ?? 0);
-  const minTemp = kelvinToCelsius(main?.temp_min ?? 0);
-  const maxTemp = kelvinToCelsius(main?.temp_max ?? 0);
+  const temp = convertedTemp(main?.temp ?? 0);
+  const minTemp = convertedTemp(main?.temp_min ?? 0);
+  const maxTemp = convertedTemp(main?.temp_max ?? 0);
 
   // Hooks should always be called in the same order
   const [localTime, setLocalTime] = useState<string>("");
@@ -84,7 +84,7 @@ const Temperature = () => {
         </span>
       </p>
 
-      <p className="py-10 text-9xl font-bold self-center">{temp}°c</p>
+      <p className="py-10 text-9xl font-bold self-center">{temp}°{unit}</p>
 
       <div>
         <div>
@@ -92,8 +92,8 @@ const Temperature = () => {
           <p className="pt-2 capitalize text-lg font-medium">{description}</p>
         </div>
         <p className="flex items-center gap-2">
-          <span>Low: {minTemp}°c</span>
-          <span>High: {maxTemp}°c</span>
+          <span>Low: {minTemp}°{unit}</span>
+          <span>High: {maxTemp}°{unit}</span>
         </p>
       </div>
     </div>

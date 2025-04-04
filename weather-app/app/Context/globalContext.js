@@ -5,6 +5,7 @@ import { debounce } from 'lodash';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import defaultStates from "../utils/defaultStates";
+import { kelvinToCelsius, kelvinToFahrenheit } from '../utils/misc';
 
 const GlobalContext = createContext();
 const GlobalContextUpdate = createContext();
@@ -26,6 +27,10 @@ export const GlobalContextProvider = ({ children }) => {
 
   // Toggle Temperature unit
   const toggleUnit = () => setUnit((prev) => (prev === "C" ? "F" : "C"));
+
+  // Convert temperature based on the selected unit
+  const convertedTemp = (kelvin) =>
+    unit === "C" ? kelvinToCelsius(kelvin) : kelvinToFahrenheit(kelvin);
 
   // Daily Forecast
   const fetchForecast = async (lat, lon) => {
@@ -124,6 +129,7 @@ export const GlobalContextProvider = ({ children }) => {
         setActiveCityCoords,
         unit,
         toggleUnit,
+        convertedTemp,
       }}
     >
       <GlobalContextUpdate.Provider
