@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Command, CommandInput } from "@/components/ui/command"
@@ -12,13 +12,31 @@ const SearchBar = () => {
   const { setActiveCityCoords } = useGlobalContextUpdate();
 
   const [hoveredIndex, setHoveredIndex] = useState<number>(0);
+  const [open, setOpen] = useState(false);
 
   const getClickedCoords = (lat: number, lon: number) => {
     setActiveCityCoords([lat, lon]);
+    setOpen(false);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.userAgent.toUpperCase().includes('MAC');
+
+      const isCmdF = isMac ? e.metaKey && e.key === 'f' : e.ctrlKey && e.key === 'f';
+
+      if (isCmdF) {
+        e.preventDefault();
+        setOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   return (
     <div className="search-btn">
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button
             variant="outline"
