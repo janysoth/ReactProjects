@@ -1,7 +1,6 @@
 "use client";
 
-import { lazy } from "react";
-
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import FiveDayForecast from "./Components/FiveDayForecast";
 import Mapbox from "./Components/Mapbox";
@@ -10,17 +9,17 @@ import Temperature from "./Components/Temperature";
 import { useGlobalContextUpdate } from "./Context/globalContext";
 import defaultStates from "./utils/defaultStates";
 
-// Lazy-loaded components
-const AirPollution = lazy(() => import("./Components/AirPollution"));
-const DailyForecast = lazy(() => import("./Components/DailyForecast"));
-const FeelsLike = lazy(() => import("./Components/FeelsLike"));
-const Humidity = lazy(() => import("./Components/Humidity"));
-const Population = lazy(() => import("./Components/Population"));
-const Sunset = lazy(() => import("./Components/Sunset"));
-const UvIndex = lazy(() => import("./Components/UvIndex"));
-const Wind = lazy(() => import("./Components/Wind"));
-const Visibility = lazy(() => import("./Components/Visibility"));
-const Pressure = lazy(() => import("./Components/Pressure"));
+// Lazy-loaded components using next/dynamic (with SSR disabled)
+const AirPollution = dynamic(() => import("./Components/AirPollution"), { ssr: false });
+const DailyForecast = dynamic(() => import("./Components/DailyForecast"), { ssr: false });
+const FeelsLike = dynamic(() => import("./Components/FeelsLike"), { ssr: false });
+const Humidity = dynamic(() => import("./Components/Humidity"), { ssr: false });
+const Population = dynamic(() => import("./Components/Population"), { ssr: false });
+const Sunset = dynamic(() => import("./Components/Sunset"), { ssr: false });
+const UvIndex = dynamic(() => import("./Components/UvIndex"), { ssr: false });
+const Wind = dynamic(() => import("./Components/Wind"), { ssr: false });
+const Visibility = dynamic(() => import("./Components/Visibility"), { ssr: false });
+const Pressure = dynamic(() => import("./Components/Pressure"), { ssr: false });
 
 export default function Home() {
   const { setActiveCityCoords } = useGlobalContextUpdate();
@@ -32,7 +31,7 @@ export default function Home() {
       top: 0,
       behavior: "smooth",
     });
-  }
+  };
 
   return (
     <main className="mx-[1rem] lg:mx-[2rem] xl:mx-[6rem] 2xl:mx-[16rem] m-auto">
@@ -62,24 +61,18 @@ export default function Home() {
             <Mapbox />
 
             <div className="states flex flex-col gap-3 flex-1">
-              <h2 className="flex items-center gap-2 font-medium">
-                Top Large Cities:
-              </h2>
+              <h2 className="flex items-center gap-2 font-medium">Top Large Cities:</h2>
 
               <div className="flex flex-col gap-4">
-                {defaultStates.map((state, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="border rounded-lg cursor-pointer dark:bg-dark-grey shadow-sm dark:shadow-none hover:bg-gray-400"
-                      onClick={() => getClickedCityCoords(state.lat, state.lon)}
-                    >
-                      <p className="px-6 py-4">
-                        {state.name}
-                      </p>
-                    </div>
-                  )
-                })}
+                {defaultStates.map((state, index) => (
+                  <div
+                    key={index}
+                    className="border rounded-lg cursor-pointer dark:bg-dark-grey shadow-sm dark:shadow-none hover:bg-gray-400"
+                    onClick={() => getClickedCityCoords(state.lat, state.lon)}
+                  >
+                    <p className="px-6 py-4">{state.name}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -96,11 +89,7 @@ export default function Home() {
             height={30}
             className="rounded-full"
           />
-          <a
-            href="https://github.com/janysoth"
-            target="_blank"
-            className=" text-green-300 font-bold"
-          >
+          <a href="https://github.com/janysoth" target="_blank" className="text-green-300 font-bold">
             Jonny Vorn Soth
           </a>
         </p>
