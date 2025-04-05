@@ -4,10 +4,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import React, { useMemo } from 'react';
 import { useGlobalContext } from '../Context/globalContext';
 import { thermometer } from '../utils/Icons';
-import { kelvinToCelsius } from '../utils/misc';
 
 const FeelsLike = () => {
-  const { forecast } = useGlobalContext();
+  const { forecast, unit, convertedTemp } = useGlobalContext();
 
   if (!forecast?.main?.feels_like)
     return <Skeleton className="h-[12rem] w-full col-span-2 md:col-span-full skeleton-animate" />;
@@ -34,7 +33,7 @@ const FeelsLike = () => {
         <h2 className="flex items-center gap-2 font-medium">
           {thermometer} Feels Like
         </h2>
-        <p className="pt-4 text-2xl">{kelvinToCelsius(feels_like)}°c</p>
+        <p className="pt-4 text-2xl">{convertedTemp(feels_like)}°{unit}</p>
       </div>
 
       <p className="text-sm">{feelsLikeDescription}</p>
