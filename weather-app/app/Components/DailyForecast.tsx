@@ -8,7 +8,7 @@ import { clearSky, cloudy, drizzleIcon, rain, snow } from '../utils/Icons';
 import { kelvinToCelsius } from '../utils/misc';
 
 const DailyForecast = () => {
-  const { forecast, fiveDayForecast } = useGlobalContext();
+  const { forecast, fiveDayForecast, convertedTemp, unit } = useGlobalContext();
 
   if (!fiveDayForecast?.city || !fiveDayForecast?.list || !forecast?.weather)
     return <Skeleton className="h-[12rem] w-full col-span-2 md:col-span-full skeleton-animate" />
@@ -63,7 +63,7 @@ const DailyForecast = () => {
               >
                 <p>{formatTime(dt_txt)}</p>
                 <p>{getIcon()}</p>
-                <p className="mt-4">{kelvinToCelsius(main.temp)}°c</p>
+                <p className="mt-4">{convertedTemp(main.temp)}°{unit}</p>
               </CarouselItem>
             ))}
           </CarouselContent>
