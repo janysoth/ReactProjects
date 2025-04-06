@@ -19,7 +19,7 @@ const Temperature = () => {
     const updateLocalTime = () => {
       const localMoment = moment().utcOffset((forecast.timezone ?? 0) / 60);
 
-      setLocalTime(localMoment.format("HH:mm A"));
+      setLocalTime(localMoment.format("h:mm A"));
       setCurrentDay(localMoment.format("dddd"));
       setCurrentDate(localMoment.format("MMMM D, YYYY"));
     };
