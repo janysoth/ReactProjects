@@ -9,11 +9,7 @@ import { useGlobalContext } from "../Context/globalContext";
 function Humidity() {
   const { forecast } = useGlobalContext();
 
-  if (!forecast || !forecast.main || forecast.main.humidity === undefined)
-    return <Skeleton className="h-[12rem] w-full col-span-2 md:col-span-full skeleton-animate" />;
-
-
-  const { humidity } = forecast.main;
+  const humidity = forecast?.main?.humidity;
 
   const getHumidityText = (humidity: number) => {
     if (humidity < 30) return "Dry: May cause skin irritation";
@@ -23,6 +19,9 @@ function Humidity() {
   };
 
   const humidityText = useMemo(() => getHumidityText(humidity), [humidity]);
+
+  if (!forecast || !forecast.main || forecast.main.humidity === undefined)
+    return <Skeleton className="h-[12rem] w-full col-span-2 md:col-span-full skeleton-animate" />;
 
   return (
     <div className="pt-6 pb-5 px-4 h-[12rem] border rounded-lg flex flex-col gap-8 dark:bg-dark-grey shadow-sm dark:shadow-none">
