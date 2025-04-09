@@ -62,7 +62,11 @@ const Login = () => {
             {error}
           </p>}
 
-          <button type="submit" className='btn-primary'>
+          <button
+            type="submit"
+            className={`btn-primary ${(!email || !password) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={!email || !password}
+          >
             Login
           </button>
 
