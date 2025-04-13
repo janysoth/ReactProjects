@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema(
       default: "https://www.gravatar.com/avatar/?d=mp",
     }
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 // Hash password before saving to database
