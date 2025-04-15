@@ -6,8 +6,8 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
 
-  fileName: (req, file, cb) => {
-    cb(null, `{Date.now()}-${file.originalname}`);
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
   }
 });
 
@@ -17,17 +17,17 @@ const fileFilter = (req, file, cb) => {
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Invalid file type. Only JPEG, PNG and JPG are allowed."));
+    cb(new Error("Invalid file type. Only JPEG, PNG and JPG are allowed."), false);
   }
 };
 
 // Initialize multer with storage and file filter
 const upload = multer({
   storage,
+  fileFilter,
   limits: {
-    fileSize: 1024 * 1024 * 50 // Limit file size to 50MB
-  },
-  fileFilter
+    fileSize: 1024 * 1024 * 10 // Limit file size to 10MB
+  }
 });
 
 module.exports = upload;
