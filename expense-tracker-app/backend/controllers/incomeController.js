@@ -10,7 +10,7 @@ exports.addIncome = async (req, res) => {
     const { icon, source, amount, date } = req.body;
 
     // Validation Check for missing fields
-    if (!source || !amount) {
+    if (!source || !amount || !date) {
       return res.status(400).json({ message: 'Please fill all fields' });
     };
 
