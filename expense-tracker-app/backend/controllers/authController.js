@@ -71,7 +71,6 @@ exports.loginUser = async (req, res) => {
       user,
       token: generateToken(user._id),
     });
-
   } catch (error) {
     res.status(500).json({
       message: "Error in logging in user backend: ",

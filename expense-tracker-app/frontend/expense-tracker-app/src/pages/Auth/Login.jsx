@@ -33,7 +33,7 @@ const Login = () => {
     }
 
     setError("");
-    console.log("Attempting login:", API_PATHS.AUTH.LOGIN, { email, password });
+
     // Login API Call 
     try {
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
@@ -48,6 +48,7 @@ const Login = () => {
         updateUser(user);
         navigate("/dashboard");
       }
+      console.log(user);
     } catch (error) {
       if (error.message && error.response.data.message) {
         setError(error.response.data.message);
