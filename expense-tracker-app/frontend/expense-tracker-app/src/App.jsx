@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
+import UserProvider from './context/userContext';
 import Login from './pages/Auth/Login';
 import SignUp from './pages/Auth/SignUp';
 import Expense from './pages/Dashboard/Expense';
@@ -9,18 +10,20 @@ import Income from './pages/Dashboard/Income';
 
 const App = () => {
   return (
-    <div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Root />} />
-          <Route path="/login" exact element={<Login />} />
-          <Route path="/signup" exact element={<SignUp />} />
-          <Route path="/dashboard" exact element={<Home />} />
-          <Route path="/income" exact element={<Income />} />
-          <Route path="/expense" exact element={<Expense />} />
-        </Routes>
-      </Router>
-    </div>
+    <UserProvider>
+      <div>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Root />} />
+            <Route path="/login" exact element={<Login />} />
+            <Route path="/signup" exact element={<SignUp />} />
+            <Route path="/dashboard" exact element={<Home />} />
+            <Route path="/income" exact element={<Income />} />
+            <Route path="/expense" exact element={<Expense />} />
+          </Routes>
+        </Router>
+      </div>
+    </UserProvider>
   );
 };
 
