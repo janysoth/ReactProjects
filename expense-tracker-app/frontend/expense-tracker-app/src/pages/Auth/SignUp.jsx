@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Input from '../../components/Inputs/Input';
 import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector';
 import AuthLayout from '../../components/layouts/AuthLayout';
-import { UserContext } from '../../context/userContext';
+import { UserContext } from '../../context/UserContext';
 import { API_PATHS } from '../../utils/apiPath';
 import axiosInstance from '../../utils/axiosInstance';
 import { validateEmail } from '../../utils/helper';
