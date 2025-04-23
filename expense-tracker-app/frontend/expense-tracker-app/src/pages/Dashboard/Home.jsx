@@ -4,6 +4,7 @@ import { LuHandCoins, LuWalletMinimal } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 
 import InfoCard from '../../components/Cards/InfoCard';
+import RecentTransactions from '../../components/Dashboard/RecentTransactions';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import { useUserAuth } from '../../hooks/useUserAuth';
 import { API_PATHS } from '../../utils/apiPath';
@@ -47,7 +48,7 @@ const Home = () => {
   return (
     <DashboardLayout activeMenu="Dashboard">
       <div className="my-5 mx-auto">
-        {loading ? (
+        {/* {loading ? (
           <p className="text-center py-10">Loading...</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -70,7 +71,14 @@ const Home = () => {
               color="bg-red-500"
             />
           </div>
-        )}
+        )} */}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <RecentTransactions
+            transactions={dashboardData?.recentTransactions}
+            onSeeMore={() => navigate("/expense")}
+          />
+        </div>
       </div>
     </DashboardLayout>
   );
