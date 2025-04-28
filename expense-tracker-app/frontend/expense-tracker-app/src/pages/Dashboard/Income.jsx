@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import AddIncomeForm from '../../components/Income/AddIncomeForm';
 import IncomeOverview from '../../components/Income/IncomeOverview';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import Modal from '../../components/Modal';
@@ -14,7 +15,7 @@ const Income = () => {
     data: null,
   });
 
-  const [openAddIncomeModal, setOpenAddIncomeModal] = useState(true);
+  const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
 
   // Get All Income Details
   const fetchIncomeDetails = async () => {
@@ -69,7 +70,7 @@ const Income = () => {
           onClose={() => setOpenAddIncomeModal(false)}
           title="Add Income"
         >
-          <div>Add Income Form</div>
+          <AddIncomeForm onAddIncome={handleAddIncome} />
         </Modal>
       </div>
     </DashboardLayout>
