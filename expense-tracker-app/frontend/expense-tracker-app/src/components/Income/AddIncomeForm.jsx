@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FormButton from '../Button/FormButton';
+import EmojiPickerPopup from '../EmojiPickerPopup';
 import Input from '../Inputs/Input';
 
 const getTodayDate = () => {
@@ -22,6 +23,11 @@ const AddIncomeForm = ({ onAddIncome, onClose }) => {
 
   return (
     <div>
+      <EmojiPickerPopup
+        icon={income.icon}
+        onSelect={(selectedIcons) => handleChange('icon', selectedIcons)}
+      />
+
       <Input
         value={income.source}
         onChange={(e) => handleChange('source', e.target.value)}
@@ -58,7 +64,7 @@ const AddIncomeForm = ({ onAddIncome, onClose }) => {
           Cancel
         </FormButton>
 
-        <FormButton variant='primary' onClick={onAddIncome} disabled={!isFormValid}>
+        <FormButton variant='primary' onClick={() => onAddIncome(income)} disabled={!isFormValid}>
           Add Income
         </FormButton>
       </div>

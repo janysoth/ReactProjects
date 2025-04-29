@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
+import { Toaster } from 'react-hot-toast';
 import UserProvider from './context/UserContext';
 import Login from './pages/Auth/Login';
 import SignUp from './pages/Auth/SignUp';
@@ -23,6 +24,15 @@ const App = () => {
           </Routes>
         </Router>
       </div>
+
+      <Toaster
+        toastOptions={{
+          className: '',
+          style: {
+            fontSize: '13px',
+          }
+        }}
+      />
     </UserProvider>
   );
 };

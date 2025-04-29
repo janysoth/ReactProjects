@@ -51,7 +51,7 @@ export const prepareSortedIncomeChartData = (data = []) => {
   const sortedData = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const chartData = sortedData.map((item) => ({
-    month: moment(item?.date).format("MMM Do"),
+    month: moment.utc(item?.date).format("MMM Do"),
     amount: item?.amount,
     source: item?.source,
   }));
