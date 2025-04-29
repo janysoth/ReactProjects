@@ -49,6 +49,8 @@ const Income = () => {
   // Handle Download Income Details
   const handleDownloadIncomeDetails = async () => { };
 
+  const onClose = () => setOpenAddIncomeModal(false);
+
   useEffect(() => {
     fetchIncomeDetails();
 
@@ -69,10 +71,10 @@ const Income = () => {
 
         <Modal
           isOpen={openAddIncomeModal}
-          onClose={() => setOpenAddIncomeModal(false)}
+          onClose={onClose}
           title="Add Income"
         >
-          <AddIncomeForm onAddIncome={handleAddIncome} />
+          <AddIncomeForm onAddIncome={handleAddIncome} onClose={onClose} />
         </Modal>
       </div>
     </DashboardLayout>

@@ -43,7 +43,7 @@ const Modal = ({ children, isOpen, onClose, title }) => {
             <button
               type="button"
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-gray-100 rounded-lg transition-all active:scale-95 dark:hover:text-red-400 dark:hover:bg-gray-700"
+              className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-gray-100 rounded-lg transition-all active:scale-95 dark:hover:text-red-400 dark:hover:bg-gray-700 cursor-pointer"
             >
               <svg
                 className="w-3 h-3"

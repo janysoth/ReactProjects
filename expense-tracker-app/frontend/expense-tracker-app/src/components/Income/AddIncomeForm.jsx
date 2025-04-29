@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
+import FormButton from '../Button/FormButton';
 import Input from '../Inputs/Input';
 
-const AddIncomeForm = ({ onAddIncome }) => {
+const getTodayDate = () => {
+  const today = new Date();
+
+  return today.toISOString().split('T')[0];
+};
+
+const AddIncomeForm = ({ onAddIncome, onClose }) => {
   const [income, setIncome] = useState({
     source: '',
     amount: '',
-    date: '',
+    date: getTodayDate(),
     icon: '',
   });
 
   const handleChange = (key, value) => setIncome({ ...income, [key]: value });
+
+  const isFormValid = income.source.trim() !== '' && income.amount.trim() !== '';
 
   return (
     <div>
@@ -38,13 +47,20 @@ const AddIncomeForm = ({ onAddIncome }) => {
       />
 
       <div className="flex justify-end mt-6">
-        <button
+        {/* <button
           type='button'
           className='add-btn add-btn-fill'
           onClick={() => onAddIncome(income)}
         >
           Add Income
-        </button>
+        </button> */}
+        <FormButton variant='danger' onClick={onClose}>
+          Cancel
+        </FormButton>
+
+        <FormButton variant='primary' onClick={onAddIncome} disabled={!isFormValid}>
+          Add Income
+        </FormButton>
       </div>
     </div>
   );
