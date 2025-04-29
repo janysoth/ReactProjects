@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const Modal = ({ children, isOpen, onClose, title }) => {
+  // ✅ Hook is called unconditionally
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  // ❌ Do not return early before the hook
   if (!isOpen) return null;
 
+  const stopPropagation = (e) => e.stopPropagation();
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-black/20 bg-opacity-50">
-      <div className="relative p-4 w-full max-w-2xl max-h-full">
+    <div
+      className="fixed inset-0 z-50 flex justify-center overflow-y-auto overflow-x-hidden bg-black/20 bg-opacity-50 p-4"
+      onClick={onClose} // Close modal on background click
+    >
+      <div
+        className="relative p-4 w-full max-w-2xl max-h-full mt-15 md:mt-20 transition-all duration-300 transform"
+        onClick={stopPropagation} // Prevent closing on modal content click
+      >
         {/* Modal content */}
         <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
           {/* Modal header */}
