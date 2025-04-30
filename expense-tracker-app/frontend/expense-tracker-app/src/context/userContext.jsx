@@ -1,32 +1,31 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useState } from 'react';
+import React, { createContext } from 'react';
 
 export const UserContext = createContext();
 
-const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+// const UserProvider = ({ children }) => {
+//   const [user, setUser] = useState(null);
 
-  // Function to update user data
-  const updateUser = (userData) => {
-    setUser(userData);
-  };
+//   // Function to update user data
+//   const updateUser = (userData) => {
+//     setUser(userData);
+//   };
 
-  // Function to clear user data (ex: on logout)
-  const clearUser = () => {
-    setUser(null);
-  };
+//   // Function to clear user data (ex: on logout)
+//   const clearUser = () => {
+//     setUser(null);
+//   };
 
-  return (
-    <UserContext.Provider
-      value={{
-        user,
-        updateUser,
-        clearUser,
-      }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
-};
+//   return (
+//     <UserContext.Provider
+//       value={{
+//         user,
+//         updateUser,
+//         clearUser,
+//       }}
+//     >
+//       {children}
+//     </UserContext.Provider>
+//   );
+// };
 
-export default UserProvider;
+// export default UserProvider;
