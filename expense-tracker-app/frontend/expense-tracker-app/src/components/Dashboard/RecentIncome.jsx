@@ -8,7 +8,7 @@ import TransactionInfoCard from '../Cards/TransactionInfoCard';
 import AddIncomeForm from '../Income/AddIncomeForm';
 import Modal from '../Modal';
 
-const RecentIncome = ({ onSeeMore }) => {
+const RecentIncome = ({ onSeeMore, refreshDashboard }) => {
   const {
     incomeData,
     loadingIncome,
@@ -24,6 +24,7 @@ const RecentIncome = ({ onSeeMore }) => {
     if (success) {
       onClose();
       fetchIncomeDetails();
+      if (refreshDashboard) refreshDashboard();
     }
   };
 

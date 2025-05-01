@@ -18,27 +18,25 @@ import { addThousandsSeparator } from '../../utils/helper';
 
 const Home = () => {
   useUserAuth();
-
   const navigate = useNavigate();
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchDashboardData = async () => {
     if (loading) return;
-
     setLoading(true);
+    setError(null);
 
     try {
-      const response = await axiosInstance.get(
-        `${API_PATHS.DASHBOARD.GET_DATA}`
-      );
-
+      const response = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA);
       if (response.data) {
         setDashboardData(response.data);
       }
-    } catch (error) {
-      console.log("Error in fetchDashboardData frontend: ", error);
+    } catch (err) {
+      console.error("Error in fetchDashboardData frontend: ", err);
+      setError("Failed to load dashboard data.");
     } finally {
       setLoading(false);
     }
@@ -46,69 +44,83 @@ const Home = () => {
 
   useEffect(() => {
     fetchDashboardData();
-
-    return () => { };
   }, []);
+
+  const {
+    totalBalance = 0,
+    totalIncome = 0,
+    totalExpense = 0,
+    recentTransactions = [],
+    last30DaysExpenses = { transactions: [] },
+    last60DaysIncome = { transactions: [] },
+  } = dashboardData || {};
 
   return (
     <DashboardLayout activeMenu="Dashboard">
       <div className="my-5 mx-auto">
         {loading ? (
           <p className="text-center py-10">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-red-500 py-10">{error}</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <InfoCard
-              icon={<IoMdCard />}
-              label="Total Balance"
-              value={addThousandsSeparator(dashboardData?.totalBalance || 0)}
-              color="bg-primary"
-            />
-            <InfoCard
-              icon={<LuWalletMinimal />}
-              label="Total Income"
-              value={addThousandsSeparator(dashboardData?.totalIncome || 0)}
-              color="bg-green-500"
-            />
-            <InfoCard
-              icon={<LuHandCoins />}
-              label="Total Expense"
-              value={addThousandsSeparator(dashboardData?.totalExpense || 0)}
-              color="bg-red-500"
-            />
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <InfoCard
+                icon={<IoMdCard />}
+                label="Total Balance"
+                value={addThousandsSeparator(totalBalance)}
+                color="bg-primary"
+              />
+              <InfoCard
+                icon={<LuWalletMinimal />}
+                label="Total Income"
+                value={addThousandsSeparator(totalIncome)}
+                color="bg-green-500"
+              />
+              <InfoCard
+                icon={<LuHandCoins />}
+                label="Total Expense"
+                value={addThousandsSeparator(totalExpense)}
+                color="bg-red-500"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              {/* <h2 className="col-span-full text-lg font-semibold">Recent Transactions</h2> */}
+              <RecentTransactions
+                transactions={recentTransactions}
+                onSeeMore={() => navigate("/expense")}
+              />
+
+              <FinanceOverview
+                totalBalance={totalBalance}
+                totalIncome={totalIncome}
+                totalExpense={totalExpense}
+              />
+
+              {/* <h2 className="col-span-full text-lg font-semibold">Expense Transactions</h2> */}
+              <ExpenseTransactions
+                transactions={last30DaysExpenses.transactions}
+                onSeeMore={() => navigate("/expense")}
+              />
+
+              <Last30DaysExpenses
+                data={last30DaysExpenses.transactions}
+              />
+
+              <RecentIncomeWithChart
+                data={last60DaysIncome.transactions.slice(0, 4)}
+                totalIncome={totalIncome}
+              />
+
+              <RecentIncome
+                transactions={last60DaysIncome.transactions}
+                onSeeMore={() => navigate("/income")}
+                refreshDashboard={fetchDashboardData}
+              />
+            </div>
+          </>
         )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <RecentTransactions
-            transactions={dashboardData?.recentTransactions || []}
-            onSeeMore={() => navigate("/expense")}
-          />
-
-          <FinanceOverview
-            totalBalance={dashboardData?.totalBalance || 0}
-            totalIncome={dashboardData?.totalIncome || 0}
-            totalExpense={dashboardData?.totalExpense || 0}
-          />
-
-          <ExpenseTransactions
-            transactions={dashboardData?.last30DaysExpenses?.transactions || []}
-            onSeeMore={() => navigate("/expense")}
-          />
-
-          <Last30DaysExpenses
-            data={dashboardData?.last30DaysExpenses?.transactions || []}
-          />
-
-          <RecentIncomeWithChart
-            data={dashboardData?.last60DaysIncome?.transactions?.slice(0, 4) || []}
-            totalIncome={dashboardData?.totalIncome || 0}
-          />
-
-          <RecentIncome
-            transactions={dashboardData?.last60DaysIncome?.transactions || []}
-            onSeeMore={() => navigate("/income")}
-          />
-        </div>
       </div>
     </DashboardLayout>
   );
