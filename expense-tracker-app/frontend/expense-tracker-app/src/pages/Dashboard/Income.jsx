@@ -39,7 +39,7 @@ const Income = () => {
     fetchIncomeDetails();
 
     return () => { };
-  }, []);
+  }, [fetchIncomeDetails]);
 
   return (
     <DashboardLayout activeMenu="Income">

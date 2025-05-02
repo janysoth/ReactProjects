@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 import IncomeContext from '../context/IncomeContext';
 import { API_PATHS } from '../utils/apiPath';
@@ -12,7 +12,7 @@ const IncomeProvider = ({ children }) => {
     data: null,
   });
 
-  const fetchIncomeDetails = async () => {
+  const fetchIncomeDetails = useCallback(async () => {
     if (loading) return;
     setLoading(true);
 
@@ -24,7 +24,7 @@ const IncomeProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading]); // <== make sure dependencies are correct
 
   const handleAddIncome = async ({ source, amount, date, icon }) => {
     if (!source.trim()) {
