@@ -12,13 +12,13 @@ const TransactionInfoCard = ({
   date,
   amount,
   type,
-  hideDeleteBtn
+  hideDeleteBtn,
+  onDelete
 }) => {
-  const onDelete = () => { };
+  //const onDelete = () => { };
 
   const getAmountStyles = () =>
     type === "income" ? "bg-green-50 text-green-500" : "bg-red-50 text-red-500";
-
 
   return (
     <div className="group relative flex items-center gap-4 mt-2 p-3 rounded-lg hover:bg-gray-100/60 ">
@@ -39,7 +39,8 @@ const TransactionInfoCard = ({
         <div className="flex items-center gap-2">
           {!hideDeleteBtn && (
             <button
-              className='text-gray-400 hover:text-red-500 opacity-0 group:hover:opacity-100 transition-opacity cursor-pointer'
+              aria-label={`Delete ${title}`}
+              className='text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
               onClick={onDelete}
             >
               <LuTrash2 />

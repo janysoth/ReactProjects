@@ -7,6 +7,10 @@ import axiosInstance from '../utils/axiosInstance';
 const IncomeProvider = ({ children }) => {
   const [incomeData, setIncomeData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [openDeleteAlert, setOpenDeleteAlert] = useState({
+    show: false,
+    data: null,
+  });
 
   const fetchIncomeDetails = async () => {
     if (loading) return;
@@ -53,6 +57,42 @@ const IncomeProvider = ({ children }) => {
     }
   };
 
+  const handleDeleteIncome = async (incomeId) => {
+    try {
+      await axiosInstance.delete(API_PATHS.INCOME.DELETE_INCOME(incomeId));
+      setOpenDeleteAlert({ show: false, data: null });
+      toast.success("Income deleted successfully");
+      fetchIncomeDetails();
+    } catch (error) {
+      console.log("Error in handleDeleteIncome backend:", error.response?.data?.message || error.message);
+      toast.error("Error in deleting income");
+    }
+  };
+
+  const handleDownloadIncomeDetails = async () => {
+    try {
+      const response = await axiosInstance.get(API_PATHS.INCOME.DOWNLOAD_INCOME, {
+        responseType: 'blob', // important to handle binary files
+      });
+
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'income_details.xlsx'); // set desired file name
+      document.body.appendChild(link);
+      link.click();
+      link.remove(); // clean up and remove the link
+
+      toast.success("Income details downloaded successfully");
+    } catch (error) {
+      console.log("Error in handleDownloadIncomeDetails backend.",
+        error.response?.data?.message || error.message
+      );
+    }
+  };
+
   return (
     <IncomeContext.Provider
       value={{
@@ -60,6 +100,10 @@ const IncomeProvider = ({ children }) => {
         loading,
         fetchIncomeDetails,
         handleAddIncome,
+        handleDeleteIncome,
+        openDeleteAlert,
+        setOpenDeleteAlert,
+        handleDownloadIncomeDetails
       }}
     >
       {children}

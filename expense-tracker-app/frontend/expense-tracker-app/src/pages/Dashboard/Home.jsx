@@ -89,7 +89,7 @@ const Home = () => {
               {/* <h2 className="col-span-full text-lg font-semibold">Recent Transactions</h2> */}
               <RecentTransactions
                 transactions={recentTransactions}
-                onSeeMore={() => navigate("/expense")}
+                onSeeMore={() => navigate("/all-transactions")}
               />
 
               <FinanceOverview
@@ -110,7 +110,7 @@ const Home = () => {
 
               <RecentIncomeWithChart
                 data={last60DaysIncome.transactions.slice(0, 4)}
-                totalIncome={totalIncome}
+                totalIncome={last60DaysIncome.total}
               />
 
               <RecentIncome

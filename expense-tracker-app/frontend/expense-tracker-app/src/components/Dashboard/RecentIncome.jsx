@@ -30,7 +30,7 @@ const RecentIncome = ({ onSeeMore, refreshDashboard }) => {
 
   useEffect(() => {
     fetchIncomeDetails();
-  });
+  }, []);
 
   return (
     <div className="card relative">
