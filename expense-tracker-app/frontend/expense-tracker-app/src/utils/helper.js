@@ -58,3 +58,21 @@ export const prepareSortedIncomeChartData = (data = []) => {
 
   return chartData;
 };
+
+export const prepareExpenseLineChartData = (data = []) => {
+  const sortedData = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const chartData = sortedData.map((item) => ({
+    month: moment.utc(item?.date).format("MMM Do"),
+    amount: item?.amount,
+    category: item?.category,
+  }));
+
+  return chartData;
+};
+
+export const getTodayDate = () => {
+  const today = new Date();
+
+  return today.toISOString().split("T")[0];
+};

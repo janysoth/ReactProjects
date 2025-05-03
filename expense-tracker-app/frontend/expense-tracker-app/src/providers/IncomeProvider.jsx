@@ -24,7 +24,7 @@ const IncomeProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [loading]); // <== make sure dependencies are correct
+  }, [loading]);
 
   const handleAddIncome = async ({ source, amount, date, icon }) => {
     if (!source.trim()) {

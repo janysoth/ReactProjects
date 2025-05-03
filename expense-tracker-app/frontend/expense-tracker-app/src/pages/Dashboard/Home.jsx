@@ -102,6 +102,7 @@ const Home = () => {
               <ExpenseTransactions
                 transactions={last30DaysExpenses.transactions}
                 onSeeMore={() => navigate("/expense")}
+                refreshDashboard={fetchDashboardData}
               />
 
               <Last30DaysExpenses
