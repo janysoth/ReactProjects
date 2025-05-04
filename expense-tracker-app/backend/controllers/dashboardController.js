@@ -47,6 +47,15 @@ exports.getDashboardData = async (req, res) => {
     const recentExpense = await Expense.find({ userId: userObjectId })
       .sort({ date: -1 }).limit(5).lean();
 
+    // All transactions
+    const allTransactions = [
+      ...recentIncome.map(txn => ({ ...txn, type: 'income' })),
+      ...recentExpense.map(txn => ({ ...txn, type: 'expense' }))
+    ];
+
+    // Sort transactions by date
+    const sortedAllTransactions = allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
     const lastTransactions = [
       ...recentIncome.map(txn => ({ ...txn, type: 'income' })),
       ...recentExpense.map(txn => ({ ...txn, type: 'expense' }))
@@ -66,6 +75,7 @@ exports.getDashboardData = async (req, res) => {
         transactions: last60DaysIncomeTransactions,
       },
       recentTransactions: lastTransactions,
+      allTransactions: sortedAllTransactions,
     });
   } catch (error) {
     console.error(error);
