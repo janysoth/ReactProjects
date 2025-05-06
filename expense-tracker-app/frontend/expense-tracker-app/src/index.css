@@ -42,3 +42,15 @@
 .add-btn:fill {
   @apply text-white bg-primary;
 }
+
+.finance-card {
+  @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300;
+}
+
+.expense {
+  @apply text-red-500;
+}
+
+.income {
+  @apply text-green-500;
+}

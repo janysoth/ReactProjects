@@ -76,3 +76,24 @@ export const getTodayDate = () => {
 
   return today.toISOString().split("T")[0];
 };
+
+export const groupTransactionsByDate = (transactions) => {
+  const groupedTransactions = {};
+
+  transactions.forEach(transaction => {
+    const date = new Date(transaction.date).toLocaleDateString();
+
+    if (!groupedTransactions[date]) {
+      groupedTransactions[date] = [];
+    }
+
+    groupedTransactions[date].push(transaction);
+  });
+
+  return Object.entries(groupedTransactions).sort(([dateA], [dateB]) => {
+    return new Date(dateB).getTime() - new Date(dateA).getTime();
+  }).map(([date, transactions]) => ({
+    date,
+    transactions
+  }));
+};
