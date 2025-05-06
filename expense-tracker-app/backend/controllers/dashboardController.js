@@ -41,6 +41,14 @@ exports.getDashboardData = async (req, res) => {
       0
     );
 
+    // All Income
+    const allIncome = await Income.find({ userId: userObjectId })
+      .sort({ date: -1 }).lean();
+
+    // All Expense
+    const allExpense = await Expense.find({ userId: userObjectId })
+      .sort({ date: -1 }).lean();
+
     // Last 5 transactions from both
     const recentIncome = await Income.find({ userId: userObjectId })
       .sort({ date: -1 }).limit(5).lean();
@@ -49,8 +57,8 @@ exports.getDashboardData = async (req, res) => {
 
     // All transactions
     const allTransactions = [
-      ...recentIncome.map(txn => ({ ...txn, type: 'income' })),
-      ...recentExpense.map(txn => ({ ...txn, type: 'expense' }))
+      ...allIncome.map(txn => ({ ...txn, type: 'income' })),
+      ...allExpense.map(txn => ({ ...txn, type: 'expense' }))
     ];
 
     // Sort transactions by date

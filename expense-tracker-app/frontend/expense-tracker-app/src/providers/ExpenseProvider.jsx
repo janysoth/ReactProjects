@@ -71,7 +71,7 @@ const ExpenseProvider = ({ children }) => {
       fetchExpenseDetails();
     } catch (error) {
       console.log("Error in handleDeleteIncome backend:", error.response?.data?.message || error.message);
-      toast.error("Error in deleting income");
+      toast.error("Error in deleting expense");
     }
   };
 

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { LuArrowDownRight, LuArrowUpRight } from 'react-icons/lu';
+import { LuTrash2, LuTrendingDown, LuTrendingUp, LuUtensils } from 'react-icons/lu';
 import TransactionList from '../../components/AllTransactions/TransactionList';
 import DeleteAlert from '../../components/DeleteAlert';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import Modal from '../../components/Modal';
+import useExpense from '../../hooks/useExpense';
+import useIncome from '../../hooks/useIncome';
 import { useUserAuth } from '../../hooks/useUserAuth';
 import { API_PATHS } from '../../utils/apiPath';
 import axiosInstance from '../../utils/axiosInstance';
@@ -45,6 +47,9 @@ const AllTransactions = () => {
   const {
     allTransactions = [],
   } = dashboardData || {};
+
+  const { handleDeleteIncome } = useIncome();
+  const { handleDeleteExpense } = useExpense();
 
   const groupedTransactions = groupTransactionsByDate(allTransactions);
 
@@ -87,26 +92,51 @@ const AllTransactions = () => {
 
                   <div className="space-y-2">
                     {transactions.map(transaction => {
-                      const isExpense = transaction.category;
+                      const isExpense = !!transaction.category;
 
                       return (
                         <div
                           key={transaction.id}
-                          className="flex items-center justify-between p-3 bg-white border rounded-md hover:bg-gray-50"
+                          className="group flex items-center justify-between p-3 bg-white border rounded-md hover:bg-gray-50"
                         >
                           <div className="flex items-center">
-                            <div
-                              className={`p-2 rounded-full mr-4`}
-                            >
-                              <img alt='transaction icon' src={transaction.icon} className="w-6 h-6" />
+                            <div className="w-12 h-12 flex ml-4 mr-4 items-center justify-center text-xl text-gray-800 bg-gray-100 rounded-full">
+                              {transaction.icon ? (
+                                <img alt="transaction icon" src={transaction.icon} className="w-6 h-6" />
+                              ) : (
+                                <LuUtensils />
+                              )}
                             </div>
 
                             <div>
-                              <p className="font-medium">{isExpense ? transaction.category : transaction.source}</p>
+                              <p className="font-medium m-2">
+                                {isExpense ? transaction.category : transaction.source}
+                              </p>
                             </div>
                           </div>
-                          <div className={`font-semibold ${isExpense ? 'expense' : 'income'}`}>
-                            {isExpense ? '-' : '+'} ${transaction.amount}
+
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`${isExpense ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500'
+                                } flex items-center gap-2 px-3 py-1.5 rounded-md`}
+                            >
+                              <h6 className="text-s font-medium">
+                                {isExpense ? '-' : '+'}${Number(transaction.amount).toLocaleString()}
+                              </h6>
+                              {isExpense ? <LuTrendingDown /> : <LuTrendingUp />}
+                            </div>
+
+                            <button
+                              aria-label={`Delete ${isExpense ? transaction.category : transaction.source}`}
+                              className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                              onClick={() => {
+                                setOpenDeleteAlert({ show: true, data: transaction });
+                                console.log(transaction._id);
+                              }
+                              }
+                            >
+                              <LuTrash2 />
+                            </button>
                           </div>
                         </div>
                       );
@@ -122,6 +152,37 @@ const AllTransactions = () => {
           )}
         </div>
       </div>
+
+      {/* Global Modal, rendered once */}
+      <Modal
+        isOpen={openDeleteAlert.show}
+        onClose={onClose}
+        title="Delete Transaction"
+      >
+        <DeleteAlert
+          content="Are you sure you want to delete this transaction?"
+          onDelete={async () => {
+            const transaction = openDeleteAlert.data;
+
+            try {
+              if (transaction.category) {
+                console.log("Deleting Expense");
+                await handleDeleteExpense(transaction._id);
+              } else {
+                console.log("Deleting Income");
+                await handleDeleteIncome(transaction._id);
+              }
+
+              fetchDashboardData();
+            } catch (error) {
+              console.log("Error in deleting transaction in deleteAlert: ", error);
+            } finally {
+              onClose();
+            }
+          }}
+          onClose={onClose}
+        />
+      </Modal>
     </DashboardLayout>
   );
 };

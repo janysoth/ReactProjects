@@ -81,7 +81,8 @@ export const groupTransactionsByDate = (transactions) => {
   const groupedTransactions = {};
 
   transactions.forEach(transaction => {
-    const date = new Date(transaction.date).toLocaleDateString();
+    // Convert to UTC and format the date string
+    const date = moment.utc(transaction.date).format('MMM Do, YYYY'); // Or any format you prefer
 
     if (!groupedTransactions[date]) {
       groupedTransactions[date] = [];
@@ -90,10 +91,10 @@ export const groupTransactionsByDate = (transactions) => {
     groupedTransactions[date].push(transaction);
   });
 
-  return Object.entries(groupedTransactions).sort(([dateA], [dateB]) => {
-    return new Date(dateB).getTime() - new Date(dateA).getTime();
-  }).map(([date, transactions]) => ({
-    date,
-    transactions
-  }));
+  return Object.entries(groupedTransactions)
+    .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime())
+    .map(([date, transactions]) => ({
+      date,
+      transactions,
+    }));
 };
