@@ -1,3 +1,4 @@
+import { Coins } from "lucide-react";
 import React, { useState } from 'react';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 
@@ -19,9 +20,12 @@ const Navbar = ({ activeMenu }) => {
         )}
       </button>
 
-      <h2 className='text-lg font-medium text-black'>
-        Personal Finance Tracker
-      </h2>
+      <div className="flex items-center">
+        <Coins size={24} className="text-primary mr-2" />
+        <h2 className='font-bold text-xl text-primary'>
+          SmartSpend
+        </h2>
+      </div>
 
       {openSideMenu && (
         <div className='fixed top-[61px] -ml-4 bg-white'>
