@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
 
-import { LuTrash2, LuTrendingDown, LuTrendingUp, LuUtensils } from 'react-icons/lu';
-import TransactionList from '../../components/AllTransactions/TransactionList';
+import { LuPlus, LuTrash2, LuTrendingDown, LuTrendingUp, LuUtensils } from 'react-icons/lu';
+import AddTransactionForm from '../../components/AllTransactions/AddTransactionForm';
 import DeleteAlert from '../../components/DeleteAlert';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import Modal from '../../components/Modal';
@@ -19,13 +20,13 @@ const AllTransactions = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   const onClose = () => setOpenDeleteAlert({ show: false, data: null });
 
   const fetchDashboardData = async () => {
     if (loading) return;
     setLoading(true);
-    setError(null);
 
     try {
       const response = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA);
@@ -42,6 +43,8 @@ const AllTransactions = () => {
 
   useEffect(() => {
     fetchDashboardData();
+
+    return () => { };
   }, []);
 
   const {
@@ -80,8 +83,35 @@ const AllTransactions = () => {
 
   return (
     <DashboardLayout activeMenu="All Transactions">
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Transactions</h1>
+      <div className="container mx-auto p-4 min-h-screen">
+        <div className='flex justify-between items-center mb-6'>
+          <h1 className="text-2xl font-bold mb-4"> All Transactions</h1>
+
+          <button
+            className="add-btn"
+            onClick={() => setOpenAddModal(true)}
+          >
+            <LuPlus className='text-lg' />
+            Add Transaction
+          </button>
+
+          <Modal
+            isOpen={openAddModal}
+            onClose={() => setOpenAddModal(false)}
+            title="Add Transaction"
+          >
+            <AddTransactionForm
+              onClose={() => setOpenAddModal(false)}
+              onSuccess={fetchDashboardData}
+            />
+          </Modal>
+        </div>
+
+        {error && (
+          <div className="text-center mb-4 text-red-500">
+            {error}
+          </div>
+        )}
 
         <div className="finance-card">
           {groupedTransactions.length > 0 ? (
@@ -96,8 +126,8 @@ const AllTransactions = () => {
 
                       return (
                         <div
-                          key={transaction.id}
-                          className="group flex items-center justify-between p-3 bg-white border rounded-md hover:bg-gray-50"
+                          key={transaction._id}
+                          className="group flex items-center justify-between p-3 border rounded-md hover:bg-gray-50"
                         >
                           <div className="flex items-center">
                             <div className="w-12 h-12 flex ml-4 mr-4 items-center justify-center text-xl text-gray-800 bg-gray-100 rounded-full">
