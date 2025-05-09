@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FormButton from '../Button/FormButton';
 import EmojiPickerPopup from '../EmojiPickerPopup';
 import Input from '../Inputs/Input';
 
 const getTodayDate = () => {
   const today = new Date();
-
   return today.toISOString().split('T')[0];
 };
 
-const AddIncomeForm = ({ onAddIncome, onClose }) => {
+const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = false }) => {
   const [income, setIncome] = useState({
     source: '',
     amount: '',
@@ -17,15 +16,34 @@ const AddIncomeForm = ({ onAddIncome, onClose }) => {
     icon: '',
   });
 
-  const handleChange = (key, value) => setIncome({ ...income, [key]: value });
+  // Initialize form if editing
+  useEffect(() => {
+    if (isEditMode && initialData) {
+      setIncome({
+        source: initialData.source || '',
+        amount: initialData.amount || '',
+        date: initialData.date ? initialData.date.split('T')[0] : getTodayDate(),
+        icon: initialData.icon || '',
+        _id: initialData._id, // include _id for PATCH request
+      });
+    }
+  }, [initialData, isEditMode]);
 
-  const isFormValid = income.source.trim() !== '' && income.amount.trim() !== '';
+  const handleChange = (key, value) => {
+    setIncome(prev => ({ ...prev, [key]: value }));
+  };
+
+  const isFormValid = income.source.trim() !== '' && income.amount.toString().trim() !== '';
+
+  const handleSubmit = () => {
+    onAddIncome(income);
+  };
 
   return (
     <div>
       <EmojiPickerPopup
         icon={income.icon}
-        onSelect={(selectedIcons) => handleChange('icon', selectedIcons)}
+        onSelect={(selectedIcon) => handleChange('icon', selectedIcon)}
       />
 
       <Input
@@ -48,24 +66,16 @@ const AddIncomeForm = ({ onAddIncome, onClose }) => {
         value={income.date}
         onChange={(e) => handleChange('date', e.target.value)}
         label="Date"
-        placeholder="MM/DD/YYYY"
         type="date"
       />
 
-      <div className="flex justify-end mt-6">
-        {/* <button
-          type='button'
-          className='add-btn add-btn-fill'
-          onClick={() => onAddIncome(income)}
-        >
-          Add Income
-        </button> */}
-        <FormButton variant='danger' onClick={onClose}>
+      <div className="flex justify-end mt-6 gap-2">
+        <FormButton variant="danger" onClick={onClose}>
           Cancel
         </FormButton>
 
-        <FormButton variant='primary' onClick={() => onAddIncome(income)} disabled={!isFormValid}>
-          Add Income
+        <FormButton variant="primary" onClick={handleSubmit} disabled={!isFormValid}>
+          {isEditMode ? 'Update Income' : 'Add Income'}
         </FormButton>
       </div>
     </div>

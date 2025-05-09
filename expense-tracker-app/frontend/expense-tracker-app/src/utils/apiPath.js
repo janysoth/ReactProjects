@@ -17,6 +17,7 @@ export const API_PATHS = {
     GET_ALL_INCOME: "/income/get",
     DELETE_INCOME: (incomeId) => `/income/${incomeId}`,
     DOWNLOAD_INCOME: "/income/downloadexcel",
+    UPDATE_INCOME: (incomeId) => `/income/update/${incomeId}`,
   },
 
   EXPENSE: {
@@ -24,6 +25,7 @@ export const API_PATHS = {
     GET_ALL_EXPENSE: "/expense/get",
     DELETE_EXPENSE: (expenseId) => `/expense/${expenseId}`,
     DOWNLOAD_EXPENSE: "/expense/downloadexcel",
+    UPDATE_EXPENSE: (expenseId) => `/expense/update/${expenseId}`,
   },
 
   IMAGE: {

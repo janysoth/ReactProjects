@@ -11,6 +11,8 @@ const IncomeProvider = ({ children }) => {
     show: false,
     data: null,
   });
+  const [editIncome, setEditIncome] = useState(null); // currently selected income for editing
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const fetchIncomeDetails = useCallback(async () => {
     if (loading) return;
@@ -64,8 +66,22 @@ const IncomeProvider = ({ children }) => {
       toast.success("Income deleted successfully");
       fetchIncomeDetails();
     } catch (error) {
-      console.log("Error in handleDeleteIncome backend:", error.response?.data?.message || error.message);
+      console.log("Error in handleDeleteIncome frontend:", error.response?.data?.message || error.message);
       toast.error("Error in deleting income");
+    }
+  };
+
+  const handleUpdateIncome = async (incomeId, updatedData) => {
+    try {
+      await axiosInstance.patch(API_PATHS.INCOME.UPDATE_INCOME(incomeId), updatedData);
+
+      toast.success("Income updated successfully");
+      fetchIncomeDetails();
+      setShowEditModal(false);
+      setEditIncome(null);
+    } catch (error) {
+      console.log("Error in handleUpdateIncome frontend: ", error.response?.data?.message || error.message);
+      toast.error("Error in updating income");
     }
   };
 
@@ -103,7 +119,12 @@ const IncomeProvider = ({ children }) => {
         handleDeleteIncome,
         openDeleteAlert,
         setOpenDeleteAlert,
-        handleDownloadIncomeDetails
+        handleDownloadIncomeDetails,
+        handleUpdateIncome,
+        editIncome,
+        setEditIncome,
+        showEditModal,
+        setShowEditModal
       }}
     >
       {children}

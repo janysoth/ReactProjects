@@ -15,8 +15,9 @@ const app = express();
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // ✅ add PATCH here
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true // ✅ if you're using tokens or cookies
   })
 );
 
@@ -33,6 +34,6 @@ app.use("/api/v1/dashboard", dashboardRoutes);
 // Serve uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

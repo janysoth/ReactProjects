@@ -101,3 +101,38 @@ exports.downloadIncomeExcel = async (req, res) => {
 
   }
 };
+
+// Update Income
+exports.updateIncome = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { id } = req.params;
+
+    const { icon, source, amount, date } = req.body;
+
+    const income = await Income.findById(id);
+
+    if (!income) {
+      return res.status(404).json({ message: "No income was found." });
+    }
+
+    // Check if the authenticated user is the owner of the Income (by userId)
+    if (!income.userId || !income.userId.equals(userId)) {
+      return res.status(401).json({ message: "Not authorized." });
+    }
+
+    // Update the income with the new data if provided or keep the old data
+    income.icon = icon || income.icon;
+    income.source = source || income.source;
+    income.amount = amount || income.amount;
+    income.date = date || income.date;
+
+    await income.save();
+
+    return res.status(200).json(income);
+  } catch (error) {
+    console.log("Error in updateIncome in incomeController backend: ", error.message);
+    res.status(500).json(error.message);
+  }
+};

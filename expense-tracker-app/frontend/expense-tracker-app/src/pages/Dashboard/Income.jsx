@@ -14,6 +14,8 @@ const Income = () => {
   useUserAuth();
 
   const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
+  const [editIncome, setEditIncome] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const {
     fetchIncomeDetails,
@@ -22,7 +24,8 @@ const Income = () => {
     handleDeleteIncome,
     openDeleteAlert,
     setOpenDeleteAlert,
-    handleDownloadIncomeDetails
+    handleDownloadIncomeDetails,
+    handleUpdateIncome,
   } = useIncome();
 
   const onClose = () => setOpenAddIncomeModal(false);
@@ -54,8 +57,12 @@ const Income = () => {
 
           <IncomeList
             transactions={incomeData}
-            onDelete={id => setOpenDeleteAlert({ show: true, data: id })}
+            onDelete={(id) => setOpenDeleteAlert({ show: true, data: id })}
             onDownload={handleDownloadIncomeDetails}
+            onEdit={(income) => {
+              setEditIncome(income);
+              setShowEditModal(true);
+            }}
           />
         </div>
 
@@ -76,6 +83,31 @@ const Income = () => {
             content="Are you sure you want to delete this income?"
             onDelete={() => handleDeleteIncome(openDeleteAlert.data)}
             onClose={() => setOpenDeleteAlert({ show: false, data: null })}
+          />
+        </Modal>
+
+        <Modal
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setEditIncome(null);
+          }}
+          title="Edit Income"
+        >
+          <AddIncomeForm
+            onAddIncome={
+              (data) => {
+                handleUpdateIncome(editIncome._id, data);
+                setShowEditModal(false);
+                setEditIncome(null);
+              }
+            }
+            onClose={() => {
+              setShowEditModal(false);
+              setEditIncome(null);
+            }}
+            initialData={editIncome}
+            isEditMode={true}
           />
         </Modal>
       </div>

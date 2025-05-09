@@ -101,3 +101,38 @@ exports.downloadExpenseExcel = async (req, res) => {
 
   }
 };
+
+// Update Expense 
+exports.updateExpense = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { id } = req.params;
+
+    const { icon, category, amount, date } = req.body;
+
+    const expense = await Expense.findById(id);
+
+    if (!expense) {
+      return res.status(404).json({ message: "No expense was found." });
+    };
+
+    // Check if the authenticated user is the owner of the Expense (by userId)
+    if (!expense.userId || !expense.userId.equals(userId)) {
+      return res.status(401).json({ message: "Not authorized." });
+    }
+
+    // Update the income with the new data if provided or keep the old data
+    expense.icon = icon || expense.icon;
+    expense.category = category || expense.category;
+    expense.amount = amount || expense.amount;
+    expense.date = date || expense.date;
+
+    await expense.save();
+
+    return res.status(200).json(expense);
+  } catch (error) {
+    console.log("Error in updateExpense in expenseController backend: ", error.message);
+    res.status(500).json(error.message);
+  }
+};

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  LuPencil,
   LuTrash2,
   LuTrendingDown,
   LuTrendingUp,
@@ -13,9 +14,9 @@ const TransactionInfoCard = ({
   amount,
   type,
   hideDeleteBtn,
-  onDelete
+  onDelete,
+  onEdit,
 }) => {
-  //const onDelete = () => { };
 
   const getAmountStyles = () =>
     type === "income" ? "bg-green-50 text-green-500" : "bg-red-50 text-red-500";
@@ -38,14 +39,23 @@ const TransactionInfoCard = ({
 
         <div className="flex items-center gap-2">
           {!hideDeleteBtn && (
-            <button
-              aria-label={`Delete ${title}`}
-              className='text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
-              onClick={onDelete}
-            >
-              <LuTrash2 />
-            </button>
+            <>
+              <button
+                aria-label={`Edit ${title}`}
+                className='text-gray-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+                onClick={onEdit}
+              >
+                <LuPencil />
+              </button>
 
+              <button
+                aria-label={`Delete ${title}`}
+                className='text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+                onClick={onDelete}
+              >
+                <LuTrash2 />
+              </button>
+            </>
           )}
 
           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md ${getAmountStyles()}`}>
