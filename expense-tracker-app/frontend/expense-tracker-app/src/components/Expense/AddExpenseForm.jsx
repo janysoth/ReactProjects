@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { getTodayDate } from '../../utils/helper';
 import FormButton from '../Button/FormButton';
 import EmojiPickerPopup from '../EmojiPickerPopup';
 import Input from '../Inputs/Input';
 
-const AddExpenseForm = ({ onAddExpense, onClose }) => {
+const AddExpenseForm = ({ onAddExpense, onClose, initialData = {}, isEditMode = false }) => {
   const [expense, setExpense] = useState({
     category: '',
     amount: '',
@@ -13,9 +13,22 @@ const AddExpenseForm = ({ onAddExpense, onClose }) => {
     icon: '',
   });
 
+  // Initialize form if editing
+  useEffect(() => {
+    if (isEditMode && initialData) {
+      setExpense({
+        category: initialData.category || '',
+        amount: initialData.amount || '',
+        date: initialData.date ? initialData.date.split('T')[0] : getTodayDate(),
+        icon: initialData.icon || '',
+        _id: initialData._id,
+      });
+    }
+  }, [initialData, isEditMode]);
+
   const handleChange = (key, value) => setExpense({ ...expense, [key]: value });
 
-  const isFormValid = expense.category.trim() !== "" && expense.amount.trim() !== '';
+  const isFormValid = expense.category.trim() !== "" && expense.amount.toString().trim() !== '';
 
   return (
     <div>
@@ -44,7 +57,6 @@ const AddExpenseForm = ({ onAddExpense, onClose }) => {
         value={expense.date}
         onChange={(e) => handleChange('date', e.target.value)}
         label="Date"
-        placeholder="MM/DD/YYYY"
         type="date"
       />
 
@@ -58,7 +70,7 @@ const AddExpenseForm = ({ onAddExpense, onClose }) => {
           onClick={() => onAddExpense(expense)}
           disabled={!isFormValid}
         >
-          Add Expense
+          {isEditMode ? 'UpdateExpense' : 'Add Expense'}
         </FormButton>
       </div>
     </div>

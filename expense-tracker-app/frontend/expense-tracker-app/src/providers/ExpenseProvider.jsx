@@ -75,6 +75,19 @@ const ExpenseProvider = ({ children }) => {
     }
   };
 
+  const handleUpdateExpense = async (expenseId, updateData) => {
+    try {
+      await axiosInstance.patch(API_PATHS.EXPENSE.UPDATE_EXPENSE(expenseId), updateData);
+
+      toast.success("Expense updated successfully.");
+      fetchExpenseDetails();
+
+    } catch (error) {
+      console.log("Error in handleUpdateExpense frontend: ", error.response?.data?.message || error.message);
+      toast.error("Error in updating expense");
+    }
+  };
+
   const handleDownloadExpenseDetails = async () => {
     try {
       const response = await axiosInstance.get(API_PATHS.EXPENSE.DOWNLOAD_EXPENSE, {
@@ -114,7 +127,8 @@ const ExpenseProvider = ({ children }) => {
         handleDownloadExpenseDetails,
         openAddExpenseModal,
         setOpenAddExpenseModal,
-        onClose
+        onClose,
+        handleUpdateExpense
       }}
     >
       {children}

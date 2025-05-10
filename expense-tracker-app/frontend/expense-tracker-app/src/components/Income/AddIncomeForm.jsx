@@ -35,10 +35,6 @@ const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = fa
 
   const isFormValid = income.source.trim() !== '' && income.amount.toString().trim() !== '';
 
-  const handleSubmit = () => {
-    onAddIncome(income);
-  };
-
   return (
     <div>
       <EmojiPickerPopup
@@ -74,7 +70,7 @@ const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = fa
           Cancel
         </FormButton>
 
-        <FormButton variant="primary" onClick={handleSubmit} disabled={!isFormValid}>
+        <FormButton variant="primary" onClick={() => onAddIncome(income)} disabled={!isFormValid}>
           {isEditMode ? 'Update Income' : 'Add Income'}
         </FormButton>
       </div>

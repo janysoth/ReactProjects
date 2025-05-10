@@ -75,7 +75,7 @@ const IncomeProvider = ({ children }) => {
     try {
       await axiosInstance.patch(API_PATHS.INCOME.UPDATE_INCOME(incomeId), updatedData);
 
-      toast.success("Income updated successfully");
+      toast.success("Income updated successfully.");
       fetchIncomeDetails();
       setShowEditModal(false);
       setEditIncome(null);

@@ -5,7 +5,7 @@ import { LuDownload } from 'react-icons/lu';
 import { addThousandsSeparator } from '../../utils/helper';
 import TransactionInfoCard from '../Cards/TransactionInfoCard';
 
-const ExpenseList = ({ transactions, onDelete, onDownload }) => {
+const ExpenseList = ({ transactions, onDelete, onDownload, onEdit }) => {
 
   return (
     <div className="card">
@@ -27,6 +27,7 @@ const ExpenseList = ({ transactions, onDelete, onDownload }) => {
             amount={addThousandsSeparator(expense.amount)}
             type="expense"
             onDelete={() => onDelete(expense._id)}
+            onEdit={() => onEdit(expense)}
           />
         ))}
       </div>
