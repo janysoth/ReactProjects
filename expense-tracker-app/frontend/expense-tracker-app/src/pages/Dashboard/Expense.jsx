@@ -29,6 +29,11 @@ const Expense = () => {
   const [editExpense, setEditExpense] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
+  const onCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditExpense(null);
+  };
+
   useEffect(() => {
     fetchExpenseDetails();
 
@@ -77,25 +82,17 @@ const Expense = () => {
 
         <Modal
           isOpen={showEditModal}
-          onClose={() => {
-            setShowEditModal(false);
-            setEditExpense(null);
-          }}
+          onClose={onCloseEditModal}
           title="Edit Expense"
         >
           <AddExpenseForm
             onAddExpense={
               (data) => {
                 handleUpdateExpense(editExpense._id, data);
-                setShowEditModal(false);
-                setEditExpense(null);
+                onCloseEditModal();
               }
             }
-
-            onClose={() => {
-              setShowEditModal(false);
-              setEditExpense(null);
-            }}
+            onClose={onCloseEditModal}
             initialData={editExpense}
             isEditMode={true}
           />

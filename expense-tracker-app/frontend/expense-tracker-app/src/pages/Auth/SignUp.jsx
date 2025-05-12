@@ -122,7 +122,7 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className={`btn-primary ${(!fullName || !email || !password) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`btn-primary cursor-pointer ${(!fullName || !email || !password) ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={!fullName || !email || !password}
           >
             Sign Up

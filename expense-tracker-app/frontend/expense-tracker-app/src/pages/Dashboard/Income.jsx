@@ -28,14 +28,19 @@ const Income = () => {
     handleUpdateIncome,
   } = useIncome();
 
-  const onClose = () => setOpenAddIncomeModal(false);
+  const onCloseAddModal = () => setOpenAddIncomeModal(false);
 
   const onSubmitIncome = async (income) => {
     const success = await handleAddIncome(income);
     if (success) {
-      onClose();
+      onCloseAddModal();
       fetchIncomeDetails();
     }
+  };
+
+  const onCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditIncome(null);
   };
 
   useEffect(() => {
@@ -66,14 +71,16 @@ const Income = () => {
           />
         </div>
 
+        {/* Add Income Modal */}
         <Modal
           isOpen={openAddIncomeModal}
-          onClose={onClose}
+          onClose={onCloseAddModal}
           title="Add Income"
         >
-          <AddIncomeForm onAddIncome={onSubmitIncome} onClose={onClose} />
+          <AddIncomeForm onAddIncome={onSubmitIncome} onClose={onCloseAddModal} />
         </Modal>
 
+        {/* Confirm Delete Modal */}
         <Modal
           isOpen={openDeleteAlert.show}
           onClose={() => setOpenDeleteAlert({ show: false, data: null })}
@@ -86,26 +93,20 @@ const Income = () => {
           />
         </Modal>
 
+        {/* Edit Income Modal */}
         <Modal
           isOpen={showEditModal}
-          onClose={() => {
-            setShowEditModal(false);
-            setEditIncome(null);
-          }}
+          onClose={onCloseEditModal}
           title="Edit Income"
         >
           <AddIncomeForm
             onAddIncome={
               (data) => {
                 handleUpdateIncome(editIncome._id, data);
-                setShowEditModal(false);
-                setEditIncome(null);
+                onCloseEditModal();
               }
             }
-            onClose={() => {
-              setShowEditModal(false);
-              setEditIncome(null);
-            }}
+            onClose={onCloseEditModal}
             initialData={editIncome}
             isEditMode={true}
           />

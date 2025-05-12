@@ -91,7 +91,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className={`btn-primary ${(!email || !password) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`btn-primary cursor-pointer ${(!email || !password) ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={!email || !password}
           >
             Login
@@ -99,7 +99,7 @@ const Login = () => {
 
           <p className='text-[13px] text-slate-800 mt-3'>
             Don't have an account?{" "}
-            <Link className='font-medium text-primary underline' to="/signup">
+            <Link className='font-medium text-primary underline cursor-pointer' to="/signup">
               Signup
             </Link>
           </p>

@@ -2,9 +2,12 @@ import { Coins } from "lucide-react";
 import React, { useState } from 'react';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 
+import { useNavigate } from "react-router-dom";
 import SideMenu from './SideMenu';
 
 const Navbar = ({ activeMenu }) => {
+
+  const navigate = useNavigate();
   const [openSideMenu, setOpenSideMenu] = useState(false);
 
   return (
@@ -14,13 +17,13 @@ const Navbar = ({ activeMenu }) => {
         onClick={() => setOpenSideMenu(!openSideMenu)}
       >
         {openSideMenu ? (
-          <HiOutlineX className='text-2xl' />
+          <HiOutlineX className='text-2xl cursor-pointer' />
         ) : (
-          <HiOutlineMenu className='text-2xl' />
+          <HiOutlineMenu className='text-2xl cursor-pointer' />
         )}
       </button>
 
-      <div className="flex items-center">
+      <div className="flex items-center cursor-pointer" onClick={() => navigate('/')} >
         <Coins size={24} className="text-primary mr-2" />
         <h2 className='font-bold text-xl text-primary'>
           SmartSpend

@@ -1,9 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 
-import { LuPlus, LuTrash2, LuTrendingDown, LuTrendingUp, LuUtensils } from 'react-icons/lu';
+import { LuPencil, LuPlus, LuTrash2, LuTrendingDown, LuTrendingUp, LuUtensils } from 'react-icons/lu';
 import AddTransactionForm from '../../components/AllTransactions/AddTransactionForm';
 import DeleteAlert from '../../components/DeleteAlert';
+import AddExpenseForm from '../../components/Expense/AddExpenseForm';
+import AddIncomeForm from '../../components/Income/AddIncomeForm';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import Modal from '../../components/Modal';
 import useExpense from '../../hooks/useExpense';
@@ -19,10 +20,20 @@ const AllTransactions = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [editIncome, setEditIncome] = useState(null);
+  const [editExpense, setEditExpense] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const onClose = () => setOpenDeleteAlert({ show: false, data: null });
+  const onCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditIncome(null);
+    setEditExpense(null);
+    fetchDashboardData();
+  };
 
   const fetchDashboardData = async () => {
     if (loading) return;
@@ -51,35 +62,10 @@ const AllTransactions = () => {
     allTransactions = [],
   } = dashboardData || {};
 
-  const { handleDeleteIncome } = useIncome();
-  const { handleDeleteExpense } = useExpense();
+  const { handleDeleteIncome, handleUpdateIncome } = useIncome();
+  const { handleDeleteExpense, handleUpdateExpense } = useExpense();
 
   const groupedTransactions = groupTransactionsByDate(allTransactions);
-
-  // return (
-  //   <DashboardLayout activeMenu="All Transactions">
-  //     <div className="my-5 mx-auto">
-  //       <div className="grid grind-cols-1 gap-6">
-  //         <TransactionList
-  //           transactions={allTransactions}
-  //           onDelete={id => setOpenDeleteAlert({ show: true, data: id })}
-  //         />
-  //       </div>
-
-  //       <Modal
-  //         isOpen={openDeleteAlert.show}
-  //         onClose={() => setOpenDeleteAlert({ show: false, data: null })}
-  //         title="Delete Transaction"
-  //       >
-  //         <DeleteAlert
-  //           content="Are you sure you want to delete this income?"
-  //           onDelete={() => { }}
-  //           onClose={() => setOpenDeleteAlert({ show: false, data: null })}
-  //         />
-  //       </Modal>
-  //     </div>
-  //   </DashboardLayout>
-  // );
 
   return (
     <DashboardLayout activeMenu="All Transactions">
@@ -157,6 +143,21 @@ const AllTransactions = () => {
                             </div>
 
                             <button
+                              aria-label="Edit Transaction"
+                              className='text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+                              onClick={() => {
+                                setShowEditModal(true);
+
+                                if (transaction.category)
+                                  setEditExpense(transaction);
+                                else
+                                  setEditIncome(transaction);
+                              }}
+                            >
+                              <LuPencil />
+                            </button>
+
+                            <button
                               aria-label={`Delete ${isExpense ? transaction.category : transaction.source}`}
                               className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                               onClick={() => {
@@ -212,6 +213,40 @@ const AllTransactions = () => {
           }}
           onClose={onClose}
         />
+      </Modal>
+
+      <Modal
+        isOpen={showEditModal}
+        onClose={onCloseEditModal}
+        title="Edit Transaction"
+      >
+        {editExpense && (
+          <AddExpenseForm
+            initialData={editExpense}
+            onClose={onCloseEditModal}
+            onAddExpense={
+              (data) => {
+                handleUpdateExpense(editExpense._id, data);
+                onCloseEditModal();
+              }
+            }
+            isEditMode={true}
+          />
+        )}
+
+        {editIncome && (
+          <AddIncomeForm
+            initialData={editIncome}
+            onClose={onCloseEditModal}
+            onAddIncome={
+              (data) => {
+                handleUpdateIncome(editIncome._id, data);
+                onCloseEditModal();
+              }
+            }
+            isEditMode={true}
+          />
+        )}
       </Modal>
     </DashboardLayout>
   );
