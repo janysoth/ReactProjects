@@ -22,6 +22,7 @@ const ExpenseList = ({ transactions, onDelete, onDownload, onEdit }) => {
           <TransactionInfoCard
             key={expense._id}
             title={expense.category}
+            description={expense.description}
             icon={expense.icon}
             date={moment.utc(expense.date).format('MMM Do YYYY')}
             amount={addThousandsSeparator(expense.amount)}

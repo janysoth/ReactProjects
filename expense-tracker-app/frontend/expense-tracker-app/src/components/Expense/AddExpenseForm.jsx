@@ -13,11 +13,14 @@ const AddExpenseForm = ({ onAddExpense, onClose, initialData = {}, isEditMode = 
     icon: '',
   });
 
+  const expenseSources = ['Fixed Expense', 'Foods', 'Groceries', 'Shopping', 'Gas', 'Misc'];
+
   // Initialize form if editing
   useEffect(() => {
     if (isEditMode && initialData) {
       setExpense({
         category: initialData.category || '',
+        description: initialData.description || '',
         amount: initialData.amount || '',
         date: initialData.date ? initialData.date.split('T')[0] : getTodayDate(),
         icon: initialData.icon || '',
@@ -37,14 +40,33 @@ const AddExpenseForm = ({ onAddExpense, onClose, initialData = {}, isEditMode = 
         onSelect={(selectedIcons) => handleChange('icon', selectedIcons)}
       />
 
+      {/* Category Dropdown */}
+      <div className="mb-4">
+        <label className='block text-sm font-medium mb-1'>Expense Category</label>
+        <select
+          value={expense.category}
+          onChange={(e) => handleChange('category', e.target.value)}
+          className='w-full border border-gray-300 round-md p-2'
+        >
+          <option>Select a category</option>
+          {expenseSources.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Description Input */}
       <Input
-        value={expense.category}
-        onChange={(e) => handleChange('category', e.target.value)}
-        label="Expense Category"
-        placeholder="Food, Transport, etc."
+        value={expense.description}
+        onChange={e => handleChange('description', e.target.value)}
+        label="Description"
+        placeholder="Place your expense description here"
         type="text"
       />
 
+      {/* Amount Input */}
       <Input
         value={expense.amount}
         onChange={(e) => handleChange('amount', e.target.value)}
@@ -53,6 +75,7 @@ const AddExpenseForm = ({ onAddExpense, onClose, initialData = {}, isEditMode = 
         type="number"
       />
 
+      {/* Expense Date */}
       <Input
         value={expense.date}
         onChange={(e) => handleChange('date', e.target.value)}

@@ -14,7 +14,12 @@ const ExpenseSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true
-  }, // Examples: "Food", "Transport", "Entertainment", etc.
+  },
+
+  description: {
+    type: String,
+    required: true,
+  },
 
   amount: {
     type: Number,

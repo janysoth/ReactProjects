@@ -59,6 +59,7 @@ const IncomeProvider = ({ children }) => {
       toast.success("Income added successfully");
       fetchIncomeDetails();
       return true;
+
     } catch (error) {
       console.log("Error in handleAddIncome:", error.response?.data?.message || error.message);
       toast.error("Error in adding income");

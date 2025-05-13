@@ -29,10 +29,15 @@ const ExpenseProvider = ({ children }) => {
   }, [loading]);
 
   const handleAddExpense = async (expense) => {
-    const { category, amount, date, icon } = expense;
+    const { category, amount, date, icon, description } = expense;
 
     if (!category.trim()) {
       toast.error("Please enter a valid expense category");
+      return false;
+    }
+
+    if (!description.trim()) {
+      toast.error("Please enter a valid description");
       return false;
     }
 
@@ -48,14 +53,18 @@ const ExpenseProvider = ({ children }) => {
 
     try {
       await axiosInstance.post(API_PATHS.EXPENSE.ADD_EXPENSE, {
-        category, amount, date, icon,
+        category: category.trim(),
+        description: description.trim(),
+        amount: Number(amount),
+        date,
+        icon,
       });
 
       toast.success("Expense added successfully");
-
       await fetchExpenseDetails(); // ✅ ensure it finishes
       onClose(); // move this after the refetch
       return true; // ✅ tell the caller it was successful
+
     } catch (error) {
       console.log("Error in handleAddExpense:", error.response?.data?.message || error.message);
       toast.error("Error in adding expense");
