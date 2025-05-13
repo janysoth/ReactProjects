@@ -26,13 +26,18 @@ const IncomeProvider = ({ children }) => {
     }
   }, [loading]);
 
-  const handleAddIncome = async ({ source, amount, date, icon }) => {
+  const handleAddIncome = async ({ source, amount, date, icon, description }) => {
     if (!source.trim()) {
       toast.error("Please enter a valid income source");
       return false;
     }
 
-    if (!amount.trim() || Number(amount) <= 0) {
+    if (!description.trim()) {
+      toast.error("Please enter a valid description");
+      return false;
+    }
+
+    if (isNaN(amount) || Number(amount) <= 0) {
       toast.error("Amount should be a valid number greater than 0");
       return false;
     }
@@ -44,7 +49,11 @@ const IncomeProvider = ({ children }) => {
 
     try {
       await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME, {
-        source, amount, date, icon
+        source: source.trim(),
+        description: description.trim(),
+        amount: Number(amount),
+        date,
+        icon,
       });
 
       toast.success("Income added successfully");
@@ -72,8 +81,36 @@ const IncomeProvider = ({ children }) => {
   };
 
   const handleUpdateIncome = async (incomeId, updatedData) => {
+    const { source, amount, date, icon, description } = updatedData;
+
+    if (!source.trim()) {
+      toast.error("Please enter a valid income source");
+      return;
+    }
+
+    if (!description.trim()) {
+      toast.error("Please enter a valid description");
+      return;
+    }
+
+    if (isNaN(amount) || Number(amount) <= 0) {
+      toast.error("Amount should be a valid number greater than 0");
+      return;
+    }
+
+    if (!date) {
+      toast.error("Please select a valid date");
+      return;
+    }
+
     try {
-      await axiosInstance.patch(API_PATHS.INCOME.UPDATE_INCOME(incomeId), updatedData);
+      await axiosInstance.patch(API_PATHS.INCOME.UPDATE_INCOME(incomeId), {
+        source: source.trim(),
+        description: description.trim(),
+        amount: Number(amount),
+        date,
+        icon,
+      });
 
       toast.success("Income updated successfully.");
       fetchIncomeDetails();

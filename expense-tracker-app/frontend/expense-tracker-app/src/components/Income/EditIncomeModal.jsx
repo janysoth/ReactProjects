@@ -9,7 +9,8 @@ const EditIncomeModal = ({ isOpen, onClose, income, onSubmit }) => {
     source: '',
     amount: '',
     date: '',
-    icon: ''
+    icon: '',
+    description: ''
   });
 
   useEffect(() => {
@@ -18,7 +19,8 @@ const EditIncomeModal = ({ isOpen, onClose, income, onSubmit }) => {
         source: income.source || '',
         amount: income.amount || '',
         date: income.date ? income.date.split('T')[0] : '',
-        icon: income.icon || ''
+        icon: income.icon || '',
+        description: income.description || '',
       });
     }
   }, [income]);
@@ -36,6 +38,7 @@ const EditIncomeModal = ({ isOpen, onClose, income, onSubmit }) => {
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Income">
       <div className="space-y-4">
         <Input name="source" value={form.source} onChange={handleChange} label="Source" />
+        <Input name="description" value={form.description} onChange={handleChange} label="Description" />
         <Input name="amount" value={form.amount} onChange={handleChange} label="Amount" type="number" />
         <Input name="date" value={form.date} onChange={handleChange} label="Date" type="date" />
         <Input name="icon" value={form.icon} onChange={handleChange} label="Icon URL" />

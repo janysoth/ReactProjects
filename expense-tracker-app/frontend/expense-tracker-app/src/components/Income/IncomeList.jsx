@@ -22,6 +22,7 @@ const IncomeList = ({ transactions, onDelete, onDownload, onEdit }) => {
           <TransactionInfoCard
             key={income._id}
             title={income.source}
+            description={income.description}
             icon={income.icon}
             date={moment.utc(income.date).format('MMM Do YYYY')}
             amount={addThousandsSeparator(income.amount)}

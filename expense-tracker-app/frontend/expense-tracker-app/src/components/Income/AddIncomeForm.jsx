@@ -8,12 +8,15 @@ const getTodayDate = () => {
   return today.toISOString().split('T')[0];
 };
 
+const incomeSources = ['Salary', 'Freelance', 'Business', 'Investment', 'Transfer', 'Other'];
+
 const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = false }) => {
   const [income, setIncome] = useState({
     source: '',
     amount: '',
     date: getTodayDate(),
     icon: '',
+    description: '',
   });
 
   // Initialize form if editing
@@ -24,6 +27,7 @@ const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = fa
         amount: initialData.amount || '',
         date: initialData.date ? initialData.date.split('T')[0] : getTodayDate(),
         icon: initialData.icon || '',
+        description: initialData.description || '',
         _id: initialData._id, // include _id for PATCH request
       });
     }
@@ -42,14 +46,33 @@ const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = fa
         onSelect={(selectedIcon) => handleChange('icon', selectedIcon)}
       />
 
+      {/* Source Dropdown */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-1">Income Source</label>
+        <select
+          value={income.source}
+          onChange={(e) => handleChange('source', e.target.value)}
+          className="w-full border border-gray-300 rounded-md p-2"
+        >
+          <option value="">Select a source</option>
+          {incomeSources.map((source) => (
+            <option key={source} value={source}>
+              {source}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Description Input */}
       <Input
-        value={income.source}
-        onChange={(e) => handleChange('source', e.target.value)}
-        label="Income Source"
-        placeholder="Freelance, Salary, etc."
+        value={income.description}
+        onChange={(e) => handleChange('description', e.target.value)}
+        label="Description"
+        placeholder="Place your income description here"
         type="text"
       />
 
+      {/* Amount Input */}
       <Input
         value={income.amount}
         onChange={(e) => handleChange('amount', e.target.value)}
@@ -58,6 +81,7 @@ const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = fa
         type="number"
       />
 
+      {/* Date Input */}
       <Input
         value={income.date}
         onChange={(e) => handleChange('date', e.target.value)}
@@ -65,6 +89,7 @@ const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = fa
         type="date"
       />
 
+      {/* Action Buttons */}
       <div className="flex justify-end mt-6 gap-2">
         <FormButton variant="danger" onClick={onClose}>
           Cancel

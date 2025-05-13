@@ -7,10 +7,10 @@ exports.addIncome = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const { icon, source, amount, date } = req.body;
+    const { icon, source, amount, date, description } = req.body;
 
     // Validation Check for missing fields
-    if (!source || !amount || !date) {
+    if (!source || !amount || !date || !description) {
       return res.status(400).json({ message: 'Please fill all fields' });
     };
 
@@ -18,6 +18,7 @@ exports.addIncome = async (req, res) => {
       userId,
       icon,
       source,
+      description,
       amount,
       date: new Date(date)
     });
@@ -109,7 +110,7 @@ exports.updateIncome = async (req, res) => {
 
     const { id } = req.params;
 
-    const { icon, source, amount, date } = req.body;
+    const { icon, source, amount, date, description } = req.body;
 
     const income = await Income.findById(id);
 
@@ -125,6 +126,7 @@ exports.updateIncome = async (req, res) => {
     // Update the income with the new data if provided or keep the old data
     income.icon = icon || income.icon;
     income.source = source || income.source;
+    income.description = description || income.description;
     income.amount = amount || income.amount;
     income.date = date || income.date;
 

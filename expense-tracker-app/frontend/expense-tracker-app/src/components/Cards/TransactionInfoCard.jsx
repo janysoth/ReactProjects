@@ -9,6 +9,7 @@ import {
 
 const TransactionInfoCard = ({
   title,
+  description,
   icon,
   date,
   amount,
@@ -33,7 +34,10 @@ const TransactionInfoCard = ({
 
       <div className="flex-1 flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-700 font-medium">{title}</p>
+          {description && (
+            <p className="text-sm text-gray-700 mt-0.5 truncate max-w-xs">{description}</p>
+          )}
+          <p className="text-xs text-gray-500 font-medium">{title}</p>
           <p className="text-xs text-gray-400 mt-1">{date}</p>
         </div>
 

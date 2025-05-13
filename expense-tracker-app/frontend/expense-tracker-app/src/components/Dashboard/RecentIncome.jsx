@@ -49,6 +49,7 @@ const RecentIncome = ({ onSeeMore, refreshDashboard }) => {
             <TransactionInfoCard
               key={item._id}
               title={item.source}
+              description={item.description}
               icon={item.icon}
               date={moment.utc(item.date).format('MMM Do YYYY')}
               amount={addThousandsSeparator(item.amount)}
@@ -61,7 +62,7 @@ const RecentIncome = ({ onSeeMore, refreshDashboard }) => {
 
       <button
         onClick={() => setOpenAddIncomeModal(true)}
-        className="absolute bottom-2 right-2 bg-green-500 text-white p-2 rounded-full shadow-lg hover:bg-primary/90 transition"
+        className="absolute bottom-2 right-2 bg-green-500 text-white p-2 rounded-full shadow-lg hover:bg-primary/90 transition cursor-pointer"
         aria-label="Add income"
       >
         <LuPlus className="text-xl" />
