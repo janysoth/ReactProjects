@@ -11,6 +11,7 @@ const AddExpenseForm = ({ onAddExpense, onClose, initialData = {}, isEditMode = 
     amount: '',
     date: getTodayDate(),
     icon: '',
+    description: '',
   });
 
   const expenseSources = ['Fixed Expense', 'Foods', 'Groceries', 'Shopping', 'Gas', 'Misc'];
@@ -31,7 +32,7 @@ const AddExpenseForm = ({ onAddExpense, onClose, initialData = {}, isEditMode = 
 
   const handleChange = (key, value) => setExpense({ ...expense, [key]: value });
 
-  const isFormValid = expense.category.trim() !== "" && expense.amount.toString().trim() !== '';
+  const isFormValid = expense.category.trim() !== "" && expense.amount.toString().trim() !== '' && expense.description.trim() !== '';
 
   return (
     <div>

@@ -1,19 +1,47 @@
-import React from 'react';
+const CustomLegend = ({ groupedData }) => {
+  if (!groupedData || groupedData.length === 0) return null;
 
-const CustomLegend = ({ payload }) => {
   return (
-    <div className="flex flex-wrap justify-center gap-2 space-x-6">
-      {payload.map((entry, index) => (
-        <div key={`legend-${index}`} className="flex
-        items-center space-x-2">
-          <div
-            className="w-2.5 h-2.5 rounded-full"
-            style={{ backgroundColor: entry.color }}
-          ></div>
-
-          <span className="text-xs text-gray-700 font-medium">
-            {entry.value}
-          </span>
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        rowGap: '10px',
+        columnGap: '24px',
+        paddingTop: '24px',
+        paddingBottom: '8px',
+        maxWidth: '100%',
+        overflow: 'visible', // ensure no clipping
+      }}
+    >
+      {groupedData.map((item, index) => (
+        <div
+          key={index}
+          style={{
+            minWidth: '140px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            fontSize: '14px',
+            flexDirection: 'row',
+          }}
+        >
+          <span
+            style={{
+              width: 10,
+              height: 10,
+              backgroundColor: item.color,
+              display: 'inline-block',
+              marginRight: 8,
+              borderRadius: '50%',
+              flexShrink: 0,
+              marginTop: 4,
+            }}
+          />
+          <div>
+            <p style={{ margin: 0 }}>{item.name}</p>
+            <p style={{ margin: 0 }}>{item.formatted} ({item.percent}%)</p>
+          </div>
         </div>
       ))}
     </div>

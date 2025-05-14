@@ -125,7 +125,10 @@ const AllTransactions = () => {
                             </div>
 
                             <div>
-                              <p className="font-medium m-2">
+                              <p className="font-medium">
+                                {transaction.description}
+                              </p>
+                              <p className="text-xs text-gray-400 mt-1">
                                 {isExpense ? transaction.category : transaction.source}
                               </p>
                             </div>

@@ -37,7 +37,7 @@ const AddIncomeForm = ({ onAddIncome, onClose, initialData = {}, isEditMode = fa
     setIncome(prev => ({ ...prev, [key]: value }));
   };
 
-  const isFormValid = income.source.trim() !== '' && income.amount.toString().trim() !== '';
+  const isFormValid = income.source.trim() !== '' && income.amount.toString().trim() !== '' && income.description.trim() !== '';
 
   return (
     <div>
