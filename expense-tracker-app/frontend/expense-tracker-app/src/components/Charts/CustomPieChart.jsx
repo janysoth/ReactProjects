@@ -16,7 +16,6 @@ const CustomPieChart = ({
   colors,
   showTextAnchor
 }) => {
-  console.log('Income Data:', data.map(item => item.name));
   const groupedData = useMemo(() => {
     const map = new Map();
     let total = 0;
@@ -44,11 +43,9 @@ const CustomPieChart = ({
     })).sort((a, b) => b.amount - a.amount);
   }, [data, colors]);
 
-  console.log('groupedData:', groupedData);
-
   return (
     <div style={{ width: '100%', textAlign: 'center' }}>
-      <ResponsiveContainer width="100%" height={380}>
+      <ResponsiveContainer width="100%" height={320}>
         <PieChart>
           <Pie
             data={groupedData}
