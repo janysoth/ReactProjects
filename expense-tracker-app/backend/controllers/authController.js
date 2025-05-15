@@ -97,3 +97,30 @@ exports.getUserInfo = async (req, res) => {
     });
   }
 };
+
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const { fullName, email, profileImageUrl, password } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    if (fullName) user.fullName = fullName;
+    if (email) user.email = email;
+    if (profileImageUrl) user.profileImageUrl = profileImageUrl;
+
+    if (password && password.trim() !== '') {
+      user.password = password;
+    }
+
+    await user.save();
+    res.json(userData);
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Error in updating User Profile backend: ",
+      error: error.message,
+    });
+  }
+};

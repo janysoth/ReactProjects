@@ -33,12 +33,14 @@ const SideMenu = ({ activeMenu }) => {
             onClick={() => navigate("/profile-page")}
           />
         ) : (
-          <CharAvatar
-            fullName={user?.fullName}
-            width="w-20"
-            height="h-20"
-            style="text-xl"
-          />
+          <div onClick={() => navigate("/profile-page")}>
+            <CharAvatar
+              fullName={user?.fullName}
+              width="w-20"
+              height="h-20"
+              style="text-xl"
+            />
+          </div>
         )}
         <h5 className="text-gray-950 font-medium leading-6">
           {user?.fullName || ""}
