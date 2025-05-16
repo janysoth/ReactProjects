@@ -115,7 +115,7 @@ exports.updateUserProfile = async (req, res) => {
     }
 
     await user.save();
-    res.json(userData);
+    res.json(user);
 
   } catch (error) {
     res.status(500).json({

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+
 import FormButton from '../../components/Button/FormButton';
+import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import Modal from '../../components/Modal';
 import { useUserAuth } from '../../hooks/useUserAuth';
@@ -26,7 +28,7 @@ const ProfilePage = () => {
     const fetchUser = async () => {
       try {
         const res = await axiosInstance.get(API_PATHS.AUTH.GET_USER_INFO, {
-          header: {
+          headers: {
             Authorization: `Bearer ${token}`,
           }
         });
@@ -77,7 +79,7 @@ const ProfilePage = () => {
       }
 
       const res = await axiosInstance.patch(API_PATHS.AUTH.UPDATE_PROFILE, payload, {
-        header: {
+        headers: {
           Authorization: `Bearer ${token}`,
         }
       });
@@ -116,6 +118,7 @@ const ProfilePage = () => {
               className="w-24 h-24 rounded-full object-cover"
             />
           )}
+
           <p><strong>Full Name:</strong> {user.fullName}</p>
           <p><strong>Email:</strong> {user.email}</p>
 
