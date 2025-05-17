@@ -63,7 +63,7 @@ const ExpenseTransactions = ({ onSeeMore, refreshDashboard }) => {
 
       <button
         onClick={() => setOpenAddExpenseModal(true)}
-        className="absolute bottom-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-primary/90 transition"
+        className="absolute bottom-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-primary/90 transition cursor-pointer"
         aria-label="Add Expense"
       >
         <LuPlus className='text-xl' />

@@ -56,12 +56,16 @@ const ProfilePage = () => {
     fetchUser();
   }, [token]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
+
+  const handleChange = (key, value) => {
+    setFormData(prev => ({ ...prev, [key]: value }));
   };
 
   const handleUpdate = async (e) => {
