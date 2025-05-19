@@ -7,36 +7,22 @@ exports.getDashboardData = async (req, res) => {
     const userId = req.user.id;
     const userObjectId = new Types.ObjectId(String(userId));
 
-    const { month } = req.query;
-    let monthStart = null;
-    let monthEnd = null;
-
-    if (month) {
-      const [year, monthStr] = month.split('-');
-      const parsedMonth = parseInt(monthStr) - 1;
-      monthStart = new Date(Date.UTC(+year, parsedMonth, 1));
-      monthEnd = new Date(Date.UTC(+year, parsedMonth + 1, 0, 23, 59, 59, 999));
-    }
-
-    const dateFilter = monthStart && monthEnd ? { date: { $gte: monthStart, $lte: monthEnd } } : {};
-
-    // Total Income and Expense (month-aware)
+    // Fetch total Incomes
     const totalIncome = await Income.aggregate([
-      { $match: { userId: userObjectId, ...dateFilter } },
+      { $match: { userId: userObjectId } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
 
+    // Fetch total Expenses
     const totalExpense = await Expense.aggregate([
-      { $match: { userId: userObjectId, ...dateFilter } },
+      { $match: { userId: userObjectId } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
 
-    // Income in last 60 days or restricted month
+    // Income in last 60 days
     const last60DaysIncomeTransactions = await Income.find({
       userId: userObjectId,
-      ...(monthStart && monthEnd
-        ? { date: { $gte: monthStart, $lte: monthEnd } }
-        : { date: { $gte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) } }),
+      date: { $gte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) },
     }).sort({ date: -1 });
 
     const incomeLast60Days = last60DaysIncomeTransactions.reduce(
@@ -44,12 +30,10 @@ exports.getDashboardData = async (req, res) => {
       0
     );
 
-    // Expense in last 30 days or restricted month
+    // Expense in last 30 days
     const last30DaysExpenseTransactions = await Expense.find({
       userId: userObjectId,
-      ...(monthStart && monthEnd
-        ? { date: { $gte: monthStart, $lte: monthEnd } }
-        : { date: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } }),
+      date: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
     }).sort({ date: -1 });
 
     const expenseLast30Days = last30DaysExpenseTransactions.reduce(
@@ -57,26 +41,35 @@ exports.getDashboardData = async (req, res) => {
       0
     );
 
-    // All income/expense transactions (filtered if month param exists)
-    const allIncome = await Income.find({ userId: userObjectId, ...dateFilter })
-      .sort({ date: -1 }).lean();
-    const allExpense = await Expense.find({ userId: userObjectId, ...dateFilter })
+    // All Income
+    const allIncome = await Income.find({ userId: userObjectId })
       .sort({ date: -1 }).lean();
 
-    // Combine for recent 5
-    const recentIncome = allIncome.slice(0, 5);
-    const recentExpense = allExpense.slice(0, 5);
+    // All Expense
+    const allExpense = await Expense.find({ userId: userObjectId })
+      .sort({ date: -1 }).lean();
+
+    // Last 5 transactions from both
+    const recentIncome = await Income.find({ userId: userObjectId })
+      .sort({ date: -1 }).limit(5).lean();
+    const recentExpense = await Expense.find({ userId: userObjectId })
+      .sort({ date: -1 }).limit(5).lean();
+
+    // All transactions
+    const allTransactions = [
+      ...allIncome.map(txn => ({ ...txn, type: 'income' })),
+      ...allExpense.map(txn => ({ ...txn, type: 'expense' }))
+    ];
+
+    // Sort transactions by date
+    const sortedAllTransactions = allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const lastTransactions = [
       ...recentIncome.map(txn => ({ ...txn, type: 'income' })),
       ...recentExpense.map(txn => ({ ...txn, type: 'expense' }))
     ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
 
-    const allTransactions = [
-      ...allIncome.map(txn => ({ ...txn, type: 'income' })),
-      ...allExpense.map(txn => ({ ...txn, type: 'expense' }))
-    ].sort((a, b) => new Date(b.date) - new Date(a.date));
-
+    // Final Response
     res.json({
       totalBalance: (totalIncome[0]?.total || 0) - (totalExpense[0]?.total || 0),
       totalIncome: totalIncome[0]?.total || 0,
@@ -90,7 +83,7 @@ exports.getDashboardData = async (req, res) => {
         transactions: last60DaysIncomeTransactions,
       },
       recentTransactions: lastTransactions,
-      allTransactions: allTransactions,
+      allTransactions: sortedAllTransactions,
     });
   } catch (error) {
     console.error(error);
