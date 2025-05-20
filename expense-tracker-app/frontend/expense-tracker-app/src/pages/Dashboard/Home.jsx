@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IoMdCard } from "react-icons/io";
 import { LuHandCoins, LuWalletMinimal } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +35,10 @@ const Home = () => {
     last30DaysExpenses = { transactions: [] },
     last60DaysIncome = { transactions: [] },
   } = dashboardData || {};
+
+  useEffect(() => {
+    refreshDashboard();
+  }, []);
 
   return (
     <DashboardLayout activeMenu="Dashboard">
