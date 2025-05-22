@@ -1,4 +1,7 @@
+import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
   LuPencil,
   LuPlus,
@@ -72,6 +75,12 @@ const AllTransactions = () => {
   const { handleDeleteExpense, handleUpdateExpense } = useExpense();
   const groupedTransactions = groupTransactionsByDate(allTransactions);
 
+  // Helper to safely parse YYYY-MM format
+  const parseMonthString = (monthString) => {
+    const [year, month] = monthString.split('-').map(Number);
+    return new Date(year, month - 1); // month is 0-based
+  };
+
   return (
     <DashboardLayout activeMenu="All Transactions">
       <div className="container mx-auto p-4 min-h-screen">
@@ -79,11 +88,16 @@ const AllTransactions = () => {
           <h1 className="text-2xl font-bold mb-4"> All Transactions</h1>
 
           <div className="flex gap-4 items-center">
-            <input
-              type="month"
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              className="border px-3 py-1.5 rounded-md text-sm"
+            <DatePicker
+              selected={selectedMonth ? parseMonthString(selectedMonth) : null}
+              onChange={(date) => {
+                const formatted = format(date, 'yyyy-MM');
+                setSelectedMonth(formatted);
+              }}
+              dateFormat="MMM-yyyy"
+              showMonthYearPicker
+              className="text-s px-2 py-1 rounded-md border w-[140px] text-center"
+              placeholderText='Filter by Month'
             />
 
             {selectedMonth && (
