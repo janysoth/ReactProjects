@@ -3,26 +3,33 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
+  LuHandCoins,
   LuPencil,
   LuPlus,
   LuTrash2,
   LuTrendingDown,
   LuTrendingUp,
-  LuUtensils
+  LuUtensils,
+  LuWalletMinimal
 } from 'react-icons/lu';
 
+import { IoMdCard } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
 import AddTransactionForm from '../../components/AllTransactions/AddTransactionForm';
+import InfoCard from '../../components/Cards/InfoCard';
 import DeleteAlert from '../../components/DeleteAlert';
 import AddExpenseForm from '../../components/Expense/AddExpenseForm';
 import AddIncomeForm from '../../components/Income/AddIncomeForm';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import Modal from '../../components/Modal';
+import DashboardSkeleton from '../../components/Skeletons/DashboardSkeleton';
+import InfoCardSkeleton from '../../components/Skeletons/InfoCardSkeleton';
 import useExpense from '../../hooks/useExpense';
 import useIncome from '../../hooks/useIncome';
 import { useUserAuth } from '../../hooks/useUserAuth';
 import { API_PATHS } from '../../utils/apiPath';
 import axiosInstance from '../../utils/axiosInstance';
-import { groupTransactionsByDate } from '../../utils/helper';
+import { addThousandsSeparator, groupTransactionsByDate } from '../../utils/helper';
 
 const AllTransactions = () => {
   useUserAuth();
@@ -70,7 +77,12 @@ const AllTransactions = () => {
     fetchDashboardData();
   }, [selectedMonth]);
 
-  const { allTransactions = [] } = dashboardData || {};
+  const {
+    allTransactions = [],
+    totalIncome = 0,
+    totalExpense = 0,
+    totalBalance = 0,
+  } = dashboardData || {};
   const { handleDeleteIncome, handleUpdateIncome } = useIncome();
   const { handleDeleteExpense, handleUpdateExpense } = useExpense();
   const groupedTransactions = groupTransactionsByDate(allTransactions);
@@ -81,60 +93,100 @@ const AllTransactions = () => {
     return new Date(year, month - 1); // month is 0-based
   };
 
+  const navigate = useNavigate();
+
   return (
     <DashboardLayout activeMenu="All Transactions">
       <div className="container mx-auto p-4 min-h-screen">
-        <div className='flex justify-between items-center mb-6'>
-          <h1 className="text-2xl font-bold mb-4"> All Transactions</h1>
+        <div className="info-banner sticky top-18 pt-2 z-20 bg-gray-50">
+          <div className='all-transactions-header flex justify-between items-center mb-6'>
+            <h1 className="text-2xl font-bold mb-4"> All Transactions</h1>
 
-          <div className="flex gap-4 items-center">
-            <DatePicker
-              selected={selectedMonth ? parseMonthString(selectedMonth) : null}
-              onChange={(date) => {
-                const formatted = format(date, 'yyyy-MM');
-                setSelectedMonth(formatted);
-              }}
-              dateFormat="MMM-yyyy"
-              showMonthYearPicker
-              className="text-s px-2 py-1 rounded-md border w-[140px] text-center"
-              placeholderText='Filter by Month'
-            />
+            <div className="flex gap-4 items-center">
+              <DatePicker
+                selected={selectedMonth ? parseMonthString(selectedMonth) : null}
+                onChange={(date) => {
+                  const formatted = format(date, 'yyyy-MM');
+                  setSelectedMonth(formatted);
+                }}
+                dateFormat="MMM-yyyy"
+                showMonthYearPicker
+                className="text-s px-2 py-1 rounded-md border w-[140px] text-center"
+                placeholderText='Filter by Month'
+              />
 
-            {selectedMonth && (
+              {selectedMonth && (
+                <button
+                  onClick={() => setSelectedMonth('')}
+                  className="text-sm text-blue-500 hover:underline cursor-pointer"
+                >
+                  Clear Filter
+                </button>
+              )}
+
               <button
-                onClick={() => setSelectedMonth('')}
-                className="text-sm text-blue-500 hover:underline cursor-pointer"
+                className="add-btn"
+                onClick={() => setOpenAddModal(true)}
               >
-                Clear Filter
+                <LuPlus className='text-lg' />
+                Add Transaction
               </button>
-            )}
-
-            <button
-              className="add-btn"
-              onClick={() => setOpenAddModal(true)}
-            >
-              <LuPlus className='text-lg' />
-              Add Transaction
-            </button>
-          </div>
-
-          <Modal
-            isOpen={openAddModal}
-            onClose={() => setOpenAddModal(false)}
-            title="Add Transaction"
-          >
-            <AddTransactionForm
+            </div>
+            <Modal
+              isOpen={openAddModal}
               onClose={() => setOpenAddModal(false)}
-              onSuccess={fetchDashboardData}
-            />
-          </Modal>
-        </div>
-
-        {error && (
-          <div className="text-center mb-4 text-red-500">
-            {error}
+              title="Add Transaction"
+            >
+              <AddTransactionForm
+                onClose={() => setOpenAddModal(false)}
+                onSuccess={fetchDashboardData}
+              />
+            </Modal>
           </div>
-        )}
+
+          {error && (
+            <div className="text-center mb-4 text-red-500">
+              {error}
+            </div>
+          )}
+
+          <div className="my-5 mx-auto">
+            {loading ? (
+              <InfoCardSkeleton />
+            ) : error ? (
+              <p className="text-center text-red-500 py-10">
+                {error}
+                <button onClick={fetchDashboardData} className="ml-2 text-blue-600 underline cursor-pointer">Retry</button>
+              </p>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <InfoCard
+                    icon={<LuWalletMinimal />}
+                    label="Total Income"
+                    value={addThousandsSeparator(totalIncome)}
+                    color="bg-green-500"
+                    onClick={() => navigate("/income")}
+                  />
+                  <InfoCard
+                    icon={<LuHandCoins />}
+                    label="Total Expense"
+                    value={addThousandsSeparator(totalExpense)}
+                    color="bg-red-500"
+                    onClick={() => navigate("/expense")}
+                  />
+                  <InfoCard
+                    icon={<IoMdCard />}
+                    label="Total Balance"
+                    value={addThousandsSeparator(totalBalance)}
+                    color="bg-primary"
+                    onClick={() => navigate("/all-transactions")}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
 
         <div className="finance-card">
           {groupedTransactions.length > 0 ? (

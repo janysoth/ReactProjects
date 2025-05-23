@@ -4,7 +4,6 @@ import { LuHandCoins, LuWalletMinimal } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 
 import InfoCard from '../../components/Cards/InfoCard';
-import DashboardSkeleton from '../../components/Dashboard/DashboardSkeleton';
 import ExpenseTransactions from '../../components/Dashboard/ExpenseTransactions';
 import FinanceOverview from '../../components/Dashboard/FinanceOverview';
 import Last30DaysExpenses from '../../components/Dashboard/Last30DaysExpenses';
@@ -12,6 +11,7 @@ import RecentIncome from '../../components/Dashboard/RecentIncome';
 import RecentIncomeWithChart from '../../components/Dashboard/RecentIncomeWithChart';
 import RecentTransactions from '../../components/Dashboard/RecentTransactions';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
+import DashboardSkeleton from '../../components/Skeletons/DashboardSkeleton';
 import { useDashboard } from '../../hooks/useDashboard';
 import { useUserAuth } from '../../hooks/useUserAuth';
 import { addThousandsSeparator } from '../../utils/helper';
