@@ -9,9 +9,15 @@ import SideMenu from './SideMenu';
 
 const Navbar = ({ activeMenu }) => {
   const { clearUser } = useContext(UserContext);
-
   const navigate = useNavigate();
   const [openSideMenu, setOpenSideMenu] = useState(false);
+
+  const currentDate = new Date().toLocaleDateString(undefined, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
   const handleLogout = () => {
     localStorage.clear();
@@ -20,7 +26,7 @@ const Navbar = ({ activeMenu }) => {
   };
 
   return (
-    <div className="flex justify-between items-center bg-white border border-b border-gray-200/50 backdrop-blur-[2px] py-4 px-7 sticky top-0 z-30">
+    <div className="relative flex justify-between items-center bg-white border border-b border-gray-200/50 backdrop-blur-[2px] py-4 px-7 sticky top-0 z-30">
       {/* Left side */}
       <div className="flex items-center gap-5">
         <button
@@ -38,6 +44,11 @@ const Navbar = ({ activeMenu }) => {
           <Coins size={24} className="text-primary mr-2" />
           <h2 className='font-bold text-xl text-primary'>SmartSpend</h2>
         </div>
+      </div>
+
+      {/* Middle section – current date */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 text-primary font-medium hidden md:block">
+        {currentDate}
       </div>
 
       {/* Right side */}
