@@ -4,33 +4,34 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
 import { addThousandsSeparator } from '../../utils/helper';
-import CustomLegend from './CustomLegend'; // Make sure you have this component
+import CustomLegend from './CustomLegend';
 
-const COLORS = ['#875cf5', '#cfbefb', '#80d4ff', '#ffb677', '#7fe7c4', '#ffd36e'];
+// Define your desired color palette
+const COLORS = ["#875cf5", "#cfbefb", "#FF8042", "#FFBB28", "#00C49F", "#0088FE", "#FF6666"];
 
-const CustomBarChart = ({ data }) => {
-
+const CustomBarChart = ({ data, groupBy = 'source' }) => {
+  // Group data by 'groupBy' key (default to 'name')
   const groupedData = useMemo(() => {
     const map = new Map();
     let total = 0;
 
     data.forEach((item, index) => {
+      const key = item[groupBy];
       const color = COLORS[index % COLORS.length];
       total += item.amount;
 
-      if (map.has(item.category)) {
-        const existing = map.get(item.category);
+      if (map.has(key)) {
+        const existing = map.get(key);
         existing.amount += item.amount;
       } else {
-        map.set(item.category, {
-          name: item.category,
+        map.set(key, {
+          name: key,
           amount: item.amount,
           color,
         });
@@ -40,20 +41,18 @@ const CustomBarChart = ({ data }) => {
     return Array.from(map.values()).map(item => ({
       ...item,
       percent: total > 0 ? ((item.amount / total) * 100).toFixed(1) : "0.0",
-      formatted: `$${addThousandsSeparator(item.amount)}`,
+      formatted: `$${addThousandsSeparator(item.amount)}`
     }));
-  }, [data]);
+  }, [data, groupBy]);
 
+  // Tooltip to show detailed info
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const { category, source, amount } = payload[0].payload;
+      const { name, amount } = payload[0].payload;
 
       return (
-        <div role="tooltip" className="bg-white shadow-md rounded-lg p-2 border border-gray-300">
-          <p className="text-xs font-semibold text-purple-800 mb-1">{category}</p>
-          <p className="text-sm text-gray-600">
-            <span className="text-xs font-semibold text-purple-800">{source}</span>
-          </p>
+        <div className="bg-white shadow-md rounded-lg p-2 border border-gray-300">
+          <p className="text-xs font-semibold text-purple-800 mb-1">{name}</p>
           <p className="text-sm text-gray-600">
             Amount:{" "}
             <span className="text-sm font-medium text-gray-900">
@@ -67,10 +66,6 @@ const CustomBarChart = ({ data }) => {
     return null;
   };
 
-  if (!data || data.length === 0) {
-    return <p className="text-center text-gray-500 mt-4">No data available</p>;
-  }
-
   return (
     <div className="bg-white mt-6">
       <ResponsiveContainer width="100%" height={300}>
@@ -78,13 +73,8 @@ const CustomBarChart = ({ data }) => {
           <CartesianGrid stroke="none" />
           <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#555" }} stroke="none" />
           <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke="none" />
-
-          <Tooltip content={CustomTooltip} />
-
-          <Bar
-            dataKey="amount"
-            radius={[10, 10, 0, 0]}
-          >
+          <Tooltip content={<CustomTooltip />} />
+          <Bar dataKey="amount" radius={[10, 10, 0, 0]}>
             {groupedData.map((entry, index) => (
               <Cell key={index} fill={entry.color} />
             ))}
@@ -92,7 +82,7 @@ const CustomBarChart = ({ data }) => {
         </BarChart>
       </ResponsiveContainer>
 
-      {/* Add legend below the chart */}
+      {/* Bottom legend */}
       <CustomLegend groupedData={groupedData} />
     </div>
   );
