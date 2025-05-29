@@ -3,33 +3,29 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
-  LuHandCoins,
   LuPencil,
   LuPlus,
   LuTrash2,
   LuTrendingDown,
   LuTrendingUp,
   LuUtensils,
-  LuWalletMinimal
 } from 'react-icons/lu';
 
-import { IoMdCard } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import AddTransactionForm from '../../components/AllTransactions/AddTransactionForm';
-import InfoCard from '../../components/Cards/InfoCard';
+import DashboardSummary from '../../components/Dashboard/DashboardSummary';
 import DeleteAlert from '../../components/DeleteAlert';
 import AddExpenseForm from '../../components/Expense/AddExpenseForm';
 import AddIncomeForm from '../../components/Income/AddIncomeForm';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import Modal from '../../components/Modal';
-import DashboardSkeleton from '../../components/Skeletons/DashboardSkeleton';
 import InfoCardSkeleton from '../../components/Skeletons/InfoCardSkeleton';
 import useExpense from '../../hooks/useExpense';
 import useIncome from '../../hooks/useIncome';
 import { useUserAuth } from '../../hooks/useUserAuth';
 import { API_PATHS } from '../../utils/apiPath';
 import axiosInstance from '../../utils/axiosInstance';
-import { addThousandsSeparator, groupTransactionsByDate } from '../../utils/helper';
+import { groupTransactionsByDate } from '../../utils/helper';
 
 const AllTransactions = () => {
   useUserAuth();
@@ -159,31 +155,12 @@ const AllTransactions = () => {
                 <button onClick={fetchDashboardData} className="ml-2 text-blue-600 underline cursor-pointer">Retry</button>
               </p>
             ) : (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <InfoCard
-                    icon={<LuWalletMinimal />}
-                    label="Total Income"
-                    value={addThousandsSeparator(totalIncome)}
-                    color="bg-green-500"
-                    onClick={() => navigate("/income")}
-                  />
-                  <InfoCard
-                    icon={<LuHandCoins />}
-                    label="Total Expense"
-                    value={addThousandsSeparator(totalExpense)}
-                    color="bg-red-500"
-                    onClick={() => navigate("/expense")}
-                  />
-                  <InfoCard
-                    icon={<IoMdCard />}
-                    label="Total Balance"
-                    value={addThousandsSeparator(totalBalance)}
-                    color="bg-primary"
-                    onClick={() => navigate("/all-transactions")}
-                  />
-                </div>
-              </>
+              <DashboardSummary
+                totalIncome={totalIncome}
+                totalExpense={totalExpense}
+                totalBalance={totalBalance}
+                navigate={navigate}
+              />
             )}
           </div>
         </div>
