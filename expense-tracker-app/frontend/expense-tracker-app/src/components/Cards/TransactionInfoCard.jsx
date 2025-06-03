@@ -6,6 +6,7 @@ import {
   LuTrendingUp,
   LuUtensils,
 } from "react-icons/lu";
+import { capitalizeFirstLetter } from '../../utils/helper';
 
 const TransactionInfoCard = ({
   title,
@@ -35,7 +36,7 @@ const TransactionInfoCard = ({
       <div className="flex-1 flex items-center justify-between">
         <div>
           {description && (
-            <p className="text-sm text-gray-700 mt-0.5 truncate max-w-xs">{description}</p>
+            <p className="text-sm text-gray-700 mt-0.5 truncate max-w-xs">{capitalizeFirstLetter(description)}</p>
           )}
           <p className="text-xs text-gray-500 font-medium">{title}</p>
           <p className="text-xs text-gray-400 mt-1">{date}</p>

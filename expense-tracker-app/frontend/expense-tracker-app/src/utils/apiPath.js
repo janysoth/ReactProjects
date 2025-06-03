@@ -11,6 +11,7 @@ export const API_PATHS = {
 
   DASHBOARD: {
     GET_DATA: "/dashboard",
+    DELETE_ALL: "/dashboard/delete-all",
   },
 
   INCOME: {

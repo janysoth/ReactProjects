@@ -100,3 +100,19 @@ exports.getDashboardData = async (req, res) => {
     });
   }
 };
+
+exports.deleteAllTransactions = async (req, res) => {
+  try {
+    console.log("req.user:", req.user);
+
+    const userId = req.user.id;
+
+    await Income.deleteMany({ userId });
+    await Expense.deleteMany({ userId });
+
+    res.status(200).json({ message: "All Income and Expense transactions deleted successfully." });
+  } catch (error) {
+    console.error('Error in deleting transactions backend: ', error);
+    res.status(500).json({ message: "Failed to delete transaction backend.", error });
+  }
+};
