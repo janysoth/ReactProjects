@@ -45,17 +45,19 @@ const ExpenseList = ({ transactions = [], onDelete, onDownload, onEdit }) => {
         )}
       </div>
 
-      <TransactionsFilter
-        data={transactions}
-        filterKey="category"
-        selectedFilter={selectedCategory}
-        setSelectedFilter={setSelectedCategory}
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
-        onClear={clearFilters}
-      />
+      {transactions.length > 0 && (
+        <TransactionsFilter
+          data={transactions}
+          filterKey="category"
+          selectedFilter={selectedCategory}
+          setSelectedFilter={setSelectedCategory}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          onClear={clearFilters}
+        />
+      )}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {filteredTransactions.length > 0 ? (

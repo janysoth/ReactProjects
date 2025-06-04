@@ -99,7 +99,7 @@ const AllTransactions = () => {
             <h1 className="text-2xl font-bold mb-4"> All Transactions</h1>
 
             <div className="flex gap-4 items-center">
-              <DatePicker
+              {allTransactions.length > 0 && (<DatePicker
                 selected={selectedMonth ? parseMonthString(selectedMonth) : null}
                 onChange={(date) => {
                   const formatted = format(date, 'yyyy-MM');
@@ -109,7 +109,7 @@ const AllTransactions = () => {
                 showMonthYearPicker
                 className="text-s px-2 py-1 rounded-md border w-[140px] text-center"
                 placeholderText='Filter by Month'
-              />
+              />)}
 
               {selectedMonth && (
                 <button

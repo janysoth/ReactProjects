@@ -45,17 +45,19 @@ const IncomeList = ({ transactions = [], onDelete, onDownload, onEdit }) => {
         )}
       </div>
 
-      <TransactionsFilter
-        data={transactions}
-        filterKey="source"
-        selectedFilter={selectedSource}
-        setSelectedFilter={setSelectedSource}
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
-        onClear={clearFilters}
-      />
+      {transactions.length > 0 && (
+        <TransactionsFilter
+          data={transactions}
+          filterKey="source"
+          selectedFilter={selectedSource}
+          setSelectedFilter={setSelectedSource}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          onClear={clearFilters}
+        />
+      )}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {filteredTransactions.length > 0 ? (
