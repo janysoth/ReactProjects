@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+const authRoutes = require("./routes/authRoutes");
+
 dotenv.config();
 
 // App Set-up
@@ -21,6 +23,10 @@ mongoose
   });
 
 // Routes
+app.use("/api/auth", authRoutes);
+app.get("/", (req, res) => {
+  res.send("Welcome to the backend server!");
+});
 
 app.get("/", (req, res) => {
   res.send("Welcome to the backend server!");
