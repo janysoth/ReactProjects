@@ -19,20 +19,24 @@ const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
 router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
+  console.log("📩 Registration request received:", { name, email });
+
   try {
     const existingUser = await User.findOne({ email });
 
-    if (existingUser)
+    if (existingUser) {
+      console.warn("⚠️ User already exists:", email);
       return res.status(400).json({ message: "User already exists." });
+    }
 
     const user = new User({ name, email, password });
+    await user.save();
 
-    // Sign token immediately after registration
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
 
-    await user.save();
+    console.log("✅ User registered:", user.email);
 
     res.status(201).json({
       message: "User registered successfully.",
@@ -40,11 +44,11 @@ router.post("/register", async (req, res) => {
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   } catch (error) {
-    console.error("Error registering user backend: ", error);
+    console.error("❌ Error registering user backend: ", error);
     res.status(500).json({ message: "Internal Server error" });
   }
 });
@@ -54,7 +58,7 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user)
       return res.status(401).json({ message: "Invalid Credentials. Please try again." });
