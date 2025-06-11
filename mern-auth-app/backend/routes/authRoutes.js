@@ -9,143 +9,109 @@ const generateResetEmail = require("../utils/resetPasswordTemplate");
 
 const User = require('../models/User');
 
-// IN memory store reset token
-const resetTokens = new Map();
-
-// Base Frontend URL
 const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
 
-// Register User route
+// Register
 router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
-  console.log("📩 Registration request received:", { name, email });
-
   try {
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      console.warn("⚠️ User already exists:", email);
-      return res.status(400).json({ message: "User already exists." });
-    }
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(400).json({ message: "User already exists." });
 
     const user = new User({ name, email, password });
     await user.save();
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
-
-    console.log("✅ User registered:", user.email);
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.status(201).json({
       message: "User registered successfully.",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+      user: { id: user._id, name: user.name, email: user.email },
     });
   } catch (error) {
-    console.error("❌ Error registering user backend: ", error);
-    res.status(500).json({ message: "Internal Server error" });
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-// Login User route
+// Login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email }).select("+password");
-
-    if (!user)
-      return res.status(401).json({ message: "Invalid Credentials. Please try again." });
+    if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    if (!isMatch)
-      return res.status(401).json({ message: "Invalid Credentials. Please try again." });
-
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.status(200).json({
-      message: "Login successfully",
+      message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email
-      }
+      user: { id: user._id, name: user.name, email: user.email },
     });
   } catch (error) {
-    console.error("Error logging user: ", error);
-    res.status(500).json({ message: "Internal Server error." });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-// Forgot Password route
+// Forgot Password
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
 
   try {
     const user = await User.findOne({ email });
-
     if (!user) return res.status(404).json({ message: "User not found." });
 
-    // Generate a reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
-    // Store the reset token in memory
-    resetTokens.set(resetToken, user._id);
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = Date.now() + 1000 * 60 * 30; // 30 minutes
 
-    // Send email with reset link
+    await user.save();
+
     const resetLink = `${baseURL}/reset-password/${resetToken}`;
-
-    // Call sendMail function to send email
     const html = generateResetEmail(user.name, resetLink);
+
     await sendMail(user.email, "Password Reset", html);
 
-    res.status(200).json({
-      message: "Password reset link sent to your email.",
-      resetLink,
-    });
+    res.status(200).json({ message: "Password reset link sent", resetLink });
   } catch (error) {
-    console.error("Error in forgot password backend: ", error);
-    res.status(500).json({ message: "Internal Server error" });
+    console.error("Forgot password error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-// Reset Password route
+// Reset Password
 router.post("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
 
   try {
-    // Compare the token from the link with the token in resetTokens
-    const userId = resetTokens.get(token);
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-    if (!userId) return res.status(400).json({ message: "Invalid or expired token." });
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
 
-    // Then compare the userId with the userIds in User
-    const user = await User.findById(userId);
+    if (!user) return res.status(403).json({ message: "Token is invalid or expired" });
 
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    // Hash password 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.password = hashedPassword;
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
 
     await user.save();
-    resetTokens.delete(token);
 
-    res.status(200).json({ message: "Password reset successfully." });
+    res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
-    console.error("Error in reset password backend: ", error);
-    res.status(500).json({ message: "Internal Server error" });
+    console.error("Reset password error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
