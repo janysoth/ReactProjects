@@ -50,12 +50,14 @@ const Register = () => {
       if (response.status === 201 || response.status === 200) {
         //   Save token to localStorage
         login(response.data.token);
+
         //   Redirect to login page after successful registration | profile | dashboard
         setSnack({
           open: true,
           message: "Registration successful! Redirecting to dashboard...",
           severity: "success",
         });
+
         //  Delay
         setTimeout(() => navigate("/dashboard"), 1000);
       } else {
