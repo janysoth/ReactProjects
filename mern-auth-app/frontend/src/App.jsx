@@ -20,52 +20,52 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* <Route element={<Layout />}> */}
-            <Route
-              path="/"
-              element={<Home />}
-            />
+            <Route element={<Layout />}>
+              <Route
+                path="/"
+                element={<Home />}
+              />
 
-            {/* Register */}
-            <Route
-              path="/register"
-              element={<Register />}
-            />
+              {/* Register */}
+              <Route
+                path="/register"
+                element={<Register />}
+              />
 
-            {/* Login */}
-            <Route
-              path="/login"
-              element={<Login />}
-            />
+              {/* Login */}
+              <Route
+                path="/login"
+                element={<Login />}
+              />
 
-            {/* Reset Password */}
-            <Route
-              path="/reset-password/:token"
-              element={<ResetPassword />}
-            />
+              {/* Reset Password */}
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
+              />
 
-            {/* Forgot Password */}
-            <Route
-              path="/forgot-password"
-              element={<ForgotPassword />}
-            />
+              {/* Forgot Password */}
+              <Route
+                path="/forgot-password"
+                element={<ForgotPassword />}
+              />
 
-            {/* Policies */}
-            <Route
-              path="/terms"
-              element={<Terms />}
-            />
+              {/* Policies */}
+              <Route
+                path="/terms"
+                element={<Terms />}
+              />
 
-            {/* Dashboard */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            {/* </Route> */}
+              {/* Dashboard */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
           </Routes>
         </Router>
       </AuthProvider>
