@@ -38,9 +38,6 @@ function MenuBar() {
   const { isAuthenticated, logout, user } = useAuth();
   console.log(user);
 
-  // State for drawer when user click on the Menu icon
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   // React Router hook to navigate programmatically
   const navigate = useNavigate();
 
@@ -85,7 +82,7 @@ function MenuBar() {
       {/* Show user info if logged in */}
       {user && (
         <MenuItem disabled>
-          Signed in as {user.name || user.email}
+          Signed in as {user?.name || "User"}
         </MenuItem>
       )}
 

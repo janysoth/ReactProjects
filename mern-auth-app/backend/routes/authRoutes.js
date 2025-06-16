@@ -8,6 +8,7 @@ const sendMail = require("../utils/sendMail");
 const generateResetEmail = require("../utils/resetPasswordTemplate");
 
 const User = require('../models/User');
+const verifyToken = require("../middleware/verifyToken");
 
 const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
 
@@ -55,6 +56,20 @@ router.post("/login", async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// Get User Info
+router.get("/getUserInfo", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-password");
+
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error in getting user info backend: ", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

@@ -8,7 +8,7 @@ const Layout = () => {
   return (
     <Box>
       <MenuBar />
-      <Container className="layout">
+      <Container className="layout" maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Outlet />
       </Container>
     </Box>

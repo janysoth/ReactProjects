@@ -2,9 +2,10 @@ const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader?.split(' ')[1]; // Bearer <token>
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
+    console.log("No token found in headers");
     return res.status(401).json({ message: "No token provided" });
   }
 
@@ -13,7 +14,7 @@ const verifyToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    console.error("Error verifying token:", error);
+    console.error("Error verifying token:", error.message);
     res.status(401).json({ message: "Invalid token" });
   }
 };
