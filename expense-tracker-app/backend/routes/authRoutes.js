@@ -8,12 +8,14 @@ const {
   loginUser,
   getUserInfo,
   updateUserProfile,
+  forgotPassword,
 } = require("../controllers/authController");
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/forgot-password", protect, forgotPassword);
 router.get("/getUser", protect, getUserInfo);
 router.patch("/update-profile", protect, updateUserProfile);
 

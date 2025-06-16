@@ -19,6 +19,9 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
 
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
+
     profileImageUrl: {
       type: String,
       // default: "https://www.gravatar.com/avatar/?d=mp",

@@ -1,6 +1,12 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const crypto = require("crypto");
 const bcrypt = require('bcryptjs');
+
+const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
+
+const sendMail = require("../utils/SendEmail");
+const generateResetEmail = require("../utils/ResetPasswordTemplate");
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -120,6 +126,36 @@ exports.updateUserProfile = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error in updating User Profile backend: ",
+      error: error.message,
+    });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = Date.now() + 1000 * 60 * 30; // 30 minutes
+
+    await user.save();
+
+    const resetLink = `${baseURL}/reset-password/${resetToken}`;
+    const html = generateResetEmail(user.fullName, resetLink);
+
+    await sendMail(user.email, "Password Reset", html);
+
+    res.status(200).json({ message: "Password reset link sent", resetLink });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error in forgot password backend: ",
       error: error.message,
     });
   }
