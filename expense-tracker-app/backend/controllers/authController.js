@@ -7,6 +7,7 @@ const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 const sendMail = require("../utils/SendEmail");
 const generateResetEmail = require("../utils/ResetPasswordTemplate");
+const { use } = require('react');
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -104,6 +105,7 @@ exports.getUserInfo = async (req, res) => {
   }
 };
 
+// Update User Profile
 exports.updateUserProfile = async (req, res) => {
   try {
     const { fullName, email, profileImageUrl, password } = req.body;
@@ -131,6 +133,7 @@ exports.updateUserProfile = async (req, res) => {
   }
 };
 
+// Forgot Password 
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
@@ -156,6 +159,37 @@ exports.forgotPassword = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error in forgot password backend: ",
+      error: error.message,
+    });
+  }
+};
+
+// Reset Password 
+exports.resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user)
+      return res.status(403).json({ message: "Token is invalid or expired." });
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error in reset password backend: ",
       error: error.message,
     });
   }
