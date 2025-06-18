@@ -85,6 +85,12 @@ const Login = () => {
             placeholder="Min 8 characters"
           />
 
+          <div className="flex justify-end mb-4">
+            <Link to="/forgot-password" className="text-sm text-primary underline hover:opacity-80">
+              Forgot Password?
+            </Link>
+          </div>
+
           {error && <p className='text-red-500 text-xs pb-2.5'>
             {error}
           </p>}
