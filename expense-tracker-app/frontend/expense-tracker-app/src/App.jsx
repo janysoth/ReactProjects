@@ -5,6 +5,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import Login from './pages/Auth/Login';
 import ProfilePage from './pages/Auth/ProfilePage';
+import ResetPassword from './pages/Auth/ResetPassword';
 import SignUp from './pages/Auth/SignUp';
 import AllTransactions from './pages/Dashboard/AllTransactions';
 import Expense from './pages/Dashboard/Expense';
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/login" exact element={<Login />} />
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/forgot-password" exact element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" exact element={<ResetPassword />} />
           <Route path="/profile-page" exact element={<ProfilePage />} />
           <Route path="/dashboard" exact element={<Home />} />
           <Route path="/income" exact element={<Income />} />

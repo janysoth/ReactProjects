@@ -8,6 +8,7 @@ export const API_PATHS = {
     GET_USER_INFO: "/auth/getUser",
     UPDATE_PROFILE: "/auth/update-profile",
     FORGOT_PASSWORD: "/auth/forgot-password",
+    RESET_PASSWORD: "/auth/reset-password",
   },
 
   DASHBOARD: {
