@@ -104,3 +104,11 @@ export const capitalizeFirstLetter = (text) => {
 
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
+
+export const passwordRulesList = [
+  { id: 'lowercase', label: 'At least one lowercase letter', test: pwd => /[a-z]/.test(pwd) },
+  { id: 'uppercase', label: 'At least one uppercase letter', test: pwd => /[A-Z]/.test(pwd) },
+  { id: 'number', label: 'At least one number', test: pwd => /[0-9]/.test(pwd) },
+  { id: 'special', label: 'At least one special character (!@#$%^&*)', test: pwd => /[!@#$%^&*]/.test(pwd) },
+  { id: 'minLength', label: 'Minimum 8 characters', test: pwd => pwd.length >= 8 },
+];
