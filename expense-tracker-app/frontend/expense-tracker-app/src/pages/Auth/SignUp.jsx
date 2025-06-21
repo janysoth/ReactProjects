@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Input from '../../components/Inputs/Input';
@@ -19,6 +19,7 @@ const SignUp = () => {
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [touched, setTouched] = useState(false);
+  const fullNameRef = useRef(null);
 
   const navigate = useNavigate();
   const { updateUser } = useContext(UserContext);
@@ -62,6 +63,10 @@ const SignUp = () => {
     }
   };
 
+  useEffect(() => {
+    fullNameRef.current?.focus();
+  }, []);
+
   return (
     <AuthLayout>
       <div className='lg:w-full mt-10 md:mt-0 flex flex-col justify-center'>
@@ -78,6 +83,7 @@ const SignUp = () => {
               onChange={(e) => setFullName(e.target.value)}
               type='text'
               placeholder='John Smith'
+              ref={fullNameRef}
             />
             <Input
               label='Email Address'
