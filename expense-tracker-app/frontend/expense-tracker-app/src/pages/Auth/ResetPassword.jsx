@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Input from '../../components/Inputs/Input';
 import AuthLayout from '../../components/layouts/AuthLayout';
+import PasswordRules from '../../components/PasswordRules';
 import { API_PATHS } from '../../utils/apiPath';
 import axiosInstance from '../../utils/axiosInstance';
+import { passwordRulesList } from '../../utils/helper';
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -12,6 +14,11 @@ const ResetPassword = () => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [touched, setTouched] = useState(false);
+  const passwordRef = useRef(null);
+
+  const isPasswordValid = passwordRulesList.every(rule => rule.test(password));
+  const ifFormValid = (password === confirmPassword) && isPasswordValid;
 
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -43,6 +50,11 @@ const ResetPassword = () => {
     }
 
   };
+
+  useEffect(() => {
+    passwordRef.current?.focus();
+  }, []);
+
   return (
     <AuthLayout>
       <div className="lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center">
@@ -54,10 +66,14 @@ const ResetPassword = () => {
         <form onSubmit={handleResetPassword}>
           <Input
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (!touched) setTouched(true);
+            }}
             label="New Password"
             type="password"
             placeholder="Min 8 characters"
+            ref={passwordRef}
           />
 
           <Input
@@ -68,12 +84,14 @@ const ResetPassword = () => {
             placeholder="Re-enter password"
           />
 
+          {touched && <PasswordRules password={password} />}
+
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
           {message && <p className="text-green-600 text-xs pb-2.5">{message}</p>}
 
           <button
             type="submit"
-            className={`btn-primary ${!password || !confirmPassword ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`btn-primary ${!ifFormValid ? "opacity-50 cursor-not-allowed" : ""}`}
             disabled={!password || !confirmPassword}
           >
             Reset Password
