@@ -15,40 +15,53 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [touched, setTouched] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const passwordRef = useRef(null);
 
   const isPasswordValid = passwordRulesList.every(rule => rule.test(password));
-  const ifFormValid = (password === confirmPassword) && isPasswordValid;
-
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const ifFormValid = password && confirmPassword && password === confirmPassword && isPasswordValid;
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
-    if (!password || !confirmPassword)
-      return setError("All fields are required.");
-
-    if (password !== confirmPassword)
-      return setError("Passwords do not match. Please try again.");
+    if (!ifFormValid) {
+      setError("Please make sure all fields are valid.");
+      return;
+    }
 
     setError("");
     setMessage("");
+    setLoading(true);
 
     try {
-      const response = await axiosInstance.post(`${API_PATHS.AUTH.RESET_PASSWORD}/${token}`, { password });
+      const response = await axiosInstance.post(
+        `${API_PATHS.AUTH.RESET_PASSWORD}/${token}`,
+        { password }
+      );
 
       setMessage(response.data.message || "Password reset successfully.");
       setTimeout(() => {
         navigate("/login");
       }, 1000);
     } catch (error) {
-      if (error.response?.data?.message)
-        setError(error.response.data.message);
-      else
-        setError("Something went wrong. Please try again.");
-    }
+      if (error.response?.status === 403) {
+        navigate("/forgot-password", {
+          state: { error: "Token expired or invalid. Please request a new password reset link." },
+        });
+        return;
+      }
 
+      setError(
+        typeof error.response?.data?.message === "string"
+          ? error.response.data.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -63,7 +76,7 @@ const ResetPassword = () => {
           Enter your new password below.
         </p>
 
-        <form onSubmit={handleResetPassword}>
+        <form onSubmit={handleResetPassword} noValidate>
           <Input
             value={password}
             onChange={(e) => {
@@ -74,6 +87,7 @@ const ResetPassword = () => {
             type="password"
             placeholder="Min 8 characters"
             ref={passwordRef}
+            aria-invalid={!isPasswordValid && touched}
           />
 
           <Input
@@ -82,6 +96,7 @@ const ResetPassword = () => {
             label="Confirm New Password"
             type="password"
             placeholder="Re-enter password"
+            aria-invalid={password !== confirmPassword}
           />
 
           {touched && <PasswordRules password={password} />}
@@ -91,10 +106,10 @@ const ResetPassword = () => {
 
           <button
             type="submit"
-            className={`btn-primary ${!ifFormValid ? "opacity-50 cursor-not-allowed" : ""}`}
-            disabled={!password || !confirmPassword}
+            className={`btn-primary ${!ifFormValid || loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            disabled={!ifFormValid || loading}
           >
-            Reset Password
+            {loading ? "Resetting..." : "Reset Password"}
           </button>
         </form>
       </div>
