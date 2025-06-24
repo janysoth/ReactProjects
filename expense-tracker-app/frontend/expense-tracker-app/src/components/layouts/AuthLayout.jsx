@@ -2,14 +2,20 @@ import { Coins } from 'lucide-react';
 import React from 'react';
 import { LuTrendingUpDown } from 'react-icons/lu';
 
+import { useNavigate } from 'react-router-dom';
 import CARD_2 from '../../assets/images/card2.png';
 import LOGO from '../../assets/images/logo.png';
 
 const AuthLayout = ({ children }) => {
+  const navigate = useNavigate();
+
   return (
     <div className='flex'>
       <div className='w-screen h-screen md:w-[60vw] px-12 pt-8 pb-12'>
-        <div className="flex items-center cursor-pointer">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <Coins size={24} className="text-primary mr-2" />
           <h2 className="font-bold text-xl text-primary">SmartSpend</h2>
         </div>
