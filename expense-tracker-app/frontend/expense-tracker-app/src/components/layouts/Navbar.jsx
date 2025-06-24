@@ -33,7 +33,11 @@ const Navbar = ({ activeMenu }) => {
   });
 
   const handleLogout = () => {
-    localStorage.clear();
+    // Clear token from both storages
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+
+    // Preserve remembered data (like email if needed)
     clearUser();
     navigate("/login");
   };
