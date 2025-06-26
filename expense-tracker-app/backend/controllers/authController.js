@@ -7,7 +7,6 @@ const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 const sendMail = require("../utils/SendEmail");
 const generateResetEmail = require("../utils/ResetPasswordTemplate");
-const { use } = require('react');
 
 // Generate JWT Token
 const generateToken = (id) => {

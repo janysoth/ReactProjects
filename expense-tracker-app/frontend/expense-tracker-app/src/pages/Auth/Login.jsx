@@ -8,6 +8,8 @@ import { API_PATHS } from '../../utils/apiPath';
 import axiosInstance from '../../utils/axiosInstance';
 import { validateEmail } from '../../utils/helper';
 
+const PASSWORD_EXPIRY_HOURS = 24;
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,16 +19,25 @@ const Login = () => {
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Load remembered credentials
+  // Load stored email/password on first load
   useEffect(() => {
     const rememberedEmail = localStorage.getItem("rememberedEmail");
-    const rememberedPassword = localStorage.getItem("rememberedPassword");
+    const passwordData = JSON.parse(localStorage.getItem("rememberedPasswordData") || "{}");
     const remember = localStorage.getItem("rememberMe") === "true";
 
-    if (remember) {
-      if (rememberedEmail) setEmail(rememberedEmail);
-      if (rememberedPassword) setPassword(rememberedPassword);
-      setRememberMe(true);
+    if (rememberedEmail) setEmail(rememberedEmail);
+    if (remember) setRememberMe(true);
+
+    // If password exists and is still within 24 hours
+    if (passwordData.password && passwordData.timestamp) {
+      const now = Date.now();
+      const ageInHours = (now - passwordData.timestamp) / (1000 * 60 * 60);
+
+      if (ageInHours <= PASSWORD_EXPIRY_HOURS) {
+        setPassword(passwordData.password);
+      } else {
+        localStorage.removeItem("rememberedPasswordData"); // expired
+      }
     }
   }, []);
 
@@ -54,21 +65,30 @@ const Login = () => {
       const { token, user } = response.data;
 
       if (token) {
-        // Store token
+        // Store token in appropriate storage
         if (rememberMe) {
           localStorage.setItem("token", token);
         } else {
           sessionStorage.setItem("token", token);
         }
 
-        // Save credentials only if user asked
+        // Remember email indefinitely
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
-          localStorage.setItem("rememberedPassword", password);
           localStorage.setItem("rememberMe", "true");
+
+          // Store password + timestamp for 24 hours
+          localStorage.setItem(
+            "rememberedPasswordData",
+            JSON.stringify({
+              password,
+              timestamp: Date.now(),
+            })
+          );
         } else {
+          // Clear all remember data
           localStorage.removeItem("rememberedEmail");
-          localStorage.removeItem("rememberedPassword");
+          localStorage.removeItem("rememberedPasswordData");
           localStorage.removeItem("rememberMe");
         }
 
@@ -76,11 +96,7 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
+      setError(error.response?.data?.message || "Something went wrong.");
     }
   };
 
@@ -118,7 +134,7 @@ const Login = () => {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={() => setRememberMe(!rememberMe)}
-                className="accent-primary"
+                className="accent-primary cursor-pointer"
               />
               Remember Me
             </label>
@@ -140,7 +156,7 @@ const Login = () => {
 
           <p className='text-[13px] text-slate-800 mt-3'>
             Don’t have an account?{" "}
-            <Link className='font-medium text-primary underline cursor-pointer' to="/signup">
+            <Link className='font-medium text-primary underline' to="/signup">
               Signup
             </Link>
           </p>
