@@ -76,7 +76,7 @@ const Navbar = ({ activeMenu }) => {
               onClick={handleLogout}
               className="group flex items-center overflow-hidden bg-primary text-white pl-3 pr-3 py-2 rounded-full hover:bg-red-500/90 transition-all duration-300 w-10 hover:w-28 cursor-pointer"
             >
-              <LuLogOut className="text-lg" />
+              <LuLogOut className="text-lg flex-shrink-0 mx-auto group-hover:mx-0 transition-all duration-300" />
               <span className="ml-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0 -translate-x-2 transition-all duration-300">
                 Logout
               </span>
