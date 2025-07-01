@@ -33,66 +33,72 @@ const Navbar = ({ activeMenu }) => {
   });
 
   const handleLogout = () => {
-    // Clear token from both storages
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
-
-    // Preserve remembered data (like email if needed)
     clearUser();
     navigate("/login");
   };
 
   return (
-    <div className="bg-white border border-b border-gray-200/50 backdrop-blur-[2px] py-2.5 px-7 sticky top-0 z-30">
-      <div className="flex justify-between items-center relative">
-        {/* Left side */}
-        <div className="flex items-center gap-5 min-w-0">
-          <button
-            className="block lg:hidden text-black"
-            onClick={() => setOpenSideMenu(!openSideMenu)}
-          >
-            {openSideMenu ? (
-              <HiOutlineX className="text-2xl cursor-pointer" />
-            ) : (
-              <HiOutlineMenu className="text-2xl cursor-pointer" />
-            )}
-          </button>
+    <>
+      <div className="bg-white border-b border-gray-200/50 backdrop-blur-[2px] py-2.5 px-7 sticky top-0 z-50">
+        <div className="flex justify-between items-center relative">
+          {/* Left side */}
+          <div className="flex items-center gap-5 min-w-0">
+            <button
+              className="block lg:hidden text-black cursor-pointer"
+              onClick={() => setOpenSideMenu(!openSideMenu)}
+            >
+              {openSideMenu ? (
+                <HiOutlineX className="text-2xl" />
+              ) : (
+                <HiOutlineMenu className="text-2xl" />
+              )}
+            </button>
 
-          <div
-            className="flex items-center cursor-pointer"
-            onClick={() => navigate("/")}
-          >
-            <Coins size={24} className="text-primary mr-2" />
-            <h2 className="font-bold text-xl text-primary">SmartSpend</h2>
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={() => navigate("/")}
+            >
+              <Coins size={24} className="text-primary mr-2" />
+              <h2 className="font-bold text-xl text-primary">SmartSpend</h2>
+            </div>
           </div>
-        </div>
 
-        {/* Center */}
-        <div className="absolute  left-1/2 transform -translate-x-1/3 text-gray-700 font-medium hidden md:block  text-center">
-          {formattedDate}, {formattedTime}
-        </div>
+          {/* Center */}
+          <div className="absolute left-1/2 transform -translate-x-1/3 text-gray-700 font-medium hidden md:block text-center">
+            {formattedDate}, {formattedTime}
+          </div>
 
-        {/* Right side */}
-        <div className="flex items-center justify-end min-w-0">
-          <button
-            onClick={handleLogout}
-            className="group flex items-center overflow-hidden bg-primary text-white pl-3 pr-3 py-2 rounded-full hover:bg-red-500/90 transition-all duration-300 w-10 hover:w-28 cursor-pointer"
-          >
-            <LuLogOut className="text-lg flex-shrink-0" />
-            <span className="ml-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0 -translate-x-2 transition-all duration-300">
-              Logout
-            </span>
-          </button>
+          {/* Right side */}
+          <div className="flex items-center justify-end min-w-0">
+            <button
+              onClick={handleLogout}
+              className="group flex items-center overflow-hidden bg-primary text-white pl-3 pr-3 py-2 rounded-full hover:bg-red-500/90 transition-all duration-300 w-10 hover:w-28 cursor-pointer"
+            >
+              <LuLogOut className="text-lg" />
+              <span className="ml-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0 -translate-x-2 transition-all duration-300">
+                Logout
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Side menu (mobile) */}
+      {/* SideMenu + overlay */}
+      <SideMenu
+        isOpen={openSideMenu}
+        setIsOpen={setOpenSideMenu}
+        activeMenu={activeMenu}
+      />
+
       {openSideMenu && (
-        <div className="fixed top-[61px] -ml-4 bg-white">
-          <SideMenu activeMenu={activeMenu} />
-        </div>
+        <div
+          className="fixed inset-0 bg-black/30 z-30"
+          onClick={() => setOpenSideMenu(false)}
+        />
       )}
-    </div>
+    </>
   );
 };
 
