@@ -10,8 +10,8 @@ import {
   LuTrendingUp,
   LuUtensils,
 } from 'react-icons/lu';
-
 import { useNavigate } from 'react-router-dom';
+
 import AddTransactionForm from '../../components/AllTransactions/AddTransactionForm';
 import DashboardSummary from '../../components/Dashboard/DashboardSummary';
 import DeleteAlert from '../../components/DeleteAlert';
@@ -35,6 +35,9 @@ const AllTransactions = () => {
   const [error, setError] = useState(null);
 
   const [selectedMonth, setSelectedMonth] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editIncome, setEditIncome] = useState(null);
@@ -52,17 +55,12 @@ const AllTransactions = () => {
   const fetchDashboardData = async () => {
     if (loading) return;
     setLoading(true);
-
     try {
-      const response = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA, {
-        params: selectedMonth ? { month: selectedMonth } : {},
-      });
-
-      if (response.data) {
-        setDashboardData(response.data);
-      }
+      const params = selectedMonth ? { month: selectedMonth } : {};
+      const response = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA, { params });
+      if (response.data) setDashboardData(response.data);
     } catch (err) {
-      console.error("Error in fetchDashboardData frontend: ", err);
+      console.error("Error fetching dashboard data:", err);
       setError("Failed to load dashboard data.");
     } finally {
       setLoading(false);
@@ -70,6 +68,7 @@ const AllTransactions = () => {
   };
 
   useEffect(() => {
+    setCurrentPage(1);
     fetchDashboardData();
   }, [selectedMonth]);
 
@@ -79,14 +78,29 @@ const AllTransactions = () => {
     totalExpense = 0,
     totalBalance = 0,
   } = dashboardData || {};
+
   const { handleDeleteIncome, handleUpdateIncome } = useIncome();
   const { handleDeleteExpense, handleUpdateExpense } = useExpense();
-  const groupedTransactions = groupTransactionsByDate(allTransactions);
 
-  // Helper to safely parse YYYY-MM format
-  const parseMonthString = (monthString) => {
-    const [year, month] = monthString.split('-').map(Number);
-    return new Date(year, month - 1); // month is 0-based
+  // Group then flatten for pagination
+  const grouped = groupTransactionsByDate(allTransactions);
+  const flattened = grouped.flatMap(({ date, transactions }) =>
+    transactions.map(tx => ({ ...tx, groupDate: date }))
+  );
+  const totalPages = Math.ceil(flattened.length / itemsPerPage);
+  const paginated = flattened.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  const regrouped = paginated.reduce((acc, tx) => {
+    (acc[tx.groupDate] ??= []).push(tx);
+    return acc;
+  }, {});
+
+  // Helper for date picker
+  const parseMonthString = ms => {
+    const [y, m] = ms.split('-').map(Number);
+    return new Date(y, m - 1);
   };
 
   const navigate = useNavigate();
@@ -94,65 +108,49 @@ const AllTransactions = () => {
   return (
     <DashboardLayout activeMenu="All Transactions">
       <div className="container mx-auto p-4 min-h-screen">
+        {/* HEADER & FILTER */}
         <div className="info-banner sticky top-18 pt-2 z-20 bg-gray-50">
-          <div className='all-transactions-header flex justify-between items-center mb-6'>
-            <h1 className="text-2xl font-bold mb-4"> All Transactions</h1>
-
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">All Transactions</h1>
             <div className="flex gap-4 items-center">
-              {allTransactions.length > 0 && (<DatePicker
-                selected={selectedMonth ? parseMonthString(selectedMonth) : null}
-                onChange={(date) => {
-                  const formatted = format(date, 'yyyy-MM');
-                  setSelectedMonth(formatted);
-                }}
-                dateFormat="MMM-yyyy"
-                showMonthYearPicker
-                className="text-s px-2 py-1 rounded-md border w-[140px] text-center"
-                placeholderText='Filter by Month'
-              />)}
-
+              {allTransactions.length > 0 && (
+                <DatePicker
+                  selected={selectedMonth ? parseMonthString(selectedMonth) : null}
+                  onChange={date => setSelectedMonth(format(date, 'yyyy-MM'))}
+                  dateFormat="MMM-yyyy"
+                  showMonthYearPicker
+                  className="px-2 py-1 rounded-md border w-[140px] text-center"
+                  placeholderText="Filter by Month"
+                />
+              )}
               {selectedMonth && (
                 <button
                   onClick={() => setSelectedMonth('')}
-                  className="text-sm text-blue-500 hover:underline cursor-pointer"
+                  className="text-sm text-blue-500 hover:underline"
                 >
                   Clear Filter
                 </button>
               )}
-
-              <button
-                className="add-btn"
-                onClick={() => setOpenAddModal(true)}
-              >
-                <LuPlus className='text-lg' />
-                Add Transaction
+              <button className="add-btn" onClick={() => setOpenAddModal(true)}>
+                <LuPlus className="text-lg" /> Add Transaction
               </button>
             </div>
-            <Modal
-              isOpen={openAddModal}
-              onClose={() => setOpenAddModal(false)}
-              title="Add Transaction"
-            >
-              <AddTransactionForm
-                onClose={() => setOpenAddModal(false)}
-                onSuccess={fetchDashboardData}
-              />
+            <Modal isOpen={openAddModal} onClose={() => setOpenAddModal(false)} title="Add Transaction">
+              <AddTransactionForm onClose={() => setOpenAddModal(false)} onSuccess={fetchDashboardData} />
             </Modal>
           </div>
 
-          {error && (
-            <div className="text-center mb-4 text-red-500">
-              {error}
-            </div>
-          )}
+          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
           <div className="my-5 mx-auto">
             {loading ? (
               <InfoCardSkeleton />
             ) : error ? (
-              <p className="text-center text-red-500 py-10">
-                {error}
-                <button onClick={fetchDashboardData} className="ml-2 text-blue-600 underline cursor-pointer">Retry</button>
+              <p className="text-red-500 text-center py-10">
+                {error}{' '}
+                <button onClick={fetchDashboardData} className="text-blue-600 underline">
+                  Retry
+                </button>
               </p>
             ) : (
               <DashboardSummary
@@ -165,68 +163,53 @@ const AllTransactions = () => {
           </div>
         </div>
 
+        {/* TRANSACTIONS */}
         <div className="finance-card">
-          {groupedTransactions.length > 0 ? (
-            <div>
-              {groupedTransactions.map(({ date, transactions }) => (
-                <div key={date} className="mb-6 last:mb-0">
+          {flattened.length > 0 ? (
+            <>
+              {Object.entries(regrouped).map(([date, transactions]) => (
+                <div key={date} className="mb-6">
                   <h2 className="font-medium text-gray-600 mb-2">{date}</h2>
-
                   <div className="space-y-2">
-                    {transactions.map(transaction => {
-                      const isExpense = !!transaction.category;
-
+                    {transactions.map(tx => {
+                      const isExpense = Boolean(tx.category);
                       return (
                         <div
-                          key={transaction._id}
+                          key={tx._id}
                           className="group flex items-center justify-between p-3 border rounded-md hover:bg-gray-50"
                         >
                           <div className="flex items-center">
                             <div className="w-12 h-12 flex ml-4 mr-4 items-center justify-center text-xl text-gray-800 bg-gray-100 rounded-full">
-                              {transaction.icon ? (
-                                <img alt="transaction icon" src={transaction.icon} className="w-6 h-6" />
-                              ) : (
-                                <LuUtensils />
-                              )}
+                              {tx.icon ? <img alt="icon" src={tx.icon} className="w-6 h-6" /> : <LuUtensils />}
                             </div>
-
                             <div>
-                              <p className="font-medium">{transaction.description}</p>
+                              <p className="font-medium">{tx.description}</p>
                               <p className="text-xs text-gray-400 mt-1">
-                                {isExpense ? transaction.category : transaction.source}
+                                {isExpense ? tx.category : tx.source}
                               </p>
                             </div>
                           </div>
-
                           <div className="flex items-center gap-2">
-                            <div
-                              className={`${isExpense ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500'} flex items-center gap-2 px-3 py-1.5 rounded-md`}
-                            >
+                            <div className={`${isExpense ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500'} flex items-center gap-2 px-3 py-1.5 rounded-md`}>
                               <h6 className="text-s font-medium">
-                                {isExpense ? '-' : '+'}${Number(transaction.amount).toLocaleString()}
+                                {isExpense ? '-' : '+'}${Number(tx.amount).toLocaleString()}
                               </h6>
                               {isExpense ? <LuTrendingDown /> : <LuTrendingUp />}
                             </div>
-
                             <button
                               aria-label="Edit Transaction"
-                              className='text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+                              className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                               onClick={() => {
                                 setShowEditModal(true);
-                                if (isExpense) setEditExpense(transaction);
-                                else setEditIncome(transaction);
+                                isExpense ? setEditExpense(tx) : setEditIncome(tx);
                               }}
                             >
                               <LuPencil />
                             </button>
-
                             <button
-                              aria-label={`Delete ${isExpense ? transaction.category : transaction.source}`}
-                              className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                              onClick={() => {
-                                setOpenDeleteAlert({ show: true, data: transaction });
-                                console.log(transaction._id);
-                              }}
+                              aria-label="Delete Transaction"
+                              className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                              onClick={() => setOpenDeleteAlert({ show: true, data: tx })}
                             >
                               <LuTrash2 />
                             </button>
@@ -237,7 +220,29 @@ const AllTransactions = () => {
                   </div>
                 </div>
               ))}
-            </div>
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center mt-8 gap-2">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+                  >
+                    Previous
+                  </button>
+                  <span>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="p-8 text-center">
               <p className="text-gray-500">No Transactions to display.</p>
@@ -246,25 +251,19 @@ const AllTransactions = () => {
         </div>
       </div>
 
-      {/* Delete Modal */}
-      <Modal
-        isOpen={openDeleteAlert.show}
-        onClose={onClose}
-        title="Delete Transaction"
-      >
+      {/* DELETE MODAL */}
+      <Modal isOpen={openDeleteAlert.show} onClose={onClose} title="Delete Transaction">
         <DeleteAlert
           content="Are you sure you want to delete this transaction?"
           onDelete={async () => {
-            const transaction = openDeleteAlert.data;
+            const tx = openDeleteAlert.data;
             try {
-              if (transaction.category) {
-                await handleDeleteExpense(transaction._id);
-              } else {
-                await handleDeleteIncome(transaction._id);
-              }
+              tx.category
+                ? await handleDeleteExpense(tx._id)
+                : await handleDeleteIncome(tx._id);
               fetchDashboardData();
-            } catch (error) {
-              console.log("Error deleting transaction:", error);
+            } catch (e) {
+              console.error('Error deleting:', e);
             } finally {
               onClose();
             }
@@ -273,32 +272,28 @@ const AllTransactions = () => {
         />
       </Modal>
 
-      {/* Edit Modal */}
-      <Modal
-        isOpen={showEditModal}
-        onClose={onCloseEditModal}
-        title="Edit Transaction"
-      >
+      {/* EDIT MODAL */}
+      <Modal isOpen={showEditModal} onClose={onCloseEditModal} title="Edit Transaction">
         {editExpense && (
           <AddExpenseForm
             initialData={editExpense}
-            onClose={onCloseEditModal}
-            onAddExpense={(data) => {
+            isEditMode
+            onAddExpense={data => {
               handleUpdateExpense(editExpense._id, data);
               onCloseEditModal();
             }}
-            isEditMode={true}
+            onClose={onCloseEditModal}
           />
         )}
         {editIncome && (
           <AddIncomeForm
             initialData={editIncome}
-            onClose={onCloseEditModal}
-            onAddIncome={(data) => {
+            isEditMode
+            onAddIncome={data => {
               handleUpdateIncome(editIncome._id, data);
               onCloseEditModal();
             }}
-            isEditMode={true}
+            onClose={onCloseEditModal}
           />
         )}
       </Modal>

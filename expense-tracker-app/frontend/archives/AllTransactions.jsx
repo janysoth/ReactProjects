@@ -1,12 +1,25 @@
+import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import {
+  LuPencil,
+  LuPlus,
+  LuTrash2,
+  LuTrendingDown,
+  LuTrendingUp,
+  LuUtensils,
+} from 'react-icons/lu';
 
-import { LuPencil, LuPlus, LuTrash2, LuTrendingDown, LuTrendingUp, LuUtensils } from 'react-icons/lu';
+import { useNavigate } from 'react-router-dom';
 import AddTransactionForm from '../../components/AllTransactions/AddTransactionForm';
+import DashboardSummary from '../../components/Dashboard/DashboardSummary';
 import DeleteAlert from '../../components/DeleteAlert';
 import AddExpenseForm from '../../components/Expense/AddExpenseForm';
 import AddIncomeForm from '../../components/Income/AddIncomeForm';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import Modal from '../../components/Modal';
+import InfoCardSkeleton from '../../components/Skeletons/InfoCardSkeleton';
 import useExpense from '../../hooks/useExpense';
 import useIncome from '../../hooks/useIncome';
 import { useUserAuth } from '../../hooks/useUserAuth';
@@ -21,6 +34,7 @@ const AllTransactions = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const [selectedMonth, setSelectedMonth] = useState('');
   const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editIncome, setEditIncome] = useState(null);
@@ -40,7 +54,10 @@ const AllTransactions = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA);
+      const response = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA, {
+        params: selectedMonth ? { month: selectedMonth } : {},
+      });
+
       if (response.data) {
         setDashboardData(response.data);
       }
@@ -54,50 +71,99 @@ const AllTransactions = () => {
 
   useEffect(() => {
     fetchDashboardData();
-
-    return () => { };
-  }, []);
+  }, [selectedMonth]);
 
   const {
     allTransactions = [],
+    totalIncome = 0,
+    totalExpense = 0,
+    totalBalance = 0,
   } = dashboardData || {};
-
   const { handleDeleteIncome, handleUpdateIncome } = useIncome();
   const { handleDeleteExpense, handleUpdateExpense } = useExpense();
-
   const groupedTransactions = groupTransactionsByDate(allTransactions);
+
+  // Helper to safely parse YYYY-MM format
+  const parseMonthString = (monthString) => {
+    const [year, month] = monthString.split('-').map(Number);
+    return new Date(year, month - 1); // month is 0-based
+  };
+
+  const navigate = useNavigate();
 
   return (
     <DashboardLayout activeMenu="All Transactions">
       <div className="container mx-auto p-4 min-h-screen">
-        <div className='flex justify-between items-center mb-6'>
-          <h1 className="text-2xl font-bold mb-4"> All Transactions</h1>
+        <div className="info-banner sticky top-18 pt-2 z-20 bg-gray-50">
+          <div className='all-transactions-header flex justify-between items-center mb-6'>
+            <h1 className="text-2xl font-bold mb-4"> All Transactions</h1>
 
-          <button
-            className="add-btn"
-            onClick={() => setOpenAddModal(true)}
-          >
-            <LuPlus className='text-lg' />
-            Add Transaction
-          </button>
+            <div className="flex gap-4 items-center">
+              {allTransactions.length > 0 && (<DatePicker
+                selected={selectedMonth ? parseMonthString(selectedMonth) : null}
+                onChange={(date) => {
+                  const formatted = format(date, 'yyyy-MM');
+                  setSelectedMonth(formatted);
+                }}
+                dateFormat="MMM-yyyy"
+                showMonthYearPicker
+                className="text-s px-2 py-1 rounded-md border w-[140px] text-center"
+                placeholderText='Filter by Month'
+              />)}
 
-          <Modal
-            isOpen={openAddModal}
-            onClose={() => setOpenAddModal(false)}
-            title="Add Transaction"
-          >
-            <AddTransactionForm
+              {selectedMonth && (
+                <button
+                  onClick={() => setSelectedMonth('')}
+                  className="text-sm text-blue-500 hover:underline cursor-pointer"
+                >
+                  Clear Filter
+                </button>
+              )}
+
+              <button
+                className="add-btn"
+                onClick={() => setOpenAddModal(true)}
+              >
+                <LuPlus className='text-lg' />
+                Add Transaction
+              </button>
+            </div>
+            <Modal
+              isOpen={openAddModal}
               onClose={() => setOpenAddModal(false)}
-              onSuccess={fetchDashboardData}
-            />
-          </Modal>
-        </div>
-
-        {error && (
-          <div className="text-center mb-4 text-red-500">
-            {error}
+              title="Add Transaction"
+            >
+              <AddTransactionForm
+                onClose={() => setOpenAddModal(false)}
+                onSuccess={fetchDashboardData}
+              />
+            </Modal>
           </div>
-        )}
+
+          {error && (
+            <div className="text-center mb-4 text-red-500">
+              {error}
+            </div>
+          )}
+
+          <div className="my-5 mx-auto">
+            {loading ? (
+              <InfoCardSkeleton />
+            ) : error ? (
+              <p className="text-center text-red-500 py-10">
+                {error}
+                <button onClick={fetchDashboardData} className="ml-2 text-blue-600 underline cursor-pointer">Retry</button>
+              </p>
+            ) : (
+              <DashboardSummary
+                totalIncome={totalIncome}
+                totalExpense={totalExpense}
+                totalBalance={totalBalance}
+                navigate={navigate}
+              />
+            )}
+          </div>
+        </div>
 
         <div className="finance-card">
           {groupedTransactions.length > 0 ? (
@@ -125,9 +191,7 @@ const AllTransactions = () => {
                             </div>
 
                             <div>
-                              <p className="font-medium">
-                                {transaction.description}
-                              </p>
+                              <p className="font-medium">{transaction.description}</p>
                               <p className="text-xs text-gray-400 mt-1">
                                 {isExpense ? transaction.category : transaction.source}
                               </p>
@@ -136,8 +200,7 @@ const AllTransactions = () => {
 
                           <div className="flex items-center gap-2">
                             <div
-                              className={`${isExpense ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500'
-                                } flex items-center gap-2 px-3 py-1.5 rounded-md`}
+                              className={`${isExpense ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500'} flex items-center gap-2 px-3 py-1.5 rounded-md`}
                             >
                               <h6 className="text-s font-medium">
                                 {isExpense ? '-' : '+'}${Number(transaction.amount).toLocaleString()}
@@ -150,11 +213,8 @@ const AllTransactions = () => {
                               className='text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
                               onClick={() => {
                                 setShowEditModal(true);
-
-                                if (transaction.category)
-                                  setEditExpense(transaction);
-                                else
-                                  setEditIncome(transaction);
+                                if (isExpense) setEditExpense(transaction);
+                                else setEditIncome(transaction);
                               }}
                             >
                               <LuPencil />
@@ -166,8 +226,7 @@ const AllTransactions = () => {
                               onClick={() => {
                                 setOpenDeleteAlert({ show: true, data: transaction });
                                 console.log(transaction._id);
-                              }
-                              }
+                              }}
                             >
                               <LuTrash2 />
                             </button>
@@ -187,7 +246,7 @@ const AllTransactions = () => {
         </div>
       </div>
 
-      {/* Global Modal, rendered once */}
+      {/* Delete Modal */}
       <Modal
         isOpen={openDeleteAlert.show}
         onClose={onClose}
@@ -197,19 +256,15 @@ const AllTransactions = () => {
           content="Are you sure you want to delete this transaction?"
           onDelete={async () => {
             const transaction = openDeleteAlert.data;
-
             try {
               if (transaction.category) {
-                console.log("Deleting Expense");
                 await handleDeleteExpense(transaction._id);
               } else {
-                console.log("Deleting Income");
                 await handleDeleteIncome(transaction._id);
               }
-
               fetchDashboardData();
             } catch (error) {
-              console.log("Error in deleting transaction in deleteAlert: ", error);
+              console.log("Error deleting transaction:", error);
             } finally {
               onClose();
             }
@@ -218,6 +273,7 @@ const AllTransactions = () => {
         />
       </Modal>
 
+      {/* Edit Modal */}
       <Modal
         isOpen={showEditModal}
         onClose={onCloseEditModal}
@@ -227,26 +283,21 @@ const AllTransactions = () => {
           <AddExpenseForm
             initialData={editExpense}
             onClose={onCloseEditModal}
-            onAddExpense={
-              (data) => {
-                handleUpdateExpense(editExpense._id, data);
-                onCloseEditModal();
-              }
-            }
+            onAddExpense={(data) => {
+              handleUpdateExpense(editExpense._id, data);
+              onCloseEditModal();
+            }}
             isEditMode={true}
           />
         )}
-
         {editIncome && (
           <AddIncomeForm
             initialData={editIncome}
             onClose={onCloseEditModal}
-            onAddIncome={
-              (data) => {
-                handleUpdateIncome(editIncome._id, data);
-                onCloseEditModal();
-              }
-            }
+            onAddIncome={(data) => {
+              handleUpdateIncome(editIncome._id, data);
+              onCloseEditModal();
+            }}
             isEditMode={true}
           />
         )}
