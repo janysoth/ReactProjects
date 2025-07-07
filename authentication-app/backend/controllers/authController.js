@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
 
-// sendMail = require("../utils/SendEmail");
+// sendEmail = require("../utils/SendEmail");
 // generateResetEmail = require("../utils/ResetPasswordTemplate");
 
 // Generate JWT Token
