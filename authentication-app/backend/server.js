@@ -27,7 +27,7 @@ app.use(express.json());
 connectDB();
 
 // Use the routes declare above
-// app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 
 const PORT = process.env.PORT || 8000;
