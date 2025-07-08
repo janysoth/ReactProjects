@@ -1,52 +1,55 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const validator = require('validator');
+const validator = require("validator");
 
-const userSchema = new mongoose.Schema({
-  fullName: {
-    type: String,
-    required: [true, 'Full name is required.']
+const userSchema = new mongoose.Schema(
+  {
+    fullName: {
+      type: String,
+      required: [true, "Full name is required."],
+      trim: true,
+    },
+
+    email: {
+      type: String,
+      required: [true, "Email is required."],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      validate: [validator.isEmail, "Please enter a valid email."],
+    },
+
+    password: {
+      type: String,
+      required: [true, "Password is required."],
+      select: false, // prevent exposure of hashed password
+      minlength: [8, 'Password must be at least 8 characters.'],
+    },
+
+    profileImageUrl: {
+      type: String,
+      default: "",
+    },
+
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
   },
+  {
+    timestamps: true,
+  }
+);
 
-  email: {
-    type: String,
-    required: [true, 'Email is required.'],
-    unique: true,
-    lowercase: true,
-    trim: true,
-    validate: [validator.isEmail, 'Please enter a valid email.']
-  },
-
-  password: {
-    type: String,
-    required: [true, 'Password is required.'],
-    select: false,
-  },
-
-  profileImageUrl: {
-    type: String,
-    default: '',
-  },
-
-  resetPasswordToken: String,
-  resetPasswordExpires: Date
-}, {
-  timestamps: true
-});
-
-// Encrypt password before saving
-userSchema.pre('save', async function (next) {
-  // Only hash if password was modified
-  if (!this.isModified('password')) return next();
-
+// Hash password before saving if changed
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-// Compare password method
+// Compare raw password with hashed password
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;
