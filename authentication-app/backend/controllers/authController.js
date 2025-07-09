@@ -111,3 +111,50 @@ exports.getUserInfo = async (req, res) => {
   }
 };
 
+// @desc   Update user profile
+// @route  PATCH /api/v1/auth/update-profile
+// @access Private
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const { fullName, email, profileImageUrl, password } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Update fields if provided
+    if (fullName) user.fullName = fullName;
+    if (email) user.email = email;
+    if (profileImageUrl) user.profileImageUrl = profileImageUrl;
+    if (password && password.trim() !== "") user.password = password; // triggers hashing via pre-save
+
+    await user.save();
+
+    // Destructure the fields you want to return
+    const {
+      _id,
+      fullName: name,
+      email: userEmail,
+      profileImageUrl: avatar,
+      createdAt,
+      updatedAt,
+    } = user;
+
+    res.status(200).json({
+      id: _id,
+      fullName: name,
+      email: userEmail,
+      profileImageUrl: avatar,
+      createdAt,
+      updatedAt,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating user profile.",
+      error: error.message,
+    });
+  }
+};
