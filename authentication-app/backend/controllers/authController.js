@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+
+const sendMail = require("../utils/sendEmail");
+const generateResetEmail = require("../utils/ResetPasswordTemplate");
 
 // Base frontend URL (for things like reset password links)
 const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
@@ -24,6 +27,7 @@ const getSafeUserData = (user) => ({
 
 // @desc   Register new user
 // @route  POST /api/v1/auth/register
+// @access Public
 exports.registerUser = async (req, res) => {
   const { fullName, email, password, profileImageUrl } = req.body;
 
@@ -59,6 +63,7 @@ exports.registerUser = async (req, res) => {
 
 // @desc   Login user
 // @route  POST /api/v1/auth/login
+// @access Public
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -154,6 +159,47 @@ exports.updateUserProfile = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error updating user profile.",
+      error: error.message,
+    });
+  }
+};
+
+// @desc   Generate Forgot password link
+// @route  POST /api/v1/auth/forgot-password
+// @access Public
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Generate token and hash it
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    // Set token and expiration
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = Date.now() + 60 * 30 * 1000; // 1 hour
+
+    await user.save();
+
+    const resetLink = `${baseURL}/reset-password/${resetToken}`;
+    const html = generateResetEmail(user.fullName, resetLink);
+
+    await sendMail(user.email, "Password Reset Request", html);
+
+    res.status(200).json({
+      message: "Password reset link sent to email.",
+      resetLink, // 🔁 Optional to send in dev mode only
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Error in forgotPassword controller (backend).",
       error: error.message,
     });
   }
