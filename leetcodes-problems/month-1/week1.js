@@ -11,3 +11,27 @@ function twoSum(nums, target) {
     map.set(nums[i], i);
   }
 }
+
+// ✅ Day 2 – Valid Anagram
+
+// Using Hash Map
+function isAnagram(s, t) {
+  if (s.length !== t.length) return false;
+
+  const count = {};
+
+  for (let char of s)
+    count[char] = (count[char] || 0) + 1;
+
+  for (let char of t) {
+    if (!count[char]) return false;
+    count[char]--;
+  }
+
+  return true;
+}
+
+// Using Sorting
+const isAnagram (s, t) {
+  return s.split('').sort().join('') === t.split('').sort().join('');
+};
