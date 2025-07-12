@@ -1,14 +1,14 @@
 // ✅ Day 1 – Two Sum
-function twoSum(nums, target) {
+function twoSum(numbers, target) {
   const map = new Map();
 
-  for (let i = 0; i < nums.length; i++) {
-    let complement = target - nums[i];
+  for (let i = 0; i < numbers.length; i++) {
+    let complement = target - numbers[i];
 
     if (map.has(complement))
       return [map.get(complement), i];
 
-    map.set(nums[i], i);
+    map.set(numbers[i], i);
   }
 }
 
@@ -34,4 +34,30 @@ function isAnagram(s, t) {
 // Using Sorting
 const isAnagram (s, t) {
   return s.split('').sort().join('') === t.split('').sort().join('');
+};
+
+// 🗓 Day 3: Set Usage
+// Input: [1, 2, 3, 1] → 1 is seen again → return true
+const containsDuplicate = (numbers) => {
+  const set = new Set();
+
+  for (let number of numbers) {
+    if (set.has(number)) return true;
+    set.add(number);
+  }
+
+  return false;
+};
+
+//🗓 Day 4: Sliding Window
+const maxSubArray = (numbers) => {
+  let currentSum = numbers[0];
+  let maxSum = numbers[0];
+
+  for (let i = 0; i < numbers.length; i++) {
+    currentSum = Math.max(numbers[i], currentSum + numbers[i]);
+    maxSum = Math.max(maxSum, currentSum);
+  }
+
+  return maxSum;
 };
