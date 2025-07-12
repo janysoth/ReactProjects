@@ -32,7 +32,7 @@ function isAnagram(s, t) {
 }
 
 // Using Sorting
-const isAnagram (s, t) {
+const isAnagram = (s, t) => {
   return s.split('').sort().join('') === t.split('').sort().join('');
 };
 
