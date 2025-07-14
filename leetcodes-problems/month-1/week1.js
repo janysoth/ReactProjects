@@ -61,3 +61,19 @@ const maxSubArray = (numbers) => {
 
   return maxSum;
 };
+
+// 🗓 Day 5: Hash Map Practice (Group Anagrams)
+const groupAnagrams = (strings) => {
+  const map = new Map();
+
+  for (let string of strings) {
+    const key = string.split('').sort().join('');
+
+    if (!map.has(key))
+      map.set(key, []);
+
+    map.get(key).push(string);
+  }
+
+  return [...map.values()];
+};
