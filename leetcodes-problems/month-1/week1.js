@@ -50,18 +50,25 @@ console.log(twoSum2(numbers, 9));
 
 // Using Hash Map
 function isAnagram(s, t) {
+  // Early return if lengths are different
   if (s.length !== t.length) return false;
 
+  // Create frequency counter object
   const count = {};
 
+  // Count frequency of characters in s
   for (let char of s)
     count[char] = (count[char] || 0) + 1;
 
+  // Decrement count fo each character in t
   for (let char of t) {
+    // If character doesn't exist or count becomes negative, not an anagram
     if (!count[char]) return false;
+
     count[char]--;
   }
 
+  // All counts should be zero if it's an anagram
   return true;
 }
 
@@ -69,6 +76,17 @@ function isAnagram(s, t) {
 const isAnagramSorting = (s, t) => {
   return s.split('').sort().join('') === t.split('').sort().join('');
 };
+
+// Test Cases
+console.log(isAnagram("", "")); // true - empty strings
+console.log(isAnagram("a", "a")); // true - same single char
+console.log(isAnagram("rat", "car")); // false - different chars
+console.log(isAnagram("anagram", "nagaram")); // true - standard case
+console.log(isAnagram("hello", "elloh")); // true - rearranged
+console.log(isAnagram("aacc", "ccac")); // false - different frequency
+console.log(isAnagram("texttwisttime", "timetwisttext")); // true - longer strings
+console.log(isAnagram("a", "ab")); // false - different lengths
+console.log(isAnagram("💻", "💻")); // true - unicode characters
 
 /* ****************************** */
 
@@ -84,6 +102,10 @@ const containsDuplicate = (numbers) => {
 
   return false;
 };
+
+// Test cases
+
+/* ****************************** */
 
 //🗓 Day 4: Sliding Window
 const maxSubArray = (numbers) => {
