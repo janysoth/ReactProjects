@@ -1,16 +1,50 @@
 // ✅ Day 1 – Two Sum
 function twoSum(numbers, target) {
+  // Create a hash map to store values and their indices
   const map = new Map();
 
+  // Loop through the array
   for (let i = 0; i < numbers.length; i++) {
+    // Calculate the complement (the value we need to find)
     let complement = target - numbers[i];
 
+    // Check if the complete exists in the map
     if (map.has(complement))
+      // If found, return both indices
       return [map.get(complement), i];
 
+    // Otherwise, store the current value and its index  
     map.set(numbers[i], i);
   }
+
+  // If no solution is found (though problem guarantees one exits)
+  return null;
 }
+
+// Alternative Using Object: 
+function twoSum2(numbers, target) {
+  const map = {}; // Value -> index mapping
+
+  for (let i = 0; i < numbers.length; i++) {
+    const complement = target - numbers[i];
+
+    // Check if complement exists in the map (object)
+    if (complement in map)
+      return [map[complement], i];
+
+    // Add current number to the map object
+    map[numbers[i]] = i;
+  }
+
+  // No solution found
+  return null;
+}
+
+const numbers = [2, 7, 11, 15];
+console.log(twoSum(numbers, 9));
+console.log(twoSum2(numbers, 9));
+
+/* ****************************** */
 
 // ✅ Day 2 – Valid Anagram
 
@@ -32,9 +66,11 @@ function isAnagram(s, t) {
 }
 
 // Using Sorting
-const isAnagram = (s, t) => {
+const isAnagramSorting = (s, t) => {
   return s.split('').sort().join('') === t.split('').sort().join('');
 };
+
+/* ****************************** */
 
 // 🗓 Day 3: Set Usage
 // Input: [1, 2, 3, 1] → 1 is seen again → return true
