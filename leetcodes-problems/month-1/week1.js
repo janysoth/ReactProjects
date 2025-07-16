@@ -93,17 +93,32 @@ console.log(isAnagram("💻", "💻")); // true - unicode characters
 // 🗓 Day 3: Set Usage
 // Input: [1, 2, 3, 1] → 1 is seen again → return true
 const containsDuplicate = (numbers) => {
+  // Create a Set to track unique values
   const set = new Set();
 
+  // Loop through each number in the array
   for (let number of numbers) {
+    // If we've seen this number before, return true
     if (set.has(number)) return true;
+
+    // Otherwise, if we've not seen it, add it to the Set
     set.add(number);
   }
 
+  // If we get through the entire array without finding duplicates
   return false;
 };
 
+// Alternative one-liner using Set size comparison
+function containsDuplicateOneLiner(numbers) {
+  return new Set(numbers).size !== numbers.length;
+}
 // Test cases
+console.log(containsDuplicate([1, 2, 3, 1])); // true
+console.log(containsDuplicate([1, 2, 3, 4])); // false
+console.log(containsDuplicateOneLiner([1, 1, 1, 3, 3, 4, 3, 2, 4, 2])); // true
+console.log(containsDuplicate([])); // false - edge case: empty array
+console.log(containsDuplicate([1])); // false - edge case: single element
 
 /* ****************************** */
 
