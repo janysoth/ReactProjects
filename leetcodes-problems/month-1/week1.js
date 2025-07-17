@@ -124,16 +124,72 @@ console.log(containsDuplicate([1])); // false - edge case: single element
 
 //🗓 Day 4: Sliding Window
 const maxSubArray = (numbers) => {
+  // Edge case: if the array is empty
+  if (numbers.length === 0) return 0;
+
+  // Initialize both currentSum and maxSum with the first element
   let currentSum = numbers[0];
   let maxSum = numbers[0];
 
-  for (let i = 0; i < numbers.length; i++) {
+  // Start from the second element (if any)
+  for (let i = 1; i < numbers.length; i++) {
+    // At each position, decide whether to: 
+    // 1. Start a new subarray (take just the current element)
+    // 2. Extend the previous subarray (add current element to previous sum)
     currentSum = Math.max(numbers[i], currentSum + numbers[i]);
+
+    // Update maxSum if the current subarray sum is larger
     maxSum = Math.max(maxSum, currentSum);
   }
 
   return maxSum;
 };
+
+// Kadane's Algorithm with Subarray Tracking
+const maxSubArrayWithDetails = numbers => {
+  if (numbers.length === 0)
+    return {
+      maxSum: 0,
+      subarray: []
+    };
+
+  let currentSum = numbers[0];
+  let maxSum = numbers[0];
+  let start = 0;
+  let end = 0;
+  let tempStart = 0;
+
+  for (let i = 1; i < numbers.length; i++) {
+    if (numbers[i] > currentSum + numbers[i]) {
+      currentSum = numbers[i];
+      tempStart = i;
+    } else {
+      currentSum += numbers[i];
+    }
+
+    if (currentSum > maxSum) {
+      maxSum = currentSum;
+      start = tempStart;
+      end = i;
+    }
+  }
+
+  return {
+    maxSum,
+    subarray: numbers.slice(start, end + 1)
+  };
+};
+
+// Test cases:
+console.log(maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4])); // 6
+console.log(maxSubArray([1])); // 1
+console.log(maxSubArray([-1])); // -1
+console.log(maxSubArray([-2, -1])); // -1
+
+console.log(maxSubArrayWithDetails([5, 4, -1, 7, 8])); // 23
+console.log(maxSubArrayWithDetails([-2, 1, -3, 4, -1, 2, 1, -5, 4]));
+
+/* ****************************** */
 
 // 🗓 Day 5: Hash Map Practice (Group Anagrams)
 const groupAnagrams = (strings) => {
