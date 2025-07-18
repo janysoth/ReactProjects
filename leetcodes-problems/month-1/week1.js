@@ -193,16 +193,36 @@ console.log(maxSubArrayWithDetails([-2, 1, -3, 4, -1, 2, 1, -5, 4]));
 
 // 🗓 Day 5: Hash Map Practice (Group Anagrams)
 const groupAnagrams = (strings) => {
+  // Create a map to store groups of anagrams
   const map = new Map();
 
-  for (let string of strings) {
-    const key = string.split('').sort().join('');
+  // Process each string in the input array
+  for (const string of strings) {
+    // Sort the characters to create a key
+    const sortedString = string.split('').sort().join('');
 
-    if (!map.has(key))
-      map.set(key, []);
+    // If we've seen this sorted string before, add the current string to it
+    if (map.has(sortedString))
+      map.get(sortedString).push(string);
 
-    map.get(key).push(string);
+    // Otherwise, create a new group with this string
+    else
+      map.set(sortedString, [string]);
   }
 
-  return [...map.values()];
+  // Convert the map values (the groups to an array of arrays)
+  return Array.from(map.values());
 };
+
+// Test cases:
+console.log(groupAnagrams(["eat", "tea", "tan", "ate", "nat", "bat"]));
+// [["eat","tea","ate"], ["tan","nat"], ["bat"]]
+
+console.log(groupAnagrams([""]));
+// [[""]]
+
+console.log(groupAnagrams(["a"]));
+// [["a"]]
+
+console.log(groupAnagrams(["cab", "tin", "pew", "duh", "may", "ill", "buy", "bar", "max", "doc", "cod"]));
+// [["cab"], ["tin"], ["pew"], ["duh"], ["may"], ["ill"], ["buy"], ["bar"], ["max"], ["doc"]]
