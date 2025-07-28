@@ -33,7 +33,8 @@ console.log(subarraySum([3, 4, 7, 2, -3, 1, 4, 2], 7)); // 4
 
 // 🌍 Real-World Analogy:
 
-const buildPrefixSum = (sales) => {
+function getSalesBetweenDays(sales, startDay, endDay) {
+  // Step 1: Build the prefix sum array
   const prefix = Array(sales.length).fill(0);
   prefix[0] = sales[0];
 
@@ -41,17 +42,15 @@ const buildPrefixSum = (sales) => {
     prefix[i] = prefix[i - 1] + sales[i];
   }
 
-  return prefix;
-};
+  // Step 2: Define the query logic inside the function
+  if (startDay === 0) {
+    return prefix[endDay]; // If starting from the beginning
+  } else {
+    return prefix[endDay] - prefix[startDay - 1]; // Difference gives range sum
+  }
+}
 
-const querySales = (prefix, i, j) => {
-  if (i === 0) return prefix[j];
-  return prefix[j] - prefix[i - 1];
-};
-
+// Example usage:
 const sales = [100, 200, 150, 300, 250, 100, 400];
-const prefix = buildPrefixSum(sales);
-
-
-const total = querySales(prefix, 2, 5);
-console.log("Total sales from day 2 to 5:", total); 
+const total = getSalesBetweenDays(sales, 2, 5);
+console.log("Total sales from day 2 to day 5:", total); // Output: 800
