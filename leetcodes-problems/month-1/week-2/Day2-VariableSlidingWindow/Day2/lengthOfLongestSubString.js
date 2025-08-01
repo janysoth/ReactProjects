@@ -75,3 +75,5 @@ for (let log of result.logs) {
 
 console.log("✅ Longest Unique Walk Length:", result.longestWalk);
 console.log("✅ Longest Unique Substring:", `"${result.longestSubstring}"`);
+
+
