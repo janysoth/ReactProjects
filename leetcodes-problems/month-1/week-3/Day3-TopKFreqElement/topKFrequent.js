@@ -80,3 +80,38 @@ function getTopKFrequent(arr, k) {
 console.log("Sort version:", topKFrequent([1, 1, 1, 2, 2, 3], 2));       // [1, 2]
 console.log("Bucket version:", topKFrequentBucket([1, 1, 1, 2, 2, 3], 2)); // [1, 2]
 console.log("Generic:", getTopKFrequent(["apple", "banana", "apple", "orange", "banana", "apple"], 2)); // ["apple", "banana"]
+
+
+// 🌍 Real-World Analogy:
+
+function topKPlayedSongs(plays, k) {
+  const freqMap = new Map();
+
+  // Count frequency of each song
+  for (let song of plays) {
+    freqMap.set(song, (freqMap.get(song) || 0) + 1);
+  }
+
+  // Create buckets: index = frequency, value = list of songs
+  const buckets = Array(plays.length + 1).fill().map(() => []);
+  for (let [song, freq] of freqMap.entries()) {
+    buckets[freq].push(song);
+  }
+
+  // Collect top k from highest frequency down
+  const result = [];
+  for (let i = buckets.length - 1; i >= 0 && result.length < k; i--) {
+    result.push(...buckets[i]);
+  }
+
+  return result.slice(0, k);
+}
+
+// 🧪 Test it
+const songs = [
+  "Shape of You", "Blinding Lights", "Shape of You",
+  "Levitating", "Shape of You", "Blinding Lights",
+  "Peaches", "Levitating", "Blinding Lights"
+];
+
+console.log(topKPlayedSongs(songs, 2)); // ["Shape of You", "Blinding Lights"]
