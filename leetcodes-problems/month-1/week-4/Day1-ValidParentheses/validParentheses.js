@@ -3,7 +3,7 @@
  ***********************************/
 
 // Solution 1: Using Stack
-var isValid = function (s) {
+const isValid = function (s) {
   const stack = [];
   const map = { ')': '(', '}': '{', ']': '[' };
 
@@ -20,7 +20,7 @@ var isValid = function (s) {
 };
 
 // Solution 2: Using Counter (only works with parentheses "()")
-var isValidParenthesesOnly = function (s) {
+const isValidParenthesesOnly = function (s) {
   let count = 0;
 
   for (let char of s) {
