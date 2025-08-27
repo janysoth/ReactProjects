@@ -64,3 +64,23 @@ console.log(stack.getMax()); // 5
 stack.pop(); // removes 2
 console.log(stack.getMin()); // 3
 console.log(stack.getMax()); // 5
+
+
+// 🧪 Real-world analogy simulation:
+const runner = new MinMaxStack();
+
+// Runner logs times at checkpoints (in minutes)
+runner.push(8);  // 1st checkpoint: 8 minutes
+runner.push(7);  // 2nd checkpoint: 7 minutes (fastest so far)
+runner.push(10); // 3rd checkpoint: 10 minutes (slowest so far)
+runner.push(9);  // 4th checkpoint: 9 minutes
+
+console.log("Latest checkpoint time:", runner.top()); // 9
+console.log("Fastest time so far:", runner.getMin()); // 7
+console.log("Slowest time so far:", runner.getMax()); // 10
+
+// Runner goes back to previous checkpoint (pop)
+runner.pop(); // removes 9
+console.log("Back to previous checkpoint:", runner.top()); // 10
+console.log("Fastest so far:", runner.getMin()); // 7
+console.log("Slowest so far:", runner.getMax()); // 10
