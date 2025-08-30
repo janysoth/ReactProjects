@@ -3,38 +3,40 @@
  *        LeetCode #232
  ***********************************/
 
-// ✅ Solution 1: Two Stacks Approach
+// ✅ Solution 2: One Stack + Recursion
 class MyQueue {
   constructor() {
-    this.stack1 = []; // for enqueue
-    this.stack2 = []; // for dequeue
+    this.stack = [];
   }
 
   push(x) {
-    this.stack1.push(x); // enqueue always goes to stack1
+    this.stack.push(x);
   }
 
   pop() {
-    if (this.stack2.length === 0) {
-      // move elements from stack1 to stack2 to reverse order
-      while (this.stack1.length) {
-        this.stack2.push(this.stack1.pop());
-      }
+    // Remove front element recursively
+    const x = this.stack.pop();
+    if (this.stack.length === 0) {
+      return x; // base: last element is the front
     }
-    return this.stack2.pop(); // dequeue
+    const res = this.pop(); // recursive call
+    this.stack.push(x); // restore stack
+    return res;
   }
 
   peek() {
-    if (this.stack2.length === 0) {
-      while (this.stack1.length) {
-        this.stack2.push(this.stack1.pop());
-      }
+    const x = this.stack.pop();
+    if (this.stack.length === 0) {
+      this.stack.push(x); // restore
+      return x;
     }
-    return this.stack2[this.stack2.length - 1]; // front of queue
+    const res = this.peek();
+    this.stack.push(x); // restore stack
+    return res;
   }
 
   empty() {
-    return this.stack1.length === 0 && this.stack2.length === 0;
+    return this.stack.length === 0;
   }
 }
 
@@ -45,5 +47,3 @@ q.push(2);
 console.log(q.peek()); // 1
 console.log(q.pop());  // 1
 console.log(q.empty()); // false
-
-
