@@ -47,3 +47,4 @@ q.push(2);
 console.log(q.peek()); // 1
 console.log(q.pop());  // 1
 console.log(q.empty()); // false
+
